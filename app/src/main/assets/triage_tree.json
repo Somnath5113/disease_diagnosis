@@ -1,0 +1,1260 @@
+{
+  "version": "1.0",
+  "metadata": {
+    "source": "MedDialog Clinical Consultation Tree",
+    "description": "Rule-based multi-turn patient symptom intake and triage pathways across Core systems"
+  },
+  "categories": [
+    {
+      "id": "RESPIRATORY",
+      "name": "Respiratory & Throat",
+      "description": "Cough, shortness of breath, sore throat, congestion",
+      "icon": "Lungs",
+      "startNodeId": "resp_chief_complaint"
+    },
+    {
+      "id": "GASTROINTESTINAL",
+      "name": "Gastrointestinal",
+      "description": "Abdominal pain, nausea, vomiting, indigestion, diarrhea",
+      "icon": "Stomach",
+      "startNodeId": "gastro_chief_complaint"
+    },
+    {
+      "id": "NEUROLOGICAL",
+      "name": "Neurological & Head",
+      "description": "Headaches, dizziness, migraine, vertigo, sensory changes",
+      "icon": "Brain",
+      "startNodeId": "neuro_chief_complaint"
+    },
+    {
+      "id": "DERMATOLOGICAL",
+      "name": "Dermatology & Skin",
+      "description": "Rashes, itching, hives, blisters, insect bites",
+      "icon": "Skin",
+      "startNodeId": "derm_chief_complaint"
+    },
+    {
+      "id": "FEVER",
+      "name": "Systemic & Fever",
+      "description": "Elevated temperature, chills, body aches, acute fatigue",
+      "icon": "Thermometer",
+      "startNodeId": "fever_chief_complaint"
+    }
+  ],
+  "nodes": {
+    "resp_chief_complaint": {
+      "id": "resp_chief_complaint",
+      "category": "RESPIRATORY",
+      "question": "What is the primary respiratory symptom you are experiencing today?",
+      "explanation": "Doctors begin by isolating the primary respiratory tract complaint to narrow down upper vs lower airway etiology.",
+      "isEmergencyCheck": false,
+      "options": [
+        {
+          "text": "Severe Shortness of Breath / Gasping for Air",
+          "subtitle": "Struggling to breathe even while sitting completely still",
+          "nextId": "resp_emergency_dyspnea",
+          "isRedFlag": true
+        },
+        {
+          "text": "Persistent Cough",
+          "subtitle": "Dry hacking or producing mucus/phlegm",
+          "nextId": "resp_cough_character",
+          "isRedFlag": false
+        },
+        {
+          "text": "Sore or Scratchy Throat",
+          "subtitle": "Pain with swallowing, throat redness or tickle",
+          "nextId": "resp_throat_severity",
+          "isRedFlag": false
+        },
+        {
+          "text": "Mild Breathlessness with Mild Exertion",
+          "subtitle": "Noticeable when walking or climbing stairs",
+          "nextId": "resp_exertion_dyspnea",
+          "isRedFlag": false
+        }
+      ],
+      "isConclusion": false
+    },
+    "resp_emergency_dyspnea": {
+      "id": "resp_emergency_dyspnea",
+      "category": "RESPIRATORY",
+      "question": "Critical Red-Flag: Severe Acute Respiratory Distress Detected",
+      "explanation": "Severe acute breathlessness at rest can signify life-threatening conditions such as acute pulmonary embolism, severe bronchospasm, or cardiac distress.",
+      "isEmergencyCheck": true,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "EMERGENCY",
+        "likelyConditions": ["Acute Respiratory Distress", "Severe Asthma Exacerbation", "Pulmonary Embolism Risk", "Cardiac-related Dyspnea"],
+        "clinicalAdvice": "Your reported difficulty breathing at rest is a critical medical emergency. Do not attempt home treatment or wait for a clinic appointment.",
+        "homeCareInstructions": [
+          "Sit upright in an open, well-ventilated space",
+          "Loosen any restrictive collar or clothing around your neck and chest",
+          "If prescribed a rescue inhaler (e.g. Albuterol), administer 2-4 puffs immediately while awaiting medical personnel"
+        ],
+        "whenToSeekImmediateHelp": "Call 911 / 112 or your nearest emergency ambulance immediately. If lips or fingernails turn bluish (cyanosis), state this to dispatch."
+      }
+    },
+    "resp_cough_character": {
+      "id": "resp_cough_character",
+      "category": "RESPIRATORY",
+      "question": "What does your cough feel like and are you bringing up any mucus?",
+      "explanation": "Differentiation between productive (wet) vs dry cough helps distinguish bronchial inflammation from allergies, post-nasal drip, or pneumonia.",
+      "isEmergencyCheck": false,
+      "options": [
+        {
+          "text": "Coughing up blood or rust-colored sputum",
+          "subtitle": "Visible red streaks or dark clots in phlegm",
+          "nextId": "resp_cough_hemoptysis_redflag",
+          "isRedFlag": true
+        },
+        {
+          "text": "Productive (Wet) Cough with Yellow or Green Phlegm",
+          "subtitle": "Clearing thick mucus from chest repeatedly",
+          "nextId": "resp_cough_wet_duration",
+          "isRedFlag": false
+        },
+        {
+          "text": "Dry, Tickling, or Hacking Cough",
+          "subtitle": "No mucus produced; feels like irritation in airway",
+          "nextId": "resp_cough_dry_duration",
+          "isRedFlag": false
+        }
+      ],
+      "isConclusion": false
+    },
+    "resp_cough_hemoptysis_redflag": {
+      "id": "resp_cough_hemoptysis_redflag",
+      "category": "RESPIRATORY",
+      "question": "Urgent Medical Alert: Hemoptysis (Blood in Sputum)",
+      "explanation": "Coughing up blood warrants immediate clinical evaluation to rule out deep bronchial lesions, pneumonia with necrosis, or pulmonary vascular injury.",
+      "isEmergencyCheck": true,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "URGENT_CARE",
+        "likelyConditions": ["Bronchitis with Mucosal Bleeding", "Community-Acquired Pneumonia", "Pulmonary Vascular Issue"],
+        "clinicalAdvice": "Coughing up visible blood or rust-colored sputum should not be treated at home. An urgent physical exam, chest auscultation, and likely a chest X-ray are necessary.",
+        "homeCareInstructions": [
+          "Avoid vigorous exertion or heavy lifting",
+          "Stay hydrated with room-temperature fluids",
+          "Do not take aspirin or NSAIDs as they can exacerbate bleeding"
+        ],
+        "whenToSeekImmediateHelp": "If coughing up large amounts of blood (> half a cup) or accompanied by dizziness/fainting, go to the nearest emergency room immediately."
+      }
+    },
+    "resp_cough_wet_duration": {
+      "id": "resp_cough_wet_duration",
+      "category": "RESPIRATORY",
+      "question": "How long have you had this productive cough, and do you have a fever?",
+      "explanation": "Duration and accompanying fever determine whether an acute viral bronchitis vs bacterial lower respiratory infection is suspected.",
+      "isEmergencyCheck": false,
+      "options": [
+        {
+          "text": "Under 10 days, with low or no fever",
+          "subtitle": "Started with a cold or runny nose; mild fatigue",
+          "nextId": "resp_conclusion_acute_bronchitis",
+          "isRedFlag": false
+        },
+        {
+          "text": "Under 10 days, but high fever (>38.5°C/101.3°F) and chest ache",
+          "subtitle": "Chills, localized pleuritic pain when inhaling deeply",
+          "nextId": "resp_conclusion_suspected_pneumonia",
+          "isRedFlag": false
+        },
+        {
+          "text": "Over 3 weeks (Chronic / Subacute)",
+          "subtitle": "Lingering persistent cough without improving",
+          "nextId": "resp_conclusion_chronic_cough",
+          "isRedFlag": false
+        }
+      ],
+      "isConclusion": false
+    },
+    "resp_cough_dry_duration": {
+      "id": "resp_cough_dry_duration",
+      "category": "RESPIRATORY",
+      "question": "When does your dry cough become most pronounced?",
+      "explanation": "Diurnal pattern and triggers help differentiate cough-variant asthma, gastroesophageal reflux (GERD), and post-viral hyperreactivity.",
+      "isEmergencyCheck": false,
+      "options": [
+        {
+          "text": "Worse when lying down at night, or after spicy meals",
+          "subtitle": "Sour taste in mouth, heartburn or clearing throat",
+          "nextId": "resp_conclusion_reflux_cough",
+          "isRedFlag": false
+        },
+        {
+          "text": "Triggered by cold air, dust, or accompanied by wheezing",
+          "subtitle": "Chest tightness or whistling sound when exhaling",
+          "nextId": "resp_conclusion_reactive_airway",
+          "isRedFlag": false
+        },
+        {
+          "text": "Following a recent cold or flu episode (Post-viral)",
+          "subtitle": "Throat tickle, mild nasal drip",
+          "nextId": "resp_conclusion_postviral_cough",
+          "isRedFlag": false
+        }
+      ],
+      "isConclusion": false
+    },
+    "resp_throat_severity": {
+      "id": "resp_throat_severity",
+      "category": "RESPIRATORY",
+      "question": "How severe is your throat pain, and can you swallow liquids easily?",
+      "explanation": "The Centor clinical criteria assess for Group A Beta-Hemolytic Streptococcal pharyngitis versus viral pharyngitis, and screen for peritonsillar abscess.",
+      "isEmergencyCheck": false,
+      "options": [
+        {
+          "text": "Severe pain, unable to swallow saliva (Drooling / Muffled voice)",
+          "subtitle": "Difficulty opening mouth wide (trismus)",
+          "nextId": "resp_conclusion_peritonsillar_emergency",
+          "isRedFlag": true
+        },
+        {
+          "text": "Moderate to severe pain, swollen glands, fever, but NO cough",
+          "subtitle": "White patches or exudate visible on tonsils",
+          "nextId": "resp_conclusion_strep_pharyngitis",
+          "isRedFlag": false
+        },
+        {
+          "text": "Mild to moderate scratchiness with runny nose and sneezing",
+          "subtitle": "Typical viral cold presentation with gradual onset",
+          "nextId": "resp_conclusion_viral_pharyngitis",
+          "isRedFlag": false
+        }
+      ],
+      "isConclusion": false
+    },
+    "resp_exertion_dyspnea": {
+      "id": "resp_exertion_dyspnea",
+      "category": "RESPIRATORY",
+      "question": "Do you notice any ankle swelling or waking up gasping for air at night?",
+      "explanation": "Doctors look for signs of fluid overload or cardiac insufficiency versus pulmonary deconditioning.",
+      "isEmergencyCheck": false,
+      "options": [
+        {
+          "text": "Yes, puffy swollen ankles or needing extra pillows to sleep",
+          "subtitle": "Weight gain, pitting edema around feet or shins",
+          "nextId": "resp_conclusion_cardiopulmonary_evaluation",
+          "isRedFlag": false
+        },
+        {
+          "text": "No swelling, purely respiratory during physical activity",
+          "subtitle": "Wheezing or tight chest during exercise",
+          "nextId": "resp_conclusion_exercise_reactive",
+          "isRedFlag": false
+        }
+      ],
+      "isConclusion": false
+    },
+    "resp_conclusion_acute_bronchitis": {
+      "id": "resp_conclusion_acute_bronchitis",
+      "category": "RESPIRATORY",
+      "question": "Evaluation: Acute Viral Bronchitis / Tracheobronchial Irritation",
+      "explanation": "MedDialog pattern: over 90% of acute bronchitis cases in immunocompetent adults are viral and self-limiting.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "SELF_CARE",
+        "likelyConditions": ["Acute Bronchitis (Viral)", "Upper Respiratory Tract Infection (URI)", "Tracheitis"],
+        "clinicalAdvice": "Your symptoms strongly suggest acute viral bronchitis. Antibiotics are rarely indicated unless secondary bacterial infection develops.",
+        "homeCareInstructions": [
+          "Maintain abundant hydration (warm water, herbal teas, broths) to thin bronchial mucus",
+          "Honey (1-2 teaspoons, adults only) is clinically shown to reduce nocturnal cough frequency",
+          "Use a cool-mist humidifier or inhale steam from a warm shower",
+          "Over-the-counter Guaifenesin may assist with mucus clearance"
+        ],
+        "whenToSeekImmediateHelp": "Seek medical review if fever rises above 38.5°C (101.3°F), shortness of breath worsens, or cough persists beyond 3 weeks."
+      }
+    },
+    "resp_conclusion_suspected_pneumonia": {
+      "id": "resp_conclusion_suspected_pneumonia",
+      "category": "RESPIRATORY",
+      "question": "Evaluation: Possible Lower Respiratory Infection / Pneumonia",
+      "explanation": "High fever combined with productive cough and pleuritic chest discomfort warrants clinical lung auscultation.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "URGENT_CARE",
+        "likelyConditions": ["Community-Acquired Pneumonia", "Bacterial Bronchitis", "Influenza with Lower Airway Involvement"],
+        "clinicalAdvice": "Your combination of productive cough, high fever, and chest discomfort indicates a possible lower respiratory infection. You should be evaluated by a healthcare professional within 24 hours.",
+        "homeCareInstructions": [
+          "Rest in bed and minimize physical exertion",
+          "Monitor body temperature every 4-6 hours",
+          "Keep well hydrated with electrolyte fluids",
+          "Do not take cough suppressants that block mucus clearance without physician approval"
+        ],
+        "whenToSeekImmediateHelp": "Proceed to emergency care if you experience rapid shallow breathing, confusion, or bluish discoloration of lips or fingers."
+      }
+    },
+    "resp_conclusion_chronic_cough": {
+      "id": "resp_conclusion_chronic_cough",
+      "category": "RESPIRATORY",
+      "question": "Evaluation: Subacute / Chronic Cough Evaluation Required",
+      "explanation": "A cough extending past 3 weeks requires investigation for non-infectious causes.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "ROUTINE_DOCTOR",
+        "likelyConditions": ["Post-Infectious Airway Hyperresponsiveness", "Upper Airway Cough Syndrome (UACS)", "Cough-Variant Asthma", "Medication-induced (ACE-inhibitor)"],
+        "clinicalAdvice": "A cough lasting longer than 3 weeks is classified as subacute or chronic. A primary care physician should review your medication history and consider spirometry or chest imaging.",
+        "homeCareInstructions": [
+          "Review your regular medications with your doctor (especially ACE inhibitors for blood pressure)",
+          "Avoid airborne irritants, tobacco smoke, and strong cleaning sprays",
+          "Maintain adequate room humidity"
+        ],
+        "whenToSeekImmediateHelp": "Seek immediate care if you develop unintentional weight loss, night sweats, or hemoptysis."
+      }
+    },
+    "resp_conclusion_reflux_cough": {
+      "id": "resp_conclusion_reflux_cough",
+      "category": "RESPIRATORY",
+      "question": "Evaluation: Gastroesophageal Reflux-Induced Airway Irritation (LPR / GERD)",
+      "explanation": "Micro-aspiration of gastric acid or vagal esophageal reflexes frequently trigger chronic nocturnal coughing.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "ROUTINE_DOCTOR",
+        "likelyConditions": ["Gastroesophageal Reflux Disease (GERD)", "Laryngopharyngeal Reflux (LPR)", "Post-Nasal Drip"],
+        "clinicalAdvice": "Your cough pattern correlates strongly with acid reflux stimulating the upper laryngeal nerves, particularly when recumbent or postprandial.",
+        "homeCareInstructions": [
+          "Elevate the head of your bed by 15-20 cm (6-8 inches)",
+          "Avoid eating within 3 hours of sleeping",
+          "Limit dietary triggers: caffeine, chocolate, citrus, tomato sauces, and peppermint",
+          "Trial an over-the-counter antacid or H2-blocker as recommended by a pharmacist"
+        ],
+        "whenToSeekImmediateHelp": "Consult a gastroenterologist if you develop painful swallowing, vomiting food, or unexpected weight loss."
+      }
+    },
+    "resp_conclusion_reactive_airway": {
+      "id": "resp_conclusion_reactive_airway",
+      "category": "RESPIRATORY",
+      "question": "Evaluation: Bronchial Hyperresponsiveness / Possible Asthma",
+      "explanation": "Wheezing and cold/trigger-induced cough suggest reversible airway narrowing.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "ROUTINE_DOCTOR",
+        "likelyConditions": ["Cough-Variant Asthma", "Allergic Bronchospasm", "Reactive Airway Disease"],
+        "clinicalAdvice": "Wheezing or cold-air induced coughing is characteristic of reactive airway disease or asthma. A physician can perform peak flow or spirometry testing to confirm.",
+        "homeCareInstructions": [
+          "Keep a symptom diary identifying specific triggers (cold air, pets, pollen, dust)",
+          "Wear a scarf over your mouth and nose when going outside in freezing weather",
+          "Avoid NSAID medications if you have suspected aspirin-sensitive asthma"
+        ],
+        "whenToSeekImmediateHelp": "Seek emergency care immediately if you have difficulty speaking full sentences without pausing to breathe or if chest indrawing occurs."
+      }
+    },
+    "resp_conclusion_postviral_cough": {
+      "id": "resp_conclusion_postviral_cough",
+      "category": "RESPIRATORY",
+      "question": "Evaluation: Post-Viral Upper Airway Cough Syndrome",
+      "explanation": "Following viral rhinitis or influenza, bronchial and laryngeal sensory receptors remain hypersensitive for up to 2-3 weeks.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "SELF_CARE",
+        "likelyConditions": ["Post-Viral Cough Syndrome", "Post-Nasal Drip / Rhinosinusitis", "Upper Respiratory Infection Recovery"],
+        "clinicalAdvice": "This is a very common post-infectious phenomenon where damaged respiratory epithelium causes temporary nerve hypersensitivity.",
+        "homeCareInstructions": [
+          "Warm saline nasal rinses (neti pot or spray) to clear post-nasal drip",
+          "Warm honey lemon water to soothe the pharyngeal mucosa",
+          "Lozenges to suppress throat tickling reflexes"
+        ],
+        "whenToSeekImmediateHelp": "Re-consult a doctor if a secondary high fever develops or sputum turns dark and foul-smelling."
+      }
+    },
+    "resp_conclusion_peritonsillar_emergency": {
+      "id": "resp_conclusion_peritonsillar_emergency",
+      "category": "RESPIRATORY",
+      "question": "Urgent Red-Flag: Suspected Peritonsillar Abscess / Airway Compromise",
+      "explanation": "Drooling, trismus (inability to open mouth), and 'hot potato' voice indicate deep neck space infection requiring immediate drainage or IV antibiotics.",
+      "isEmergencyCheck": true,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "EMERGENCY",
+        "likelyConditions": ["Peritonsillar Abscess (Quinsy)", "Epiglottitis", "Severe Pharyngeal Space Infection"],
+        "clinicalAdvice": "Inability to swallow saliva accompanied by severe throat pain and difficulty opening your jaw is an emergency that risks airway closure.",
+        "homeCareInstructions": [
+          "Do not force food or oral pills down your throat",
+          "Sit upright and do not recline flat",
+          "Proceed directly to an emergency department or ENT specialist"
+        ],
+        "whenToSeekImmediateHelp": "Call 911 / 112 or head to the nearest Emergency Room without delay."
+      }
+    },
+    "resp_conclusion_strep_pharyngitis": {
+      "id": "resp_conclusion_strep_pharyngitis",
+      "category": "RESPIRATORY",
+      "question": "Evaluation: Suspected Streptococcal Pharyngitis (Strep Throat)",
+      "explanation": "Centor clinical score criteria met (fever, tonsillar exudate, tender anterior cervical lymph nodes, lack of cough).",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "URGENT_CARE",
+        "likelyConditions": ["Group A Streptococcal Pharyngitis", "Infectious Mononucleosis", "Acute Tonsillitis"],
+        "clinicalAdvice": "Your presentation satisfies high Centor probability for bacterial strep throat. A rapid throat swab and potential course of antibiotics (e.g. Amoxicillin) by a clinician is advised to prevent rheumatic sequelae.",
+        "homeCareInstructions": [
+          "Gargle with warm salt water (1/2 tsp salt in 1 cup warm water) every 3 hours",
+          "Use acetaminophen or ibuprofen for throat pain relief and fever reduction",
+          "Replace your toothbrush once you begin antibiotic therapy to prevent re-infection"
+        ],
+        "whenToSeekImmediateHelp": "Seek immediate evaluation if breathing becomes difficult or if unilateral neck swelling rapidly expands."
+      }
+    },
+    "resp_conclusion_viral_pharyngitis": {
+      "id": "resp_conclusion_viral_pharyngitis",
+      "category": "RESPIRATORY",
+      "question": "Evaluation: Acute Viral Pharyngitis / Common Cold",
+      "explanation": "Concurrent upper respiratory symptoms (rhinorrhea, sneezing) with gradual mild sore throat confirm viral etiology.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "SELF_CARE",
+        "likelyConditions": ["Viral Pharyngitis", "Rhinovirus / Common Cold", "Adenovirus Infection"],
+        "clinicalAdvice": "Viral sore throats typically peak between days 2 and 4 and resolve spontaneously within 7 to 10 days without antibiotic therapy.",
+        "homeCareInstructions": [
+          "Hydrate well with warm broths, chamomile tea with honey, or cold popsicles for numbing relief",
+          "Over-the-counter pain relievers (ibuprofen or paracetamol) for discomfort",
+          "Anesthetic throat lozenges or benzocaine throat sprays for local numbing"
+        ],
+        "whenToSeekImmediateHelp": "Consult a physician if symptoms worsen after 5 days, if a high fever emerges, or if rash develops."
+      }
+    },
+    "resp_conclusion_cardiopulmonary_evaluation": {
+      "id": "resp_conclusion_cardiopulmonary_evaluation",
+      "category": "RESPIRATORY",
+      "question": "Evaluation: Cardiopulmonary Fluid Retention Assessment Required",
+      "explanation": "Exertional dyspnea combined with peripheral edema and orthopnea warrants evaluation for congestive heart failure or pulmonary hypertension.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "URGENT_CARE",
+        "likelyConditions": ["Congestive Heart Failure (Mild/Moderate)", "Venous Insufficiency with Deconditioning", "Cor Pulmonale"],
+        "clinicalAdvice": "Breathlessness with peripheral edema suggests fluid accumulation requiring physical exam, ECG, BNP biomarkers, and an echocardiogram.",
+        "homeCareInstructions": [
+          "Avoid excess dietary sodium/salt which worsens fluid retention",
+          "Record daily morning weights to track sudden fluid gain (>1.5kg in 2 days)",
+          "Rest with legs slightly elevated when sitting"
+        ],
+        "whenToSeekImmediateHelp": "Proceed to emergency if you develop sudden pink frothy sputum, crushing chest discomfort, or extreme air hunger."
+      }
+    },
+    "resp_conclusion_exercise_reactive": {
+      "id": "resp_conclusion_exercise_reactive",
+      "category": "RESPIRATORY",
+      "question": "Evaluation: Exercise-Induced Bronchoconstriction (EIB)",
+      "explanation": "Airway narrowing occurring during or shortly after strenuous aerobic exercise.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "ROUTINE_DOCTOR",
+        "likelyConditions": ["Exercise-Induced Bronchoconstriction", "Physical Deconditioning", "Vocal Cord Dysfunction"],
+        "clinicalAdvice": "Transient shortness of breath specifically during exertion without resting symptoms or edema is often manageable with pre-exercise warm-ups or prophylactic inhaled bronchodilators.",
+        "homeCareInstructions": [
+          "Perform a thorough 10-15 minute warm-up before intense aerobic exercise",
+          "Breathe through your nose to warm and humidify inspired air",
+          "Consult a doctor to discuss whether a pre-workout inhaler is suitable"
+        ],
+        "whenToSeekImmediateHelp": "Seek immediate emergency care if breathing remains restricted more than 30 minutes after ceasing exercise."
+      }
+    },
+    "gastro_chief_complaint": {
+      "id": "gastro_chief_complaint",
+      "category": "GASTROINTESTINAL",
+      "question": "Where is your digestive discomfort centered, and what is the primary symptom?",
+      "explanation": "The anatomical quadrant of abdominal pain is the most critical diagnostic clue in clinical gastroenterology.",
+      "isEmergencyCheck": false,
+      "options": [
+        {
+          "text": "Severe Sharp Pain in the Lower Right Abdomen (RLQ)",
+          "subtitle": "Worse when coughing or touching; fever, nausea",
+          "nextId": "gastro_emergency_appendicitis",
+          "isRedFlag": true
+        },
+        {
+          "text": "Vomiting Blood or Black 'Coffee Ground' Material / Tarry Stools",
+          "subtitle": "Dark black sticky stools or blood in emesis",
+          "nextId": "gastro_emergency_gi_bleed",
+          "isRedFlag": true
+        },
+        {
+          "text": "Upper Abdomen / Epigastric Burning or Acid Indigestion",
+          "subtitle": "Below breastbone; burning sensation after eating or when hungry",
+          "nextId": "gastro_epigastric_path",
+          "isRedFlag": false
+        },
+        {
+          "text": "Cramping Abdominal Pain with Diarrhea or Nausea",
+          "subtitle": "Diffuse crampy ache, frequent loose watery bowel movements",
+          "nextId": "gastro_diarrhea_path",
+          "isRedFlag": false
+        }
+      ],
+      "isConclusion": false
+    },
+    "gastro_emergency_appendicitis": {
+      "id": "gastro_emergency_appendicitis",
+      "category": "GASTROINTESTINAL",
+      "question": "Critical Red-Flag: Acute Appendicitis Warning",
+      "explanation": "Right lower quadrant focal tenderness (McBurney's point), rebound tenderness, and anorexia are classic surgical abdomen signs.",
+      "isEmergencyCheck": true,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "EMERGENCY",
+        "likelyConditions": ["Acute Appendicitis", "Cecal Diverticulitis", "Ovarian Torsion / Ectopic Pregnancy (if female)"],
+        "clinicalAdvice": "Sharp or migrating pain localized to the lower right abdomen requires immediate emergency surgical evaluation and ultrasound or CT imaging.",
+        "homeCareInstructions": [
+          "DO NOT eat or drink anything (remain strictly NPO in case surgery is required)",
+          "DO NOT apply a heating pad to your abdomen (can accelerate rupture)",
+          "DO NOT take laxatives or heavy pain medicines before surgical evaluation"
+        ],
+        "whenToSeekImmediateHelp": "Proceed immediately to the nearest Emergency Department. If pain suddenly vanished and then turned into severe diffuse pain, the appendix may have perforated."
+      }
+    },
+    "gastro_emergency_gi_bleed": {
+      "id": "gastro_emergency_gi_bleed",
+      "category": "GASTROINTESTINAL",
+      "question": "Critical Red-Flag: Acute Gastrointestinal Bleeding",
+      "explanation": "Hematemesis or melena signifies active upper or lower GI bleeding with hemorrhage risk.",
+      "isEmergencyCheck": true,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "EMERGENCY",
+        "likelyConditions": ["Bleeding Peptic Ulcer", "Mallory-Weiss Tear", "Esophageal Varices", "Severe Gastric Erosion"],
+        "clinicalAdvice": "Visible blood in vomit or tarry black stools indicates an internal gastrointestinal bleed requiring immediate emergency care, blood volume check, and endoscopy.",
+        "homeCareInstructions": [
+          "Do not eat, drink, or ingest aspirin/NSAIDs",
+          "Lie down with legs elevated if feeling lightheaded or dizzy",
+          "Have someone drive you or call an ambulance immediately"
+        ],
+        "whenToSeekImmediateHelp": "Call 911 / 112 immediately. Seek emergency assistance without delay."
+      }
+    },
+    "gastro_epigastric_path": {
+      "id": "gastro_epigastric_path",
+      "category": "GASTROINTESTINAL",
+      "question": "Does the upper stomach burning correlate with meals, and is there radiating pain to your back?",
+      "explanation": "Doctors differentiate simple GERD and gastritis from peptic ulcers and biliary/pancreatic disease.",
+      "isEmergencyCheck": false,
+      "options": [
+        {
+          "text": "Severe pain radiating straight through to my mid-back",
+          "subtitle": "Unrelenting boring pain, nausea, sweating",
+          "nextId": "gastro_conclusion_pancreatitis_biliary",
+          "isRedFlag": false
+        },
+        {
+          "text": "Burning sensation after heavy/greasy meals or when reclining",
+          "subtitle": "Acid taste, burping, relief with antacids",
+          "nextId": "gastro_conclusion_gerd_gastritis",
+          "isRedFlag": false
+        },
+        {
+          "text": "Gnawing hunger-like pain that temporarily improves with food",
+          "subtitle": "Wakes you up 2-3 hours after meals or in middle of night",
+          "nextId": "gastro_conclusion_peptic_ulcer",
+          "isRedFlag": false
+        }
+      ],
+      "isConclusion": false
+    },
+    "gastro_diarrhea_path": {
+      "id": "gastro_diarrhea_path",
+      "category": "GASTROINTESTINAL",
+      "question": "What is the nature of the diarrhea, and are you able to keep fluids down?",
+      "explanation": "Dehydration risk and invasive bacterial/parasitic markers guide the urgency of acute gastroenteritis management.",
+      "isEmergencyCheck": false,
+      "options": [
+        {
+          "text": "Signs of severe dehydration: no urination >8h, extreme dizziness",
+          "subtitle": "Sunken eyes, dry mouth, unable to retain any water",
+          "nextId": "gastro_conclusion_severe_dehydration",
+          "isRedFlag": true
+        },
+        {
+          "text": "Frequent watery stools with nausea for 1-3 days, can sip fluids",
+          "subtitle": "Mild low fever or body cramps; others around you were sick",
+          "nextId": "gastro_conclusion_viral_gastroenteritis",
+          "isRedFlag": false
+        },
+        {
+          "text": "Recurrent alternating constipation and diarrhea with bloating",
+          "subtitle": "Ongoing for months, relieved temporarily after bowel movement",
+          "nextId": "gastro_conclusion_ibs_functional",
+          "isRedFlag": false
+        }
+      ],
+      "isConclusion": false
+    },
+    "gastro_conclusion_pancreatitis_biliary": {
+      "id": "gastro_conclusion_pancreatitis_biliary",
+      "category": "GASTROINTESTINAL",
+      "question": "Evaluation: Suspected Biliary Colic / Pancreatic Inflammation",
+      "explanation": "Radiation to the mid-back with intense epigastric distress suggests cholecystitis, gallstones, or acute pancreatitis.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "URGENT_CARE",
+        "likelyConditions": ["Acute Cholecystitis / Gallstone Colic", "Acute Pancreatitis", "Severe Peptic Ulcer"],
+        "clinicalAdvice": "Severe epigastric pain boring through to the back is not typical of simple heartburn. Prompt evaluation including serum amylase/lipase and abdominal ultrasound is recommended within 12 hours.",
+        "homeCareInstructions": [
+          "Avoid fatty, fried, or rich foods entirely",
+          "Do not consume alcohol",
+          "Rest comfortably with knees drawn to chest if that provides relief"
+        ],
+        "whenToSeekImmediateHelp": "Proceed to the ER immediately if you develop jaundice (yellowing of eyes/skin), dark tea-colored urine, or intractable vomiting."
+      }
+    },
+    "gastro_conclusion_gerd_gastritis": {
+      "id": "gastro_conclusion_gerd_gastritis",
+      "category": "GASTROINTESTINAL",
+      "question": "Evaluation: Gastroesophageal Reflux (GERD) / Acute Gastritis",
+      "explanation": "Postprandial substernal burning relieved by antacids matches classic gastric acid irritation.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "SELF_CARE",
+        "likelyConditions": ["Gastroesophageal Reflux Disease (GERD)", "Acid Gastritis", "Functional Non-Ulcer Dyspepsia"],
+        "clinicalAdvice": "Your symptoms are classic for acid reflux or gastritis. Most cases respond well to dietary modification and short-term acid suppressive therapy.",
+        "homeCareInstructions": [
+          "Eat smaller, more frequent meals rather than large heavy dinners",
+          "Do not lie down for at least 2 to 3 hours after eating",
+          "Avoid triggers: coffee, alcohol, carbonated sodas, citrus fruits, and spicy foods",
+          "Trial an over-the-counter antacid, H2-receptor blocker, or PPI as directed by a pharmacist"
+        ],
+        "whenToSeekImmediateHelp": "Consult a doctor if you develop difficulty or pain when swallowing food, or if burning pain does not improve within 2 weeks."
+      }
+    },
+    "gastro_conclusion_peptic_ulcer": {
+      "id": "gastro_conclusion_peptic_ulcer",
+      "category": "GASTROINTESTINAL",
+      "question": "Evaluation: Suspected Peptic / Duodenal Ulcer Disease",
+      "explanation": "Hunger-like pain improving after food intake is a hallmark of duodenal ulceration, frequently linked to H. pylori or NSAID usage.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "ROUTINE_DOCTOR",
+        "likelyConditions": ["Duodenal Ulcer", "Gastric Ulcer", "Helicobacter Pylori Infection"],
+        "clinicalAdvice": "Your pain pattern corresponds closely to peptic ulcer disease. You should be evaluated by a physician for Helicobacter pylori breath/stool testing and appropriate mucosal healing treatment.",
+        "homeCareInstructions": [
+          "Strictly avoid NSAID painkillers (ibuprofen, naproxen, aspirin) which damage the stomach lining; use acetaminophen instead if needed",
+          "Avoid smoking and alcohol consumption which inhibit ulcer healing",
+          "Eat regular nutritious meals to prevent prolonged fasting acid exposure"
+        ],
+        "whenToSeekImmediateHelp": "Seek immediate emergency care if you experience sudden severe knife-like pain across your whole abdomen or vomit dark material."
+      }
+    },
+    "gastro_conclusion_severe_dehydration": {
+      "id": "gastro_conclusion_severe_dehydration",
+      "category": "GASTROINTESTINAL",
+      "question": "Urgent Red-Flag: Acute Dehydration Secondary to Gastroenteritis",
+      "explanation": "Oliguria (>8 hours without urination) and postural syncope indicate circulatory volume depletion requiring IV fluids.",
+      "isEmergencyCheck": true,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "EMERGENCY",
+        "likelyConditions": ["Severe Hypovolemia / Dehydration", "Acute Infectious Gastroenteritis", "Electrolyte Disturbance"],
+        "clinicalAdvice": "Your inability to retain fluids and absence of urination indicates advanced fluid deficit. Intravenous rehydration is urgently required to protect kidney function.",
+        "homeCareInstructions": [
+          "Sip Oral Rehydration Salt (ORS) solution by tiny teaspoons every 2-3 minutes if conscious",
+          "Do not chug large glasses of plain water rapidly as this triggers emesis",
+          "Get transported to an urgent care clinic or emergency facility"
+        ],
+        "whenToSeekImmediateHelp": "Call emergency services if accompanied by confusion, fainting when standing, or rapid weak pulse."
+      }
+    },
+    "gastro_conclusion_viral_gastroenteritis": {
+      "id": "gastro_conclusion_viral_gastroenteritis",
+      "category": "GASTROINTESTINAL",
+      "question": "Evaluation: Acute Viral Gastroenteritis ('Stomach Flu')",
+      "explanation": "Self-limiting viral infection (Norovirus, Rotavirus) presenting with sudden diarrhea, nausea, and low fever.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "SELF_CARE",
+        "likelyConditions": ["Viral Gastroenteritis", "Food-Borne Illness (Food Poisoning)", "Enteric Infection"],
+        "clinicalAdvice": "Acute gastroenteritis typically resolves spontaneously within 48 to 72 hours. The primary clinical priority is maintaining electrolyte and water balance.",
+        "homeCareInstructions": [
+          "Drink Oral Rehydration Salts (ORS) or diluted electrolyte solutions in small frequent sips",
+          "Follow the BRAT diet (Bananas, Rice, Applesauce, Toast) once vomiting pauses",
+          "Avoid dairy products, greasy foods, caffeine, and artificial sweeteners which exacerbate diarrhea",
+          "Wash hands meticulously with soap and water to prevent household transmission"
+        ],
+        "whenToSeekImmediateHelp": "Seek medical review if diarrhea lasts longer than 3 days, high fever develops, or blood appears in your stool."
+      }
+    },
+    "gastro_conclusion_ibs_functional": {
+      "id": "gastro_conclusion_ibs_functional",
+      "category": "GASTROINTESTINAL",
+      "question": "Evaluation: Irritable Bowel Syndrome (IBS) / Functional Gut Disorder",
+      "explanation": "Rome IV diagnostic criteria pattern: recurrent abdominal pain associated with defecation and altered bowel frequency without alarm features.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "ROUTINE_DOCTOR",
+        "likelyConditions": ["Irritable Bowel Syndrome (IBS-M / IBS-D)", "Dietary Intolerance (Lactose / FODMAPs)", "Small Intestinal Bacterial Overgrowth (SIBO)"],
+        "clinicalAdvice": "Your chronic fluctuating symptoms without alarm signs match functional bowel patterns like IBS. Schedule an appointment with a primary care doctor or gastroenterologist for comprehensive dietary and stress management.",
+        "homeCareInstructions": [
+          "Keep a daily food and symptom diary to detect specific trigger foods",
+          "Consider a trial of a low-FODMAP dietary approach under nutritional guidance",
+          "Engage in regular moderate exercise and stress-reduction techniques (gut-directed mindfulness)"
+        ],
+        "whenToSeekImmediateHelp": "See a physician promptly if you develop nocturnal bowel movements waking you from sleep, rectal bleeding, or unexplained weight loss."
+      }
+    },
+    "neuro_chief_complaint": {
+      "id": "neuro_chief_complaint",
+      "category": "NEUROLOGICAL",
+      "question": "What is the primary neurological symptom or head complaint you are experiencing?",
+      "explanation": "Neurological triage prioritizes rapid identification of cerebrovascular accidents (stroke) and acute intracranial emergencies (hemorrhage, meningitis).",
+      "isEmergencyCheck": false,
+      "options": [
+        {
+          "text": "Sudden Weakness, Facial Droop, or Difficulty Speaking (FAST Alert)",
+          "subtitle": "Arm drifts down, slurred speech, confusion, sudden blindness",
+          "nextId": "neuro_emergency_stroke",
+          "isRedFlag": true
+        },
+        {
+          "text": "'Worst Headache of My Life' (Thunderclap Headache)",
+          "subtitle": "Instant peak intensity within seconds, stiff neck, vomiting",
+          "nextId": "neuro_emergency_thunderclap",
+          "isRedFlag": true
+        },
+        {
+          "text": "Throbbing or Pounding Headache",
+          "subtitle": "Unilateral or bilateral, sensitivity to light/sound, visual aura",
+          "nextId": "neuro_headache_character",
+          "isRedFlag": false
+        },
+        {
+          "text": "Dizziness or Spinning Sensation (Vertigo)",
+          "subtitle": "Room feels like it is rotating, or lightheaded upon standing",
+          "nextId": "neuro_dizziness_path",
+          "isRedFlag": false
+        }
+      ],
+      "isConclusion": false
+    },
+    "neuro_emergency_stroke": {
+      "id": "neuro_emergency_stroke",
+      "category": "NEUROLOGICAL",
+      "question": "Critical Red-Flag: Acute Stroke / TIA Protocol Activated",
+      "explanation": "FAST criteria (Face drooping, Arm weakness, Speech difficulty, Time to call emergency). Time-sensitive thrombolytic window is critical.",
+      "isEmergencyCheck": true,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "EMERGENCY",
+        "likelyConditions": ["Acute Ischemic Stroke", "Transient Ischemic Attack (TIA)", "Intracerebral Hemorrhage"],
+        "clinicalAdvice": "Acute focal neurological deficits represent a critical stroke emergency. Every minute counts to preserve brain tissue.",
+        "homeCareInstructions": [
+          "DO NOT give the person aspirin, food, or drink",
+          "Note the exact time symptoms were first observed",
+          "Keep the patient lying flat with head slightly supported"
+        ],
+        "whenToSeekImmediateHelp": "Call 911 / 112 immediately. Inform the emergency dispatcher: 'Suspected stroke, patient has focal weakness/speech impairment.'"
+      }
+    },
+    "neuro_emergency_thunderclap": {
+      "id": "neuro_emergency_thunderclap",
+      "category": "NEUROLOGICAL",
+      "question": "Critical Red-Flag: Suspected Subarachnoid Hemorrhage / Acute Meningitis",
+      "explanation": "Instantaneous peak-intensity headache ('thunderclap') or headache with rigid neck stiffness requires emergency brain CT and lumbar puncture.",
+      "isEmergencyCheck": true,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "EMERGENCY",
+        "likelyConditions": ["Subarachnoid Hemorrhage (Aneurysmal Rupture)", "Acute Bacterial Meningitis", "Cerebral Venous Sinus Thrombosis"],
+        "clinicalAdvice": "A thunderclap headache reaching maximum agony in under a minute or accompanied by an inability to touch chin to chest is an emergency that cannot be treated at home.",
+        "homeCareInstructions": [
+          "Remain seated or reclined in a quiet, dark environment",
+          "Do not perform strenuous activities or drive yourself to the hospital",
+          "Have someone call for emergency transport immediately"
+        ],
+        "whenToSeekImmediateHelp": "Call 911 / 112 or proceed straight to the nearest Emergency Department immediately."
+      }
+    },
+    "neuro_headache_character": {
+      "id": "neuro_headache_character",
+      "category": "NEUROLOGICAL",
+      "question": "Where is the pain located and what accompanying symptoms do you notice?",
+      "explanation": "ICHD-3 headache criteria differentiate primary headaches (Migraine vs Tension vs Cluster) from sinus/cervicogenic headaches.",
+      "isEmergencyCheck": false,
+      "options": [
+        {
+          "text": "One-sided throbbing pain with nausea and light/noise sensitivity",
+          "subtitle": "Worse with routine activity; may see flashing zigzag lines",
+          "nextId": "neuro_conclusion_migraine",
+          "isRedFlag": false
+        },
+        {
+          "text": "Dull, tight band-like squeezing pressure across both temples or forehead",
+          "subtitle": "Mild to moderate, not aggravated by walking, related to stress/screen time",
+          "nextId": "neuro_conclusion_tension_headache",
+          "isRedFlag": false
+        },
+        {
+          "text": "Facial pressure and aching behind the cheeks, forehead, and bridge of nose",
+          "subtitle": "Worse when bending forward; nasal congestion or discolored mucus",
+          "nextId": "neuro_conclusion_sinus_headache",
+          "isRedFlag": false
+        }
+      ],
+      "isConclusion": false
+    },
+    "neuro_dizziness_path": {
+      "id": "neuro_dizziness_path",
+      "category": "NEUROLOGICAL",
+      "question": "How does the dizziness feel, and what specifically triggers it?",
+      "explanation": "Differentiating true rotational vertigo (vestibular) from presyncope (cardiovascular/orthostatic) and disequilibrium.",
+      "isEmergencyCheck": false,
+      "options": [
+        {
+          "text": "Brief spinning sensation (< 1 minute) triggered by rolling over in bed or tilting head back",
+          "subtitle": "Room tilts/spins intensely for seconds, then calms down while still",
+          "nextId": "neuro_conclusion_bppv_vertigo",
+          "isRedFlag": false
+        },
+        {
+          "text": "Persistent room-spinning vertigo lasting hours or days with nausea",
+          "subtitle": "Unsteadiness walking, recent ear infection or viral illness",
+          "nextId": "neuro_conclusion_vestibular_neuritis",
+          "isRedFlag": false
+        },
+        {
+          "text": "Lightheaded 'blacking out' feeling specifically when standing up rapidly",
+          "subtitle": "Tunnel vision for a few seconds after rising from bed or couch",
+          "nextId": "neuro_conclusion_orthostatic_hypotension",
+          "isRedFlag": false
+        }
+      ],
+      "isConclusion": false
+    },
+    "neuro_conclusion_migraine": {
+      "id": "neuro_conclusion_migraine",
+      "category": "NEUROLOGICAL",
+      "question": "Evaluation: Migraine Headache (with or without Aura)",
+      "explanation": "MedDialog clinical pattern: unilateral pulsatile pain with photophobia, phonophobia, or sensory aura.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "ROUTINE_DOCTOR",
+        "likelyConditions": ["Migraine without Aura", "Migraine with Typical Aura", "Chronic Migraine"],
+        "clinicalAdvice": "Your presentation aligns with migraine criteria. While distressing, typical migraines are manageable with targeted acute abortive therapy (triptans, NSAIDs) and preventive strategies.",
+        "homeCareInstructions": [
+          "Rest in a completely dark, cool, and quiet room",
+          "Apply a cold gel pack or damp compress to your forehead or the back of your neck",
+          "Take an abortive medication (e.g. ibuprofen, naproxen, or prescribed triptan) as early as possible during onset",
+          "Maintain regular sleep schedules and stay well-hydrated"
+        ],
+        "whenToSeekImmediateHelp": "Seek urgent care if this is the first migraine you have ever experienced over age 50, if it worsens continuously for >72 hours (status migrainosus), or if new persistent numbness develops."
+      }
+    },
+    "neuro_conclusion_tension_headache": {
+      "id": "neuro_conclusion_tension_headache",
+      "category": "NEUROLOGICAL",
+      "question": "Evaluation: Tension-Type Headache (TTH)",
+      "explanation": "The most prevalent primary headache disorder, caused by pericranial myofascial strain and stress.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "SELF_CARE",
+        "likelyConditions": ["Episodic Tension-Type Headache", "Cervicogenic Strain", "Computer Vision / Postural Strain"],
+        "clinicalAdvice": "Tension headaches feature bilateral tightening discomfort without nausea. They respond well to stress management, postural correction, and simple analgesia.",
+        "homeCareInstructions": [
+          "Take regular screen breaks (the 20-20-20 rule: every 20 minutes look 20 feet away for 20 seconds)",
+          "Perform gentle neck and shoulder stretching exercises",
+          "Apply a warm heating pad to tight shoulder and trapezius muscles",
+          "Over-the-counter paracetamol or ibuprofen as needed (limit to under 10-15 days per month to prevent medication-overuse headache)"
+        ],
+        "whenToSeekImmediateHelp": "Consult a physician if headaches become daily or progressively increase in intensity over weeks."
+      }
+    },
+    "neuro_conclusion_sinus_headache": {
+      "id": "neuro_conclusion_sinus_headache",
+      "category": "NEUROLOGICAL",
+      "question": "Evaluation: Rhinosinusitis / Sinus Pressure Headache",
+      "explanation": "Mucosal swelling and impaired ostiomeatal drainage causing pressure over the maxillary, frontal, or ethmoid sinuses.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "SELF_CARE",
+        "likelyConditions": ["Acute Rhinosinusitis", "Allergic Sinusitis", "Eustachian Tube Dysfunction"],
+        "clinicalAdvice": "Your facial pressure and postural aggravation correlate with sinus ostium congestion. Most cases are viral or allergic and resolve with conservative drainage support.",
+        "homeCareInstructions": [
+          "Use isotonic saline nasal sprays or saline sinus rinses 2-3 times daily",
+          "Inhale warm steam with a towel over your head for 10 minutes",
+          "Stay hydrated to thin sinonasal mucus secretions",
+          "Consider a short 3-5 day course of nasal decongestant or oral antihistamine"
+        ],
+        "whenToSeekImmediateHelp": "Seek immediate doctor evaluation if you develop swelling or redness around the eyes (periorbital cellulitis), double vision, or a high persistent fever."
+      }
+    },
+    "neuro_conclusion_bppv_vertigo": {
+      "id": "neuro_conclusion_bppv_vertigo",
+      "category": "NEUROLOGICAL",
+      "question": "Evaluation: Benign Paroxysmal Positional Vertigo (BPPV)",
+      "explanation": "Displaced calcium carbonate crystals (otoconia) in the posterior semicircular canal of the inner ear.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "ROUTINE_DOCTOR",
+        "likelyConditions": ["Benign Paroxysmal Positional Vertigo (BPPV)", "Cervicogenic Dizziness", "Inner Ear Canalithiasis"],
+        "clinicalAdvice": "Brief spinning provoked exclusively by head movement changes (turning in bed, looking upward) is classic for BPPV. This condition does not respond to pills but is highly treatable with physical repositioning maneuvers.",
+        "homeCareInstructions": [
+          "Move smoothly and avoid rapid head tilting or jerking motions",
+          "Sleep with your head slightly elevated on two pillows",
+          "Ask a doctor or physical therapist to perform the Epley Maneuver to reposition the ear crystals",
+          "Avoid driving while experiencing active spinning episodes"
+        ],
+        "whenToSeekImmediateHelp": "Seek immediate medical attention if vertigo is accompanied by hearing loss, double vision, weakness in any limb, or inability to walk."
+      }
+    },
+    "neuro_conclusion_vestibular_neuritis": {
+      "id": "neuro_conclusion_vestibular_neuritis",
+      "category": "NEUROLOGICAL",
+      "question": "Evaluation: Acute Vestibular Neuritis / Labyrinthitis",
+      "explanation": "Post-viral inflammation of the vestibulocochlear nerve (CN VIII) resulting in prolonged unilateral vestibular asymmetry.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "URGENT_CARE",
+        "likelyConditions": ["Acute Vestibular Neuritis", "Labyrinthitis (if accompanied by hearing changes)", "Vestibular Migraine"],
+        "clinicalAdvice": "Constant room-spinning vertigo lasting hours to days requires a clinical exam (including HINTS exam) to rule out cerebellar stroke and provide vestibular sedative medication.",
+        "homeCareInstructions": [
+          "Rest comfortably in bed in a position where spinning feels minimized",
+          "Focus your eyes on a fixed, non-moving target across the room",
+          "Take small sips of water to prevent dehydration from vomiting",
+          "Consult an urgent care physician for vestibular suppressant therapy (e.g. Meclizine/Ondansetron)"
+        ],
+        "whenToSeekImmediateHelp": "Go immediately to emergency if you cannot stand unsupported, have severe headache, or notice speech slurring."
+      }
+    },
+    "neuro_conclusion_orthostatic_hypotension": {
+      "id": "neuro_conclusion_orthostatic_hypotension",
+      "category": "NEUROLOGICAL",
+      "question": "Evaluation: Postural / Orthostatic Hypotension",
+      "explanation": "Transient drop in systolic blood pressure (>20 mmHg) upon standing, causing temporary cerebral hypoperfusion.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "SELF_CARE",
+        "likelyConditions": ["Orthostatic Hypotension", "Mild Volume Depletion / Dehydration", "Medication-Induced Hypotension"],
+        "clinicalAdvice": "Brief lightheadedness when rising from seated or reclining positions is common, especially with dehydration, warm weather, or blood pressure medications.",
+        "homeCareInstructions": [
+          "Rise slowly in stages: sit on the edge of the bed for 30 seconds before standing up",
+          "Flex your calf muscles and pump your ankles before standing to promote venous return",
+          "Increase daily fluid and electrolyte intake (unless restricted for heart or kidney reasons)",
+          "Review your blood pressure prescriptions with your prescribing doctor"
+        ],
+        "whenToSeekImmediateHelp": "Seek medical review if you lose consciousness (syncope), injure yourself during an episode, or have chest palpitations."
+      }
+    },
+    "derm_chief_complaint": {
+      "id": "derm_chief_complaint",
+      "category": "DERMATOLOGICAL",
+      "question": "What is the primary skin symptom, and how rapidly did it appear?",
+      "explanation": "Dermatologic assessment separates acute allergic anaphylaxis and life-threatening dermatoses from common contact allergies and rashes.",
+      "isEmergencyCheck": false,
+      "options": [
+        {
+          "text": "Sudden Widespread Hives with Lip/Tongue Swelling or Breathing Trouble",
+          "subtitle": "Face/throat swelling, tight chest, feeling faint (Anaphylaxis)",
+          "nextId": "derm_emergency_anaphylaxis",
+          "isRedFlag": true
+        },
+        {
+          "text": "Extremely Painful Blistering Rash Banded on One Side of Body/Face",
+          "subtitle": "Follows a single nerve strip (dermatome); burning, tingling nerve pain",
+          "nextId": "derm_conclusion_shingles",
+          "isRedFlag": false
+        },
+        {
+          "text": "Red, Itchy, Raised Wheals or Patches (Hives / Contact Allergy)",
+          "subtitle": "Appeared after contact with new soap, poison ivy, plant, or jewelry",
+          "nextId": "derm_conclusion_contact_dermatitis",
+          "isRedFlag": false
+        },
+        {
+          "text": "Dry, Flaky, Scaly Patches on Creases of Arms, Legs, or Hands",
+          "subtitle": "Chronic itching, sensitive skin flare-ups",
+          "nextId": "derm_conclusion_eczema_atopic",
+          "isRedFlag": false
+        }
+      ],
+      "isConclusion": false
+    },
+    "derm_emergency_anaphylaxis": {
+      "id": "derm_emergency_anaphylaxis",
+      "category": "DERMATOLOGICAL",
+      "question": "Critical Red-Flag: Acute Anaphylaxis / Angioedema Alert",
+      "explanation": "Rapidly developing urticaria accompanied by respiratory or hemodynamic symptoms represents systemic anaphylaxis.",
+      "isEmergencyCheck": true,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "EMERGENCY",
+        "likelyConditions": ["Severe Systemic Anaphylaxis", "Acute Angioedema", "Drug / Food Allergenic Reaction"],
+        "clinicalAdvice": "Swelling of the lips, tongue, or airway accompanied by hives is a critical life-threatening medical emergency requiring immediate intramuscular epinephrine.",
+        "homeCareInstructions": [
+          "If an Epinephrine auto-injector (EpiPen) is available, inject into the outer mid-thigh immediately",
+          "Lie down with legs elevated unless breathing is easier sitting up",
+          "Do not stand up or walk around"
+        ],
+        "whenToSeekImmediateHelp": "Call 911 / 112 immediately. State clearly: 'Patient experiencing severe allergic anaphylaxis with facial swelling.'"
+      }
+    },
+    "derm_conclusion_shingles": {
+      "id": "derm_conclusion_shingles",
+      "category": "DERMATOLOGICAL",
+      "question": "Evaluation: Suspected Herpes Zoster (Shingles)",
+      "explanation": "Reactivation of latent varicella-zoster virus causing vesicular eruption confined to a dermatomal distribution.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "URGENT_CARE",
+        "likelyConditions": ["Herpes Zoster (Shingles)", "Post-Herpetic Neuralgia Risk", "Contact Dermatitis"],
+        "clinicalAdvice": "A painful unilateral blistering rash following a dermatome is characteristic of shingles. Antiviral medications (Valacyclovir, Acyclovir) are most effective when initiated within 72 hours of rash onset to reduce pain duration and nerve damage.",
+        "homeCareInstructions": [
+          "Keep the rash clean and covered with a sterile non-stick bandage to avoid spreading virus to non-immune individuals",
+          "Apply cool, wet compresses to soothe burning skin",
+          "Avoid touching or scratching blisters",
+          "Wash hands frequently with warm water and soap"
+        ],
+        "whenToSeekImmediateHelp": "Seek immediate emergency evaluation if blisters appear near your eye or the tip of your nose (Herpes Zoster Ophthalmicus can threaten vision)."
+      }
+    },
+    "derm_conclusion_contact_dermatitis": {
+      "id": "derm_conclusion_contact_dermatitis",
+      "category": "DERMATOLOGICAL",
+      "question": "Evaluation: Allergic or Irritant Contact Dermatitis",
+      "explanation": "Type IV delayed hypersensitivity or direct chemical epidermal disruption from environmental contactants.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "SELF_CARE",
+        "likelyConditions": ["Allergic Contact Dermatitis (Poison Ivy / Nickel / Fragrances)", "Irritant Contact Dermatitis", "Acute Urticaria"],
+        "clinicalAdvice": "Localized itchy red patches or small blisters following contact with chemicals, plants, cosmetics, or metals usually improve once the offending agent is eliminated.",
+        "homeCareInstructions": [
+          "Wash the affected skin thoroughly with mild soap and lukewarm water to remove residual allergen",
+          "Apply over-the-counter 1% Hydrocortisone cream twice daily for up to 7 days",
+          "Take an oral non-sedating antihistamine (cetirizine or loratadine) to alleviate itching",
+          "Apply calamine lotion or cool oatmeal compress to reduce inflammation"
+        ],
+        "whenToSeekImmediateHelp": "Seek medical review if the rash covers more than 25% of your body, becomes warm/tender with pus (secondary bacterial impetigo), or involves the face."
+      }
+    },
+    "derm_conclusion_eczema_atopic": {
+      "id": "derm_conclusion_eczema_atopic",
+      "category": "DERMATOLOGICAL",
+      "question": "Evaluation: Atopic Dermatitis (Eczema Flare)",
+      "explanation": "Skin barrier dysfunction with immune dysregulation presenting with pruritic, lichenified, or xerotic lesions in flexural folds.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "SELF_CARE",
+        "likelyConditions": ["Atopic Dermatitis (Eczema)", "Xerosis Cutis (Dry Skin)", "Seborrheic Dermatitis"],
+        "clinicalAdvice": "Chronic itchy flaking patches in skin creases represent eczema. The primary clinical goals are barrier repair, hydration, and anti-inflammatory control.",
+        "homeCareInstructions": [
+          "Take short, lukewarm showers (5-10 minutes) instead of hot baths",
+          "Apply a thick ceramide-rich ointment or moisturizing cream within 3 minutes of bathing ('soak and seal')",
+          "Avoid synthetic fragrances, scented laundry detergents, and wool fabrics",
+          "Use a short course of mild topical steroid on inflamed red areas as advised by a doctor"
+        ],
+        "whenToSeekImmediateHelp": "Consult a doctor if the skin develops honey-colored crusting, bleeding cracks, or intense spreading redness."
+      }
+    },
+    "fever_chief_complaint": {
+      "id": "fever_chief_complaint",
+      "category": "FEVER",
+      "question": "What is your measured body temperature and what critical warning signs are present?",
+      "explanation": "Pyrexia evaluation screens for septic syndrome, central nervous system involvement, and hemodynamic compromise.",
+      "isEmergencyCheck": false,
+      "options": [
+        {
+          "text": "High Fever with Stiff Neck, Confusion, Lethargy, or Non-Blanching Dark Rash",
+          "subtitle": "Cannot touch chin to chest, altered mental status, purple spots",
+          "nextId": "fever_emergency_sepsis",
+          "isRedFlag": true
+        },
+        {
+          "text": "Temperature > 39.5°C (103.1°F) Unresponsive to Antipyretics",
+          "subtitle": "Shivering violently, severe exhaustion",
+          "nextId": "fever_high_temp_path",
+          "isRedFlag": false
+        },
+        {
+          "text": "Mild to Moderate Fever (37.8°C - 38.8°C / 100°F - 102°F) for 1-3 Days",
+          "subtitle": "Generalized muscle aches, mild headache, fatigue",
+          "nextId": "fever_conclusion_viral_pyrexia",
+          "isRedFlag": false
+        },
+        {
+          "text": "Prolonged Low-Grade Fever Lasting Over 10 Days",
+          "subtitle": "Night sweats, unexplained weight loss, persistent exhaustion",
+          "nextId": "fever_conclusion_fuo_prolonged",
+          "isRedFlag": false
+        }
+      ],
+      "isConclusion": false
+    },
+    "fever_emergency_sepsis": {
+      "id": "fever_emergency_sepsis",
+      "category": "FEVER",
+      "question": "Critical Red-Flag: Suspected Meningitis / Sepsis Syndrome",
+      "explanation": "High fever with altered mental status, neck stiffness, or petechial purpura is a life-threatening medical emergency requiring immediate IV antibiotics and intensive resuscitation.",
+      "isEmergencyCheck": true,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "EMERGENCY",
+        "likelyConditions": ["Acute Bacterial Meningitis", "Septicemia / Sepsis", "Severe Systemic Infection"],
+        "clinicalAdvice": "Your reported fever accompanied by altered responsiveness, stiff neck, or petechial rash is a critical medical emergency. Immediate hospital admission is required.",
+        "homeCareInstructions": [
+          "Do not delay seeking care to give home remedies",
+          "Have someone call an ambulance immediately",
+          "Keep the patient comfortable and monitor breathing"
+        ],
+        "whenToSeekImmediateHelp": "Call 911 / 112 immediately. State: 'Patient has high fever, neck stiffness, and altered mental status.'"
+      }
+    },
+    "fever_high_temp_path": {
+      "id": "fever_high_temp_path",
+      "category": "FEVER",
+      "question": "Do you have localizing symptoms such as burning urination or severe flank pain?",
+      "explanation": "Doctors look for occult urinary tract pyelonephritis or intra-abdominal source when fever is high.",
+      "isEmergencyCheck": false,
+      "options": [
+        {
+          "text": "Yes, painful burning urination, cloudy urine, or severe back/flank pain",
+          "subtitle": "Nausea, rigors, tenderness over kidney area",
+          "nextId": "fever_conclusion_pyelonephritis",
+          "isRedFlag": false
+        },
+        {
+          "text": "No urinary symptoms, primarily full-body aches and chills",
+          "subtitle": "Influenza-like illness, heavy headache, joint aching",
+          "nextId": "fever_conclusion_influenza_syndrome",
+          "isRedFlag": false
+        }
+      ],
+      "isConclusion": false
+    },
+    "fever_conclusion_pyelonephritis": {
+      "id": "fever_conclusion_pyelonephritis",
+      "category": "FEVER",
+      "question": "Evaluation: Suspected Acute Pyelonephritis (Upper Urinary Tract Infection)",
+      "explanation": "Ascending bacterial infection from bladder into renal pelvis causing systemic fever and costovertebral angle tenderness.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "URGENT_CARE",
+        "likelyConditions": ["Acute Pyelonephritis", "Complicated Urinary Tract Infection", "Renal Abscess"],
+        "clinicalAdvice": "High fever with dysuria or flank pain indicates the infection has reached the kidneys. This requires urgent medical evaluation, urinalysis, urine culture, and targeted oral or IV antibiotics.",
+        "homeCareInstructions": [
+          "Drink plenty of water to flush the urinary tract",
+          "Do not postpone seeing a healthcare provider within 12-24 hours",
+          "Take paracetamol for fever reduction; avoid high-dose NSAIDs which stress renal perfusion"
+        ],
+        "whenToSeekImmediateHelp": "Go immediately to the ER if you cannot keep fluids down, experience confusion, or severe uncontrollable shaking chills."
+      }
+    },
+    "fever_conclusion_influenza_syndrome": {
+      "id": "fever_conclusion_influenza_syndrome",
+      "category": "FEVER",
+      "question": "Evaluation: Acute Influenza / Viral Syndrome",
+      "explanation": "Systemic viral cytokine cascade causing abrupt fever, diffuse myalgias, arthralgias, and exhaustion.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "SELF_CARE",
+        "likelyConditions": ["Influenza (Flu)", "COVID-19 / Acute Respiratory Virus", "Viral Pyrexia"],
+        "clinicalAdvice": "Classic flu presentation involves sudden fever with severe muscle aches and fatigue. Most healthy individuals recover with supportive care within 5 to 7 days.",
+        "homeCareInstructions": [
+          "Strict bed rest to allow your immune system to fight the infection",
+          "Hydrate aggressively with warm teas, broths, and electrolyte fluids",
+          "Use acetaminophen or ibuprofen in recommended doses to reduce fever and body aches",
+          "If within 48 hours of symptom onset and in a high-risk group (elderly, asthma, diabetes), contact a physician about prescription antiviral therapy (e.g. Oseltamivir)"
+        ],
+        "whenToSeekImmediateHelp": "Seek urgent medical attention if you develop chest pain, difficulty breathing, or if fever breaks and then returns higher days later."
+      }
+    },
+    "fever_conclusion_viral_pyrexia": {
+      "id": "fever_conclusion_viral_pyrexia",
+      "category": "FEVER",
+      "question": "Evaluation: Mild Uncomplicated Viral Pyrexia",
+      "explanation": "Physiological fever response to viral antigen presentation without focal alarm signs.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "SELF_CARE",
+        "likelyConditions": ["Uncomplicated Viral Infection", "Viral Syndrome", "Early Common Cold / URI"],
+        "clinicalAdvice": "Fever is the body's natural defense mechanism to inhibit viral replication. In the absence of red-flag symptoms, conservative management at home is safe and effective.",
+        "homeCareInstructions": [
+          "Wear light, breathable cotton clothing and avoid bundling in heavy blankets which traps body heat",
+          "Drink cool or room-temperature liquids regularly",
+          "Take an antipyretic (paracetamol/acetaminophen) if fever causes significant discomfort",
+          "Rest adequately and monitor body temperature twice a day"
+        ],
+        "whenToSeekImmediateHelp": "Seek medical review if the fever persists beyond 3 to 4 days or if localizing symptoms (cough, severe headache, rash) emerge."
+      }
+    },
+    "fever_conclusion_fuo_prolonged": {
+      "id": "fever_conclusion_fuo_prolonged",
+      "category": "FEVER",
+      "question": "Evaluation: Prolonged Fever / Fever of Unknown Origin (FUO)",
+      "explanation": "Fever persisting greater than 10-14 days without an obvious self-limiting viral trajectory requires systematic medical investigation.",
+      "isEmergencyCheck": false,
+      "options": [],
+      "isConclusion": true,
+      "conclusion": {
+        "urgencyLevel": "ROUTINE_DOCTOR",
+        "likelyConditions": ["Fever of Unknown Origin (FUO)", "Subacute Bacterial / Viral Infection (EBV, CMV)", "Autoimmune / Inflammatory Condition"],
+        "clinicalAdvice": "A fever lasting more than 10 days is beyond the normal window for typical uncomplicated viral illnesses. You should consult a physician for laboratory testing (complete blood count, inflammatory markers ESR/CRP, blood cultures).",
+        "homeCareInstructions": [
+          "Keep a written log of daily morning and evening temperatures",
+          "Record any other signs: night sweats, joint pains, skin changes, or weight changes",
+          "Bring this log and your symptom summary to your doctor's appointment"
+        ],
+        "whenToSeekImmediateHelp": "Seek immediate evaluation if you develop severe lethargy, shortness of breath, or sudden petechial skin spots."
+      }
+    }
+  }
+}

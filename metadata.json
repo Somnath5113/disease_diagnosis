@@ -1,0 +1,6 @@
+{
+  "name": "MedTriage",
+  "description": "Offline clinical intake and symptom triage app powered by MedDialog diagnostic decision trees.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
