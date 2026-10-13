@@ -306,9 +306,8 @@ fun ConclusionScreen(
 
         // Supportive Care Instructions
         if (conclusion.homeCareInstructions.isNotEmpty()) {
-            val selfCareColors = getUrgencyThemeColors(UrgencyLevel.SELF_CARE)
-
             item {
+                val selfCareColors = getUrgencyThemeColors(UrgencyLevel.SELF_CARE)
                 Card(
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     shape = RoundedCornerShape(20.dp),
