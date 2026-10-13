@@ -29,8 +29,8 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      # The ubuntu-latest image ships with the Android SDK and accepted licenses;
+      # AGP downloads any missing platform/build-tools on demand.
 
       # gradle/wrapper/gradle-wrapper.jar and gradlew are not committed, so install
       # the Gradle version the project expects (see gradle-wrapper.properties).
