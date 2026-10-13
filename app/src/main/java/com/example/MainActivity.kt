@@ -7,15 +7,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.MedicalServices
@@ -25,10 +24,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,6 +36,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.ui.screens.ConclusionScreen
 import com.example.ui.screens.ConsultationScreen
@@ -60,9 +61,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             MedTriageTheme {
                 Surface(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .windowInsetsPadding(WindowInsets.safeDrawing),
+                    modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     MedTriageApp(viewModel = triageViewModel)
@@ -108,7 +107,7 @@ fun MedTriageApp(viewModel: TriageViewModel) {
                 onShareSummary = {
                     val summaryText = viewModel.buildSummaryText(
                         categoryName = consultationState.category!!.name,
-                        chiefComplaint = consultationState.stepHistory.firstOrNull()?.selectedOption?.text ?: "Unspecified symptom",
+                        chiefComplaint = consultationState.category!!.name,
                         conclusion = consultationState.conclusion!!,
                         stepHistory = consultationState.stepHistory
                     )
@@ -116,7 +115,7 @@ fun MedTriageApp(viewModel: TriageViewModel) {
                 }
             )
         } else {
-            // Interactive Multi-turn Consultation
+            // Interactive Multi-turn Consultation Flow
             ConsultationScreen(
                 state = consultationState,
                 onOptionSelected = { option ->
@@ -142,7 +141,7 @@ fun MedTriageApp(viewModel: TriageViewModel) {
             bottomBar = {
                 NavigationBar(
                     containerColor = MaterialTheme.colorScheme.surface,
-                    tonalElevation = 8.dp,
+                    tonalElevation = 3.dp,
                     modifier = Modifier.testTag("main_bottom_nav_bar")
                 ) {
                     NavigationBarItem(
@@ -151,10 +150,22 @@ fun MedTriageApp(viewModel: TriageViewModel) {
                         icon = {
                             Icon(
                                 imageVector = if (selectedTab == MainTab.INTAKE) Icons.Filled.MedicalServices else Icons.Outlined.MedicalServices,
-                                contentDescription = "Intake"
+                                contentDescription = "Clinical Intake"
                             )
                         },
-                        label = { Text("Clinical Intake") },
+                        label = {
+                            Text(
+                                "Clinical Intake",
+                                fontWeight = if (selectedTab == MainTab.INTAKE) FontWeight.Bold else FontWeight.Medium
+                            )
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                            indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
                         modifier = Modifier.testTag("nav_item_intake")
                     )
 
@@ -167,7 +178,19 @@ fun MedTriageApp(viewModel: TriageViewModel) {
                                 contentDescription = "History"
                             )
                         },
-                        label = { Text("History") },
+                        label = {
+                            Text(
+                                "History",
+                                fontWeight = if (selectedTab == MainTab.HISTORY) FontWeight.Bold else FontWeight.Medium
+                            )
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                            indicatorColor = MaterialTheme.colorScheme.primaryContainer,
+                            unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                            unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        ),
                         modifier = Modifier.testTag("nav_item_history")
                     )
                 }
@@ -175,7 +198,15 @@ fun MedTriageApp(viewModel: TriageViewModel) {
         ) { innerPadding ->
             AnimatedContent(
                 targetState = selectedTab,
-                transitionSpec = { fadeIn() togetherWith fadeOut() },
+                transitionSpec = {
+                    if (targetState == MainTab.HISTORY) {
+                        (slideInHorizontally(tween(250)) { it / 4 } + fadeIn(tween(200)))
+                            .togetherWith(slideOutHorizontally(tween(250)) { -it / 4 } + fadeOut(tween(180)))
+                    } else {
+                        (slideInHorizontally(tween(250)) { -it / 4 } + fadeIn(tween(200)))
+                            .togetherWith(slideOutHorizontally(tween(250)) { it / 4 } + fadeOut(tween(180)))
+                    }
+                },
                 label = "tab_transition",
                 modifier = Modifier.padding(innerPadding)
             ) { tab ->

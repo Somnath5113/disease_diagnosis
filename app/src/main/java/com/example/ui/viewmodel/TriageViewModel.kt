@@ -180,7 +180,8 @@ class TriageViewModel(application: Application) : AndroidViewModel(application) 
     private fun autoSaveRecord(history: List<ConsultationStep>, conclusion: TriageConclusion) {
         viewModelScope.launch {
             val category = _consultationState.value.category?.name ?: "General Intake"
-            val chiefComplaint = history.firstOrNull()?.selectedOption?.text ?: "Unspecified symptom"
+            // The first node is the emergency screen, so its answer ("None of these") is not the complaint.
+            val chiefComplaint = _consultationState.value.category?.name ?: "Unspecified symptom"
 
             val transcript = history.map { step ->
                 ConsultationTranscriptItem(

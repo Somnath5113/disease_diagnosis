@@ -30,21 +30,37 @@ class ExampleRobolectricTest {
         val treeData = repository.getTreeData()
 
         assertNotNull(treeData)
-        assertTrue(treeData.categories.isNotEmpty())
-        assertEquals(5, treeData.categories.size)
-
-        // Verify all 5 core clinical systems are mapped
+        // Categories are the chief complaints that were frequent enough in MedDialog.
+        assertTrue(treeData.categories.size >= 15)
         val categoryIds = treeData.categories.map { it.id }.toSet()
-        assertTrue(categoryIds.contains("RESPIRATORY"))
-        assertTrue(categoryIds.contains("GASTROINTESTINAL"))
-        assertTrue(categoryIds.contains("NEUROLOGICAL"))
-        assertTrue(categoryIds.contains("DERMATOLOGICAL"))
-        assertTrue(categoryIds.contains("FEVER"))
+        assertEquals("Category ids must be unique", treeData.categories.size, categoryIds.size)
+        // Safety-critical complaints must always be covered.
+        for (id in listOf("CHESTPAIN", "BREATHLESS", "HEADACHE", "ABDPAIN", "COUGH", "FEVER")) {
+            assertTrue("Missing category $id", categoryIds.contains(id))
+        }
+        assertTrue(treeData.categories.all { it.group.isNotBlank() && it.groupName.isNotBlank() })
 
-        // Ensure every start node exists in the node catalog
+        // Ensure every start node exists, and is an emergency screen with a red-flag option
+        // plus a way to continue.
         for (category in treeData.categories) {
             val startNode = treeData.nodes[category.startNodeId]
             assertNotNull("Start node ${category.startNodeId} for category ${category.id} must exist", startNode)
+            assertTrue("${category.id} start node must be an emergency screen", startNode!!.isEmergencyCheck)
+            assertTrue("${category.id} must have a red-flag option", startNode.options.any { it.isRedFlag })
+            assertTrue("${category.id} must let the patient continue", startNode.options.any { !it.isRedFlag })
+        }
+
+        // Every red-flag option must lead straight to an emergency/urgent conclusion.
+        for ((nodeId, node) in treeData.nodes) {
+            for (option in node.options.filter { it.isRedFlag }) {
+                val target = treeData.nodes[option.nextId]
+                assertNotNull("Red flag in $nodeId has no target", target)
+                assertTrue("Red flag target ${option.nextId} must be a conclusion", target!!.isConclusion)
+            }
+            // Condition names are joined with ", " in the history record, so they must not contain it.
+            node.conclusion?.likelyConditions?.forEach {
+                assertTrue("Condition '$it' in $nodeId contains ', '", !it.contains(", "))
+            }
         }
 
         // Validate that every referenced nextId actually points to a real node

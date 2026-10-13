@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.sp
 import com.example.data.model.CategoryItem
 import com.example.data.model.TriageConclusion
 import com.example.data.model.UrgencyLevel
-import com.example.ui.theme.*
+import com.example.ui.theme.getUrgencyThemeColors
 import com.example.ui.viewmodel.ConsultationStep
 
 @Composable
@@ -69,38 +69,24 @@ fun ConclusionScreen(
         onReturnHome()
     }
 
-    val (badgeText, badgeIcon, containerColor, deepTextColor, primaryBadgeColor, borderColor) = when (conclusion.urgencyLevel) {
-        UrgencyLevel.EMERGENCY -> Sextuple(
+    val urgencyColors = getUrgencyThemeColors(conclusion.urgencyLevel)
+
+    val (badgeText, badgeIcon) = when (conclusion.urgencyLevel) {
+        UrgencyLevel.EMERGENCY -> Pair(
             "CRITICAL EMERGENCY • CALL 911 / 112",
-            Icons.Default.Warning,
-            LightEmergencyContainer,
-            DeepEmergencyRed,
-            DeepEmergencyRed,
-            BorderEmergencyRed
+            Icons.Default.Warning
         )
-        UrgencyLevel.URGENT_CARE -> Sextuple(
+        UrgencyLevel.URGENT_CARE -> Pair(
             "URGENT CARE • SEEK CLINIC WITHIN 12-24H",
-            Icons.Default.Warning,
-            LightUrgentContainer,
-            DeepUrgentOrange,
-            DeepUrgentOrange,
-            BorderUrgentOrange
+            Icons.Default.Warning
         )
-        UrgencyLevel.ROUTINE_DOCTOR -> Sextuple(
+        UrgencyLevel.ROUTINE_DOCTOR -> Pair(
             "ROUTINE PHYSICIAN EVALUATION",
-            Icons.Default.MedicalServices,
-            LightRoutineContainer,
-            DeepRoutineBlue,
-            DeepRoutineBlue,
-            BorderRoutineBlue
+            Icons.Default.MedicalServices
         )
-        UrgencyLevel.SELF_CARE -> Sextuple(
+        UrgencyLevel.SELF_CARE -> Pair(
             "SUPPORTIVE AT-HOME MONITORING",
-            Icons.Default.CheckCircle,
-            LightSelfCareContainer,
-            DeepSelfCareGreen,
-            DeepSelfCareGreen,
-            BorderSelfCareGreen
+            Icons.Default.CheckCircle
         )
     }
 
@@ -111,12 +97,12 @@ fun ConclusionScreen(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Triage Urgency Banner Card
+        // Triage Urgency Header Banner Card
         item {
             Card(
-                colors = CardDefaults.cardColors(containerColor = containerColor),
+                colors = CardDefaults.cardColors(containerColor = urgencyColors.container),
                 shape = RoundedCornerShape(24.dp),
-                border = androidx.compose.foundation.BorderStroke(1.5.dp, borderColor),
+                border = androidx.compose.foundation.BorderStroke(1.5.dp, urgencyColors.border),
                 elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -133,7 +119,7 @@ fun ConclusionScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Surface(
-                            color = primaryBadgeColor,
+                            color = urgencyColors.primary,
                             shape = RoundedCornerShape(12.dp)
                         ) {
                             Row(
@@ -157,9 +143,9 @@ fun ConclusionScreen(
 
                         if (isSavedLocally) {
                             Surface(
-                                color = PureWhiteSurface,
+                                color = MaterialTheme.colorScheme.surface,
                                 shape = RoundedCornerShape(10.dp),
-                                border = androidx.compose.foundation.BorderStroke(1.dp, borderColor)
+                                border = androidx.compose.foundation.BorderStroke(1.dp, urgencyColors.border)
                             ) {
                                 Row(
                                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
@@ -168,14 +154,14 @@ fun ConclusionScreen(
                                     Icon(
                                         imageVector = Icons.Default.Check,
                                         contentDescription = "Saved",
-                                        tint = primaryBadgeColor,
+                                        tint = urgencyColors.primary,
                                         modifier = Modifier.size(12.dp)
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Text(
                                         text = "Saved locally",
                                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                        color = deepTextColor
+                                        color = urgencyColors.primary
                                     )
                                 }
                             }
@@ -190,13 +176,13 @@ fun ConclusionScreen(
                             fontWeight = FontWeight.Bold,
                             letterSpacing = (-0.4).sp
                         ),
-                        color = deepTextColor
+                        color = urgencyColors.primary
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = "Specialty: ${category.name} • MedDialog Clinical Pathway",
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
-                        color = deepTextColor.copy(alpha = 0.85f)
+                        color = urgencyColors.onContainer
                     )
 
                     if (conclusion.urgencyLevel == UrgencyLevel.EMERGENCY) {
@@ -207,7 +193,7 @@ fun ConclusionScreen(
                                 context.startActivity(dialIntent)
                             },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = DeepEmergencyRed,
+                                containerColor = urgencyColors.primary,
                                 contentColor = Color.White
                             ),
                             shape = RoundedCornerShape(14.dp),
@@ -229,10 +215,10 @@ fun ConclusionScreen(
         if (conclusion.likelyConditions.isNotEmpty()) {
             item {
                 Card(
-                    colors = CardDefaults.cardColors(containerColor = PureWhiteSurface),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     shape = RoundedCornerShape(20.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, CardBorderSubtle),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(
@@ -243,21 +229,24 @@ fun ConclusionScreen(
                         Text(
                             text = "Potential Clinical Matches",
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            color = DeepTextHeadlines
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = "Correlation with MedDialog clinical consultation patterns:",
                             style = MaterialTheme.typography.bodySmall,
-                            color = MutedTextSlate
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Spacer(modifier = Modifier.height(14.dp))
 
                         conclusion.likelyConditions.forEach { condition ->
                             Surface(
-                                color = SoftAquaContainer,
+                                color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.6f),
                                 shape = RoundedCornerShape(12.dp),
-                                border = androidx.compose.foundation.BorderStroke(1.dp, DeepTealPrimary.copy(alpha = 0.2f)),
+                                border = androidx.compose.foundation.BorderStroke(
+                                    1.dp,
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)
+                                ),
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(vertical = 4.dp)
@@ -269,13 +258,13 @@ fun ConclusionScreen(
                                     Box(
                                         modifier = Modifier
                                             .size(8.dp)
-                                            .background(DeepTealPrimary, CircleShape)
+                                            .background(MaterialTheme.colorScheme.primary, CircleShape)
                                     )
                                     Spacer(modifier = Modifier.width(12.dp))
                                     Text(
                                         text = condition,
                                         style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                                        color = DeepTextHeadlines
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                 }
                             }
@@ -288,10 +277,10 @@ fun ConclusionScreen(
         // Clinical Assessment & Guidance
         item {
             Card(
-                colors = CardDefaults.cardColors(containerColor = PureWhiteSurface),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 shape = RoundedCornerShape(20.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                border = androidx.compose.foundation.BorderStroke(1.dp, CardBorderSubtle),
+                border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
@@ -302,13 +291,13 @@ fun ConclusionScreen(
                     Text(
                         text = "Clinical Assessment & Guidance",
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        color = DeepTextHeadlines
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
                         text = conclusion.clinicalAdvice,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = DeepTextBody,
+                        color = MaterialTheme.colorScheme.onSurface,
                         lineHeight = 22.sp
                     )
                 }
@@ -317,12 +306,14 @@ fun ConclusionScreen(
 
         // Supportive Care Instructions
         if (conclusion.homeCareInstructions.isNotEmpty()) {
+            val selfCareColors = getUrgencyThemeColors(UrgencyLevel.SELF_CARE)
+
             item {
                 Card(
-                    colors = CardDefaults.cardColors(containerColor = PureWhiteSurface),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                     shape = RoundedCornerShape(20.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, CardBorderSubtle),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Column(
@@ -333,7 +324,7 @@ fun ConclusionScreen(
                         Text(
                             text = "Recommended Care & Symptom Relief",
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            color = DeepTextHeadlines
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(14.dp))
 
@@ -347,14 +338,14 @@ fun ConclusionScreen(
                                 Box(
                                     modifier = Modifier
                                         .size(22.dp)
-                                        .background(LightSelfCareContainer, CircleShape)
-                                        .border(1.dp, BorderSelfCareGreen, CircleShape),
+                                        .background(selfCareColors.container, CircleShape)
+                                        .border(1.dp, selfCareColors.border, CircleShape),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Check,
                                         contentDescription = "Care step",
-                                        tint = DeepSelfCareGreen,
+                                        tint = selfCareColors.primary,
                                         modifier = Modifier.size(13.dp)
                                     )
                                 }
@@ -362,7 +353,7 @@ fun ConclusionScreen(
                                 Text(
                                     text = instruction,
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = DeepTextBody,
+                                    color = MaterialTheme.colorScheme.onSurface,
                                     lineHeight = 20.sp
                                 )
                             }
@@ -374,10 +365,12 @@ fun ConclusionScreen(
 
         // Warning Thresholds Card
         item {
+            val urgentColors = getUrgencyThemeColors(UrgencyLevel.URGENT_CARE)
+
             Card(
-                colors = CardDefaults.cardColors(containerColor = LightUrgentContainer),
+                colors = CardDefaults.cardColors(containerColor = urgentColors.container),
                 shape = RoundedCornerShape(20.dp),
-                border = androidx.compose.foundation.BorderStroke(1.2.dp, BorderUrgentOrange),
+                border = androidx.compose.foundation.BorderStroke(1.2.dp, urgentColors.border),
                 elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -390,7 +383,7 @@ fun ConclusionScreen(
                     Icon(
                         imageVector = Icons.Default.Info,
                         contentDescription = "Warning thresholds",
-                        tint = DeepUrgentOrange,
+                        tint = urgentColors.primary,
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(14.dp))
@@ -398,13 +391,13 @@ fun ConclusionScreen(
                         Text(
                             text = "When to Seek Immediate Medical Evaluation",
                             style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                            color = DeepUrgentOrange
+                            color = urgentColors.primary
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                             text = conclusion.whenToSeekImmediateHelp,
                             style = MaterialTheme.typography.bodySmall,
-                            color = DeepUrgentOrange.copy(alpha = 0.95f),
+                            color = urgentColors.onContainer,
                             lineHeight = 18.sp
                         )
                     }
@@ -423,8 +416,8 @@ fun ConclusionScreen(
                 Button(
                     onClick = onShareSummary,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = DeepTealPrimary,
-                        contentColor = Color.White
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
                     ),
                     shape = RoundedCornerShape(16.dp),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.dp),
@@ -449,8 +442,8 @@ fun ConclusionScreen(
                 OutlinedButton(
                     onClick = onReturnHome,
                     shape = RoundedCornerShape(16.dp),
-                    border = androidx.compose.foundation.BorderStroke(1.5.dp, DeepTealPrimary),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = DeepTealPrimary),
+                    border = androidx.compose.foundation.BorderStroke(1.5.dp, MaterialTheme.colorScheme.primary),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(50.dp)
@@ -475,12 +468,3 @@ fun ConclusionScreen(
         }
     }
 }
-
-private data class Sextuple<A, B, C, D, E, F>(
-    val first: A,
-    val second: B,
-    val third: C,
-    val fourth: D,
-    val fifth: E,
-    val sixth: F
-)

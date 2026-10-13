@@ -64,19 +64,7 @@ import com.example.data.model.CategoryItem
 import com.example.data.model.TriageNode
 import com.example.data.model.TriageOption
 import com.example.ui.components.EmergencyDialog
-import com.example.ui.theme.BorderEmergencyRed
-import com.example.ui.theme.CardBorderSubtle
-import com.example.ui.theme.CrispCanvasBackground
-import com.example.ui.theme.DeepEmergencyRed
-import com.example.ui.theme.DeepTealPrimary
-import com.example.ui.theme.DeepTextBody
-import com.example.ui.theme.DeepTextHeadlines
-import com.example.ui.theme.LightEmergencyContainer
-import com.example.ui.theme.MutedTextSlate
-import com.example.ui.theme.OnDeepTealPrimary
-import com.example.ui.theme.OnLightEmergencyContainer
-import com.example.ui.theme.PureWhiteSurface
-import com.example.ui.theme.SoftAquaContainer
+import com.example.ui.theme.getUrgencyThemeColors
 import com.example.ui.viewmodel.ConsultationState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -99,7 +87,7 @@ fun ConsultationScreen(
     val stepCount = state.stepHistory.size + 1
 
     Scaffold(
-        containerColor = CrispCanvasBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
@@ -107,13 +95,13 @@ fun ConsultationScreen(
                         Text(
                             text = category.name,
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                            color = DeepTextHeadlines,
+                            color = MaterialTheme.colorScheme.onSurface,
                             maxLines = 1
                         )
                         Text(
                             text = "Question $stepCount • Clinical Decision Tree",
                             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
-                            color = DeepTealPrimary
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
                 },
@@ -125,7 +113,7 @@ fun ConsultationScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Previous Question",
-                            tint = DeepTextHeadlines
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 },
@@ -137,12 +125,12 @@ fun ConsultationScreen(
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Exit Intake",
-                            tint = MutedTextSlate
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PureWhiteSurface
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             )
         },
@@ -153,7 +141,7 @@ fun ConsultationScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // Smooth Deep Teal Progress Bar
+            // Smooth Precision Progress Bar
             val targetProgress = (stepCount / 6f).coerceIn(0.15f, 0.95f)
             val animatedProgress by animateFloatAsState(
                 targetValue = targetProgress,
@@ -167,8 +155,8 @@ fun ConsultationScreen(
                     .fillMaxWidth()
                     .height(4.dp)
                     .testTag("consultation_progress_bar"),
-                color = DeepTealPrimary,
-                trackColor = SoftAquaContainer
+                color = MaterialTheme.colorScheme.primary,
+                trackColor = MaterialTheme.colorScheme.primaryContainer
             )
 
             if (currentNode != null) {
@@ -218,13 +206,13 @@ private fun CrispQuestionContent(
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Pure White Question Card with Deep Teal Badge
+        // Elevated Question Card with Clinical Query Badge
         item {
             Card(
-                colors = CardDefaults.cardColors(containerColor = PureWhiteSurface),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 shape = RoundedCornerShape(22.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
-                border = androidx.compose.foundation.BorderStroke(1.dp, CardBorderSubtle),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                 modifier = Modifier
                     .fillMaxWidth()
                     .testTag("question_card")
@@ -232,7 +220,7 @@ private fun CrispQuestionContent(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(22.dp)
+                        .padding(20.dp)
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -242,33 +230,33 @@ private fun CrispQuestionContent(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Box(
                                 modifier = Modifier
-                                    .size(38.dp)
-                                    .background(SoftAquaContainer, CircleShape),
+                                    .size(36.dp)
+                                    .background(MaterialTheme.colorScheme.primaryContainer, CircleShape),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.MedicalServices,
-                                    contentDescription = "Doctor",
-                                    tint = DeepTealPrimary,
-                                    modifier = Modifier.size(20.dp)
+                                    contentDescription = "Doctor Query",
+                                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    modifier = Modifier.size(19.dp)
                                 )
                             }
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
-                                text = "Physician Consultation Query",
+                                text = "Clinical Intake Query",
                                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                                color = DeepTealPrimary
+                                color = MaterialTheme.colorScheme.primary
                             )
                         }
 
                         Surface(
-                            color = SoftAquaContainer,
+                            color = MaterialTheme.colorScheme.primaryContainer,
                             shape = RoundedCornerShape(8.dp)
                         ) {
                             Text(
                                 text = "Q$stepCount",
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                color = DeepTealPrimary,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 modifier = Modifier.padding(horizontal = 9.dp, vertical = 4.dp)
                             )
                         }
@@ -283,16 +271,19 @@ private fun CrispQuestionContent(
                             fontSize = 20.sp,
                             lineHeight = 28.sp
                         ),
-                        color = DeepTextHeadlines,
+                        color = MaterialTheme.colorScheme.onSurface,
                         modifier = Modifier.testTag("question_text")
                     )
 
                     if (!node.explanation.isNullOrBlank()) {
                         Spacer(modifier = Modifier.height(16.dp))
                         Surface(
-                            color = SoftAquaContainer.copy(alpha = 0.6f),
+                            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
                             shape = RoundedCornerShape(14.dp),
-                            border = androidx.compose.foundation.BorderStroke(1.dp, DeepTealPrimary.copy(alpha = 0.2f)),
+                            border = androidx.compose.foundation.BorderStroke(
+                                1.dp,
+                                MaterialTheme.colorScheme.outline.copy(alpha = 0.6f)
+                            ),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .clip(RoundedCornerShape(14.dp))
@@ -308,20 +299,20 @@ private fun CrispQuestionContent(
                                         Icon(
                                             imageVector = Icons.Default.HelpOutline,
                                             contentDescription = "Rationale",
-                                            tint = DeepTealPrimary,
+                                            tint = MaterialTheme.colorScheme.primary,
                                             modifier = Modifier.size(16.dp)
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
                                         Text(
                                             text = "Clinical Rationale",
                                             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                                            color = DeepTealPrimary
+                                            color = MaterialTheme.colorScheme.primary
                                         )
                                     }
                                     Text(
                                         text = if (isExplanationExpanded) "Hide" else "Learn more",
                                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
-                                        color = DeepTealPrimary
+                                        color = MaterialTheme.colorScheme.primary
                                     )
                                 }
 
@@ -330,7 +321,7 @@ private fun CrispQuestionContent(
                                     Text(
                                         text = node.explanation,
                                         style = MaterialTheme.typography.bodySmall,
-                                        color = DeepTextBody,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                                         lineHeight = 18.sp
                                     )
                                 }
@@ -344,13 +335,13 @@ private fun CrispQuestionContent(
         // Section Prompt
         item {
             Text(
-                text = "Select the answer that best fits your symptom:",
+                text = "Select the option that best describes your symptom:",
                 style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
-                color = DeepTextHeadlines
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
 
-        // Response Option Cards with Deep Indicators
+        // Response Option Cards
         items(node.options, key = { it.text }) { option ->
             CrispOptionCard(
                 option = option,
@@ -369,16 +360,18 @@ fun CrispOptionCard(
     option: TriageOption,
     onSelect: () -> Unit
 ) {
+    val emergencyColors = getUrgencyThemeColors("EMERGENCY")
+
     val borderColor = if (option.isRedFlag) {
-        BorderEmergencyRed
+        emergencyColors.border
     } else {
-        CardBorderSubtle
+        MaterialTheme.colorScheme.outline
     }
 
     val backgroundColor = if (option.isRedFlag) {
-        LightEmergencyContainer.copy(alpha = 0.5f)
+        emergencyColors.container.copy(alpha = 0.55f)
     } else {
-        PureWhiteSurface
+        MaterialTheme.colorScheme.surface
     }
 
     Card(
@@ -404,7 +397,7 @@ fun CrispOptionCard(
                     .size(20.dp)
                     .border(
                         width = 2.5.dp,
-                        color = if (option.isRedFlag) DeepEmergencyRed else DeepTealPrimary,
+                        color = if (option.isRedFlag) emergencyColors.primary else MaterialTheme.colorScheme.primary,
                         shape = CircleShape
                     )
             )
@@ -418,7 +411,7 @@ fun CrispOptionCard(
                         fontWeight = FontWeight.Bold,
                         lineHeight = 22.sp
                     ),
-                    color = if (option.isRedFlag) DeepEmergencyRed else DeepTextHeadlines
+                    color = if (option.isRedFlag) emergencyColors.primary else MaterialTheme.colorScheme.onSurface
                 )
 
                 if (!option.subtitle.isNullOrBlank()) {
@@ -426,7 +419,7 @@ fun CrispOptionCard(
                     Text(
                         text = option.subtitle,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MutedTextSlate,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         lineHeight = 18.sp
                     )
                 }
@@ -434,25 +427,25 @@ fun CrispOptionCard(
                 if (option.isRedFlag) {
                     Spacer(modifier = Modifier.height(8.dp))
                     Surface(
-                        color = LightEmergencyContainer,
+                        color = emergencyColors.container,
                         shape = RoundedCornerShape(8.dp),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, BorderEmergencyRed)
+                        border = androidx.compose.foundation.BorderStroke(1.dp, emergencyColors.border)
                     ) {
                         Row(
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Warning,
                                 contentDescription = "Emergency Flag",
-                                tint = DeepEmergencyRed,
+                                tint = emergencyColors.primary,
                                 modifier = Modifier.size(13.dp)
                             )
                             Spacer(modifier = Modifier.width(5.dp))
                             Text(
                                 text = "Emergency Red Flag Alert",
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                color = OnLightEmergencyContainer
+                                color = emergencyColors.onContainer
                             )
                         }
                     }

@@ -1,0 +1,21 @@
+{
+  "name": "meddialog-triage-miner",
+  "version": "1.0.0",
+  "description": "Mines MedDialog-EN into the MedTriage decision tree",
+  "scripts": {
+    "mine": "node --max-old-space-size=6000 train.mjs",
+    "emit": "node emit.mjs && node verify_tree.mjs",
+    "report": "node report.mjs",
+    "trees": "node print_trees.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@huggingface/transformers": "^4.3.1",
+    "hyparquet": "^1.31.4",
+    "hyparquet-compressors": "^1.1.2"
+  },
+  "private": true
+}

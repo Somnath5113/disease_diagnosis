@@ -30,6 +30,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
@@ -38,14 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.data.model.TriageOption
-import com.example.ui.theme.BorderEmergencyRed
-import com.example.ui.theme.DeepEmergencyRed
-import com.example.ui.theme.DeepTextBody
-import com.example.ui.theme.DeepTextHeadlines
-import com.example.ui.theme.LightEmergencyContainer
-import com.example.ui.theme.MutedTextSlate
-import com.example.ui.theme.OnLightEmergencyContainer
-import com.example.ui.theme.PureWhiteSurface
+import com.example.ui.theme.getUrgencyThemeColors
 
 @Composable
 fun EmergencyDialog(
@@ -54,15 +48,16 @@ fun EmergencyDialog(
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
+    val emergencyColors = getUrgencyThemeColors("EMERGENCY")
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
             shape = RoundedCornerShape(26.dp),
             colors = CardDefaults.cardColors(
-                containerColor = PureWhiteSurface
+                containerColor = MaterialTheme.colorScheme.surface
             ),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-            border = androidx.compose.foundation.BorderStroke(1.5.dp, BorderEmergencyRed),
+            border = androidx.compose.foundation.BorderStroke(1.5.dp, emergencyColors.border),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
@@ -74,18 +69,18 @@ fun EmergencyDialog(
                     .padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Emergency Alert Badge
+                // Emergency Alert Badge with Tinted Background
                 Box(
                     modifier = Modifier
                         .size(68.dp)
-                        .background(LightEmergencyContainer, CircleShape),
+                        .background(emergencyColors.container, CircleShape),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         imageVector = Icons.Default.Warning,
                         contentDescription = "Emergency Alert",
-                        tint = DeepEmergencyRed,
-                        modifier = Modifier.size(38.dp)
+                        tint = emergencyColors.primary,
+                        modifier = Modifier.size(36.dp)
                     )
                 }
 
@@ -95,9 +90,9 @@ fun EmergencyDialog(
                     text = "CRITICAL RED-FLAG ALERT",
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp
+                        letterSpacing = 0.8.sp
                     ),
-                    color = DeepEmergencyRed,
+                    color = emergencyColors.primary,
                     textAlign = TextAlign.Center
                 )
 
@@ -108,7 +103,7 @@ fun EmergencyDialog(
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold
                     ),
-                    color = DeepTextHeadlines,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center
                 )
 
@@ -117,7 +112,7 @@ fun EmergencyDialog(
                     Text(
                         text = option.subtitle,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MutedTextSlate,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = TextAlign.Center
                     )
                 }
@@ -128,15 +123,15 @@ fun EmergencyDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            color = LightEmergencyContainer,
+                            color = emergencyColors.container,
                             shape = RoundedCornerShape(14.dp)
                         )
                         .padding(14.dp)
                 ) {
                     Text(
-                        text = "This symptom indicates high risk of an acute medical emergency. Immediate clinical evaluation or emergency services is advised.",
+                        text = "This symptom indicates high risk of an acute medical emergency. Immediate clinical evaluation or emergency services is strongly advised.",
                         style = MaterialTheme.typography.bodySmall,
-                        color = OnLightEmergencyContainer,
+                        color = emergencyColors.onContainer,
                         textAlign = TextAlign.Center,
                         lineHeight = 18.sp,
                         modifier = Modifier.fillMaxWidth()
@@ -151,8 +146,8 @@ fun EmergencyDialog(
                         context.startActivity(dialIntent)
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = DeepEmergencyRed,
-                        contentColor = androidx.compose.ui.graphics.Color.White
+                        containerColor = emergencyColors.primary,
+                        contentColor = Color.White
                     ),
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier
@@ -182,8 +177,8 @@ fun EmergencyDialog(
                 OutlinedButton(
                     onClick = onAcknowledgeAndProceed,
                     shape = RoundedCornerShape(14.dp),
-                    border = androidx.compose.foundation.BorderStroke(1.2.dp, DeepEmergencyRed),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = DeepEmergencyRed),
+                    border = androidx.compose.foundation.BorderStroke(1.2.dp, emergencyColors.primary),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = emergencyColors.primary),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp)
@@ -203,7 +198,7 @@ fun EmergencyDialog(
                 ) {
                     Text(
                         text = "Return to Questionnaire",
-                        color = MutedTextSlate
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }

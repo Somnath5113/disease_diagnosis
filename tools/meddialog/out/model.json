@@ -1,0 +1,3569 @@
+{
+ "generatedAt": "2026-10-13T20:43:10.026Z",
+ "corpus": {
+  "dialogs": 212098,
+  "subsets": [
+   "healthcaremagic",
+   "icliniq"
+  ],
+  "chiefComplaintMatched": 152884
+ },
+ "selectionRule": "Chief complaints present in at least 2000 dialogs, excluding non-triage topics",
+ "excluded": [
+  {
+   "symptom": "sexual",
+   "dialogs": 10669,
+   "reason": "Needs a private clinical consultation; symptom questions cannot triage it safely."
+  },
+  {
+   "symptom": "dental",
+   "dialogs": 8437,
+   "reason": "Needs a dentist examination."
+  },
+  {
+   "symptom": "bp",
+   "dialogs": 4996,
+   "reason": "A measurement rather than a symptom."
+  }
+ ],
+ "symptoms": {
+  "periods": {
+   "dialogs": 18104,
+   "train": 12692,
+   "validation": 2722,
+   "holdout": 2690,
+   "minLeaf": 381,
+   "splitsBeforePruning": 6,
+   "splitsAfterPruning": 6,
+   "conditions": [
+    "Pregnancy",
+    "Hormonal imbalance or PCOS",
+    "Menstrual irregularity",
+    "Anxiety or panic",
+    "Vitamin D or calcium deficiency",
+    "High blood pressure",
+    "Depression",
+    "Thyroid disorder"
+   ],
+   "facetStats": {
+    "pcos_signs": {
+     "patientPct": 19,
+     "doctorAskPct": 0.2
+    },
+    "stress": {
+     "patientPct": 14,
+     "doctorAskPct": 0.2
+    },
+    "long_duration": {
+     "patientPct": 28.1,
+     "doctorAskPct": 0.2
+    },
+    "unprotected": {
+     "patientPct": 20,
+     "doctorAskPct": 0.1
+    },
+    "late_period": {
+     "patientPct": 10.5,
+     "doctorAskPct": 0
+    }
+   },
+   "eval": {
+    "labelledHoldout": 2030,
+    "hit3Tree": 0.94,
+    "hit3Baseline": 0.973,
+    "meanLogLikTree": -2.3771,
+    "meanLogLikBaseline": -2.9437,
+    "logLikGain": 0.5666
+   },
+   "flagAudit": [
+    {
+     "id": "ectopic",
+     "mentions": 213,
+     "urgentPct": 7.5,
+     "baseUrgentPct": 5.3
+    },
+    {
+     "id": "bleed",
+     "mentions": 336,
+     "urgentPct": 8,
+     "baseUrgentPct": 5.3
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "pcos_signs",
+    "gain": 0.2371,
+    "n": 12692,
+    "yesShare": 0.187,
+    "probs": {
+     "Pregnancy": 0.5351,
+     "Hormonal imbalance or PCOS": 0.3032,
+     "Menstrual irregularity": 0.1191,
+     "Anxiety or panic": 0.0789,
+     "Vitamin D or calcium deficiency": 0.0711,
+     "High blood pressure": 0.069,
+     "Depression": 0.0673,
+     "Thyroid disorder": 0.052
+    },
+    "yes": {
+     "leaf": false,
+     "facet": "stress",
+     "gain": 0.741,
+     "n": 2372,
+     "yesShare": 0.272,
+     "probs": {
+      "Pregnancy": 0.1927,
+      "Hormonal imbalance or PCOS": 0.5734,
+      "Menstrual irregularity": 0.2766,
+      "Anxiety or panic": 0.008,
+      "Vitamin D or calcium deficiency": 0.0042,
+      "High blood pressure": 0.0025,
+      "Depression": 0.0038,
+      "Thyroid disorder": 0.0451
+     },
+     "yes": {
+      "leaf": true,
+      "n": 645,
+      "probs": {
+       "Pregnancy": 0.0744,
+       "Hormonal imbalance or PCOS": 0.0961,
+       "Menstrual irregularity": 0.8481,
+       "Anxiety or panic": 0.014,
+       "Vitamin D or calcium deficiency": 0.0031,
+       "High blood pressure": 0.0031,
+       "Depression": 0.0047,
+       "Thyroid disorder": 0.0217
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "long_duration",
+      "gain": 0.1216,
+      "n": 1727,
+      "yesShare": 0.27,
+      "probs": {
+       "Pregnancy": 0.2368,
+       "Hormonal imbalance or PCOS": 0.7516,
+       "Menstrual irregularity": 0.0631,
+       "Anxiety or panic": 0.0058,
+       "Vitamin D or calcium deficiency": 0.0046,
+       "High blood pressure": 0.0023,
+       "Depression": 0.0035,
+       "Thyroid disorder": 0.0539
+      },
+      "yes": {
+       "leaf": true,
+       "n": 467,
+       "probs": {
+        "Pregnancy": 0.4283,
+        "Hormonal imbalance or PCOS": 0.6124,
+        "Menstrual irregularity": 0.1221,
+        "Anxiety or panic": 0.0107,
+        "Vitamin D or calcium deficiency": 0.0086,
+        "High blood pressure": 0.0021,
+        "Depression": 0.0128,
+        "Thyroid disorder": 0.1242
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 1260,
+       "probs": {
+        "Pregnancy": 0.1659,
+        "Hormonal imbalance or PCOS": 0.8032,
+        "Menstrual irregularity": 0.0413,
+        "Anxiety or panic": 0.004,
+        "Vitamin D or calcium deficiency": 0.0032,
+        "High blood pressure": 0.0024,
+        "Depression": 0,
+        "Thyroid disorder": 0.0278
+       }
+      }
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "unprotected",
+     "gain": 0.2315,
+     "n": 10320,
+     "yesShare": 0.236,
+     "probs": {
+      "Pregnancy": 0.6138,
+      "Hormonal imbalance or PCOS": 0.2411,
+      "Menstrual irregularity": 0.0828,
+      "Anxiety or panic": 0.0953,
+      "Vitamin D or calcium deficiency": 0.0865,
+      "High blood pressure": 0.0843,
+      "Depression": 0.0819,
+      "Thyroid disorder": 0.0536
+     },
+     "yes": {
+      "leaf": false,
+      "facet": "late_period",
+      "gain": 0.5053,
+      "n": 2433,
+      "yesShare": 0.371,
+      "probs": {
+       "Pregnancy": 0.8471,
+       "Hormonal imbalance or PCOS": 0.4599,
+       "Menstrual irregularity": 0.0917,
+       "Anxiety or panic": 0.0152,
+       "Vitamin D or calcium deficiency": 0.0037,
+       "High blood pressure": 0.0016,
+       "Depression": 0.0004,
+       "Thyroid disorder": 0.0214
+      },
+      "yes": {
+       "leaf": true,
+       "n": 903,
+       "probs": {
+        "Pregnancy": 0.9779,
+        "Hormonal imbalance or PCOS": 0.9092,
+        "Menstrual irregularity": 0.0244,
+        "Anxiety or panic": 0,
+        "Vitamin D or calcium deficiency": 0,
+        "High blood pressure": 0.0011,
+        "Depression": 0,
+        "Thyroid disorder": 0.0033
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 1530,
+       "probs": {
+        "Pregnancy": 0.7699,
+        "Hormonal imbalance or PCOS": 0.1948,
+        "Menstrual irregularity": 0.1314,
+        "Anxiety or panic": 0.0242,
+        "Vitamin D or calcium deficiency": 0.0059,
+        "High blood pressure": 0.002,
+        "Depression": 0.0007,
+        "Thyroid disorder": 0.032
+       }
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "long_duration",
+      "gain": 0.2209,
+      "n": 7887,
+      "yesShare": 0.325,
+      "probs": {
+       "Pregnancy": 0.5418,
+       "Hormonal imbalance or PCOS": 0.1736,
+       "Menstrual irregularity": 0.0801,
+       "Anxiety or panic": 0.1199,
+       "Vitamin D or calcium deficiency": 0.1121,
+       "High blood pressure": 0.1098,
+       "Depression": 0.107,
+       "Thyroid disorder": 0.0635
+      },
+      "yes": {
+       "leaf": true,
+       "n": 2565,
+       "probs": {
+        "Pregnancy": 0.4729,
+        "Hormonal imbalance or PCOS": 0.2386,
+        "Menstrual irregularity": 0.1096,
+        "Anxiety or panic": 0.0222,
+        "Vitamin D or calcium deficiency": 0.0121,
+        "High blood pressure": 0.007,
+        "Depression": 0.0047,
+        "Thyroid disorder": 0.0963
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 5322,
+       "probs": {
+        "Pregnancy": 0.575,
+        "Hormonal imbalance or PCOS": 0.1422,
+        "Menstrual irregularity": 0.066,
+        "Anxiety or panic": 0.167,
+        "Vitamin D or calcium deficiency": 0.1603,
+        "High blood pressure": 0.1593,
+        "Depression": 0.1563,
+        "Thyroid disorder": 0.0477
+       }
+      }
+     }
+    }
+   }
+  },
+  "rash": {
+   "dialogs": 13999,
+   "train": 9785,
+   "validation": 2152,
+   "holdout": 2062,
+   "minLeaf": 294,
+   "splitsBeforePruning": 5,
+   "splitsAfterPruning": 5,
+   "conditions": [
+    "Fungal skin infection",
+    "Allergic reaction or hives",
+    "Eczema or dermatitis",
+    "Bacterial skin infection",
+    "Viral skin infection",
+    "Allergic rhinitis or allergy",
+    "Injury or fracture",
+    "Pelvic or vaginal infection"
+   ],
+   "facetStats": {
+    "allergy": {
+     "patientPct": 13.1,
+     "doctorAskPct": 0.7
+    },
+    "itching": {
+     "patientPct": 56.6,
+     "doctorAskPct": 0.7
+    },
+    "pus_blisters": {
+     "patientPct": 17,
+     "doctorAskPct": 0.5
+    },
+    "fever": {
+     "patientPct": 5.2,
+     "doctorAskPct": 0.4
+    }
+   },
+   "eval": {
+    "labelledHoldout": 1066,
+    "hit3Tree": 0.699,
+    "hit3Baseline": 0.611,
+    "meanLogLikTree": -2.1947,
+    "meanLogLikBaseline": -2.2687,
+    "logLikGain": 0.074
+   },
+   "flagAudit": [
+    {
+     "id": "airway",
+     "mentions": 31,
+     "urgentPct": 12.9,
+     "baseUrgentPct": 5
+    },
+    {
+     "id": "skin_reaction",
+     "mentions": 240,
+     "urgentPct": 5,
+     "baseUrgentPct": 5
+    },
+    {
+     "id": "purpuric",
+     "mentions": 26,
+     "urgentPct": 0,
+     "baseUrgentPct": 5
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "allergy",
+    "gain": 0.0678,
+    "n": 9785,
+    "yesShare": 0.131,
+    "probs": {
+     "Fungal skin infection": 0.1441,
+     "Allergic reaction or hives": 0.118,
+     "Eczema or dermatitis": 0.0946,
+     "Bacterial skin infection": 0.0796,
+     "Viral skin infection": 0.068,
+     "Allergic rhinitis or allergy": 0.0667,
+     "Injury or fracture": 0.0502,
+     "Pelvic or vaginal infection": 0.0472
+    },
+    "yes": {
+     "leaf": false,
+     "facet": "itching",
+     "gain": 0.0253,
+     "n": 1283,
+     "yesShare": 0.63,
+     "probs": {
+      "Fungal skin infection": 0.0678,
+      "Allergic reaction or hives": 0.2736,
+      "Eczema or dermatitis": 0.1029,
+      "Bacterial skin infection": 0.0249,
+      "Viral skin infection": 0.0359,
+      "Allergic rhinitis or allergy": 0.219,
+      "Injury or fracture": 0.0164,
+      "Pelvic or vaginal infection": 0.0265
+     },
+     "yes": {
+      "leaf": true,
+      "n": 808,
+      "probs": {
+       "Fungal skin infection": 0.073,
+       "Allergic reaction or hives": 0.2574,
+       "Eczema or dermatitis": 0.1027,
+       "Bacterial skin infection": 0.0235,
+       "Viral skin infection": 0.0136,
+       "Allergic rhinitis or allergy": 0.2475,
+       "Injury or fracture": 0.0173,
+       "Pelvic or vaginal infection": 0.026
+      }
+     },
+     "no": {
+      "leaf": true,
+      "n": 475,
+      "probs": {
+       "Fungal skin infection": 0.0589,
+       "Allergic reaction or hives": 0.3011,
+       "Eczema or dermatitis": 0.1032,
+       "Bacterial skin infection": 0.0274,
+       "Viral skin infection": 0.0737,
+       "Allergic rhinitis or allergy": 0.1705,
+       "Injury or fracture": 0.0147,
+       "Pelvic or vaginal infection": 0.0274
+      }
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "pus_blisters",
+     "gain": 0.046,
+     "n": 8502,
+     "yesShare": 0.182,
+     "probs": {
+      "Fungal skin infection": 0.1556,
+      "Allergic reaction or hives": 0.0946,
+      "Eczema or dermatitis": 0.0934,
+      "Bacterial skin infection": 0.0879,
+      "Viral skin infection": 0.0728,
+      "Allergic rhinitis or allergy": 0.0438,
+      "Injury or fracture": 0.0553,
+      "Pelvic or vaginal infection": 0.0503
+     },
+     "yes": {
+      "leaf": false,
+      "facet": "itching",
+      "gain": 0.0651,
+      "n": 1551,
+      "yesShare": 0.332,
+      "probs": {
+       "Fungal skin infection": 0.0825,
+       "Allergic reaction or hives": 0.0451,
+       "Eczema or dermatitis": 0.0658,
+       "Bacterial skin infection": 0.216,
+       "Viral skin infection": 0.1173,
+       "Allergic rhinitis or allergy": 0.0335,
+       "Injury or fracture": 0.0632,
+       "Pelvic or vaginal infection": 0.0432
+      },
+      "yes": {
+       "leaf": true,
+       "n": 515,
+       "probs": {
+        "Fungal skin infection": 0.1592,
+        "Allergic reaction or hives": 0.0874,
+        "Eczema or dermatitis": 0.099,
+        "Bacterial skin infection": 0.1592,
+        "Viral skin infection": 0.1204,
+        "Allergic rhinitis or allergy": 0.0466,
+        "Injury or fracture": 0.035,
+        "Pelvic or vaginal infection": 0.068
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 1036,
+       "probs": {
+        "Fungal skin infection": 0.0444,
+        "Allergic reaction or hives": 0.0241,
+        "Eczema or dermatitis": 0.0492,
+        "Bacterial skin infection": 0.2442,
+        "Viral skin infection": 0.1158,
+        "Allergic rhinitis or allergy": 0.027,
+        "Injury or fracture": 0.0772,
+        "Pelvic or vaginal infection": 0.0309
+       }
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "fever",
+      "gain": 0.0172,
+      "n": 6951,
+      "yesShare": 0.05,
+      "probs": {
+       "Fungal skin infection": 0.1719,
+       "Allergic reaction or hives": 0.1056,
+       "Eczema or dermatitis": 0.0996,
+       "Bacterial skin infection": 0.0593,
+       "Viral skin infection": 0.0629,
+       "Allergic rhinitis or allergy": 0.046,
+       "Injury or fracture": 0.0535,
+       "Pelvic or vaginal infection": 0.0519
+      },
+      "yes": {
+       "leaf": true,
+       "n": 345,
+       "probs": {
+        "Fungal skin infection": 0.058,
+        "Allergic reaction or hives": 0.1594,
+        "Eczema or dermatitis": 0.0609,
+        "Bacterial skin infection": 0.0435,
+        "Viral skin infection": 0.2,
+        "Allergic rhinitis or allergy": 0.0551,
+        "Injury or fracture": 0.0145,
+        "Pelvic or vaginal infection": 0.0174
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 6606,
+       "probs": {
+        "Fungal skin infection": 0.1779,
+        "Allergic reaction or hives": 0.1028,
+        "Eczema or dermatitis": 0.1016,
+        "Bacterial skin infection": 0.0601,
+        "Viral skin infection": 0.0557,
+        "Allergic rhinitis or allergy": 0.0456,
+        "Injury or fracture": 0.0556,
+        "Pelvic or vaginal infection": 0.0537
+       }
+      }
+     }
+    }
+   }
+  },
+  "backpain": {
+   "dialogs": 13955,
+   "train": 9754,
+   "validation": 2132,
+   "holdout": 2069,
+   "minLeaf": 293,
+   "splitsBeforePruning": 5,
+   "splitsAfterPruning": 3,
+   "conditions": [
+    "Injury or fracture",
+    "Neuropathy or nerve compression",
+    "Slipped disc or disc bulge",
+    "Muscle or chest wall strain",
+    "Lumbar strain or muscle spasm",
+    "Vitamin deficiency",
+    "Vitamin D or calcium deficiency"
+   ],
+   "facetStats": {
+    "injury": {
+     "patientPct": 12.6,
+     "doctorAskPct": 0.6
+    },
+    "leg_pain": {
+     "patientPct": 4.7,
+     "doctorAskPct": 0.2
+    },
+    "sitting_posture": {
+     "patientPct": 10.5,
+     "doctorAskPct": 0.3
+    }
+   },
+   "eval": {
+    "labelledHoldout": 751,
+    "hit3Tree": 0.667,
+    "hit3Baseline": 0.667,
+    "meanLogLikTree": -1.9098,
+    "meanLogLikBaseline": -1.9528,
+    "logLikGain": 0.043
+   },
+   "flagAudit": [
+    {
+     "id": "cauda",
+     "mentions": 29,
+     "urgentPct": 20.7,
+     "baseUrgentPct": 6
+    },
+    {
+     "id": "trauma",
+     "mentions": 498,
+     "urgentPct": 5.6,
+     "baseUrgentPct": 6
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "injury",
+    "gain": 0.0435,
+    "n": 9754,
+    "yesShare": 0.128,
+    "probs": {
+     "Injury or fracture": 0.0974,
+     "Neuropathy or nerve compression": 0.0947,
+     "Slipped disc or disc bulge": 0.0894,
+     "Muscle or chest wall strain": 0.0787,
+     "Lumbar strain or muscle spasm": 0.0688,
+     "Vitamin deficiency": 0.0576,
+     "Vitamin D or calcium deficiency": 0.0545
+    },
+    "yes": {
+     "leaf": true,
+     "n": 1251,
+     "probs": {
+      "Injury or fracture": 0.3022,
+      "Neuropathy or nerve compression": 0.0919,
+      "Slipped disc or disc bulge": 0.1167,
+      "Muscle or chest wall strain": 0.1023,
+      "Lumbar strain or muscle spasm": 0.1255,
+      "Vitamin deficiency": 0.0584,
+      "Vitamin D or calcium deficiency": 0.0504
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "leg_pain",
+     "gain": 0.0207,
+     "n": 8503,
+     "yesShare": 0.046,
+     "probs": {
+      "Injury or fracture": 0.0673,
+      "Neuropathy or nerve compression": 0.0951,
+      "Slipped disc or disc bulge": 0.0854,
+      "Muscle or chest wall strain": 0.0753,
+      "Lumbar strain or muscle spasm": 0.0604,
+      "Vitamin deficiency": 0.0575,
+      "Vitamin D or calcium deficiency": 0.0552
+     },
+     "yes": {
+      "leaf": true,
+      "n": 388,
+      "probs": {
+       "Injury or fracture": 0.0593,
+       "Neuropathy or nerve compression": 0.3402,
+       "Slipped disc or disc bulge": 0.183,
+       "Muscle or chest wall strain": 0.0515,
+       "Lumbar strain or muscle spasm": 0.0387,
+       "Vitamin deficiency": 0.0954,
+       "Vitamin D or calcium deficiency": 0.049
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "sitting_posture",
+      "gain": 0.014,
+      "n": 8115,
+      "yesShare": 0.078,
+      "probs": {
+       "Injury or fracture": 0.0677,
+       "Neuropathy or nerve compression": 0.0834,
+       "Slipped disc or disc bulge": 0.0807,
+       "Muscle or chest wall strain": 0.0764,
+       "Lumbar strain or muscle spasm": 0.0615,
+       "Vitamin deficiency": 0.0557,
+       "Vitamin D or calcium deficiency": 0.0555
+      },
+      "yes": {
+       "leaf": true,
+       "n": 629,
+       "probs": {
+        "Injury or fracture": 0.1113,
+        "Neuropathy or nerve compression": 0.1033,
+        "Slipped disc or disc bulge": 0.132,
+        "Muscle or chest wall strain": 0.151,
+        "Lumbar strain or muscle spasm": 0.1494,
+        "Vitamin deficiency": 0.0652,
+        "Vitamin D or calcium deficiency": 0.0684
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 7486,
+       "probs": {
+        "Injury or fracture": 0.064,
+        "Neuropathy or nerve compression": 0.0818,
+        "Slipped disc or disc bulge": 0.0764,
+        "Muscle or chest wall strain": 0.0701,
+        "Lumbar strain or muscle spasm": 0.0541,
+        "Vitamin deficiency": 0.0549,
+        "Vitamin D or calcium deficiency": 0.0544
+       }
+      }
+     }
+    }
+   }
+  },
+  "urinary": {
+   "dialogs": 10138,
+   "train": 6993,
+   "validation": 1613,
+   "holdout": 1532,
+   "minLeaf": 210,
+   "splitsBeforePruning": 3,
+   "splitsAfterPruning": 3,
+   "conditions": [
+    "Urinary tract infection",
+    "Pregnancy",
+    "Kidney stone",
+    "Diabetes",
+    "Injury or fracture"
+   ],
+   "facetStats": {
+    "stone_history": {
+     "patientPct": 13.9,
+     "doctorAskPct": 0.5
+    },
+    "diabetes": {
+     "patientPct": 5.4,
+     "doctorAskPct": 0.4
+    },
+    "burning_urine": {
+     "patientPct": 4.7,
+     "doctorAskPct": 0.2
+    }
+   },
+   "eval": {
+    "labelledHoldout": 562,
+    "hit3Tree": 0.884,
+    "hit3Baseline": 0.77,
+    "meanLogLikTree": -1.3289,
+    "meanLogLikBaseline": -1.44,
+    "logLikGain": 0.1111
+   },
+   "flagAudit": [
+    {
+     "id": "retention",
+     "mentions": 70,
+     "urgentPct": 2.9,
+     "baseUrgentPct": 5.7
+    },
+    {
+     "id": "kidney",
+     "mentions": 26,
+     "urgentPct": 7.7,
+     "baseUrgentPct": 5.7
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "stone_history",
+    "gain": 0.1137,
+    "n": 6993,
+    "yesShare": 0.139,
+    "probs": {
+     "Urinary tract infection": 0.1294,
+     "Pregnancy": 0.1027,
+     "Kidney stone": 0.0701,
+     "Diabetes": 0.0601,
+     "Injury or fracture": 0.0586
+    },
+    "yes": {
+     "leaf": true,
+     "n": 971,
+     "probs": {
+      "Urinary tract infection": 0.1277,
+      "Pregnancy": 0.0185,
+      "Kidney stone": 0.3615,
+      "Diabetes": 0.0381,
+      "Injury or fracture": 0.034
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "diabetes",
+     "gain": 0.0613,
+     "n": 6022,
+     "yesShare": 0.058,
+     "probs": {
+      "Urinary tract infection": 0.1297,
+      "Pregnancy": 0.1162,
+      "Kidney stone": 0.0231,
+      "Diabetes": 0.0636,
+      "Injury or fracture": 0.0626
+     },
+     "yes": {
+      "leaf": true,
+      "n": 348,
+      "probs": {
+       "Urinary tract infection": 0.1609,
+       "Pregnancy": 0.0661,
+       "Kidney stone": 0.0144,
+       "Diabetes": 0.4598,
+       "Injury or fracture": 0.0345
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "burning_urine",
+      "gain": 0.018,
+      "n": 5674,
+      "yesShare": 0.044,
+      "probs": {
+       "Urinary tract infection": 0.1278,
+       "Pregnancy": 0.1193,
+       "Kidney stone": 0.0236,
+       "Diabetes": 0.0393,
+       "Injury or fracture": 0.0643
+      },
+      "yes": {
+       "leaf": true,
+       "n": 247,
+       "probs": {
+        "Urinary tract infection": 0.3684,
+        "Pregnancy": 0.0202,
+        "Kidney stone": 0.0526,
+        "Diabetes": 0.0445,
+        "Injury or fracture": 0.081
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 5427,
+       "probs": {
+        "Urinary tract infection": 0.1168,
+        "Pregnancy": 0.1238,
+        "Kidney stone": 0.0223,
+        "Diabetes": 0.0391,
+        "Injury or fracture": 0.0636
+       }
+      }
+     }
+    }
+   }
+  },
+  "abdpain": {
+   "dialogs": 7712,
+   "train": 5415,
+   "validation": 1162,
+   "holdout": 1135,
+   "minLeaf": 162,
+   "splitsBeforePruning": 5,
+   "splitsAfterPruning": 4,
+   "conditions": [
+    "Gastroenteritis or food poisoning",
+    "Gastritis or peptic ulcer",
+    "Urinary tract infection",
+    "Gallstones or gallbladder disease",
+    "Pregnancy",
+    "Acid reflux (GERD)",
+    "Appendicitis",
+    "Fibroid or ovarian cyst"
+   ],
+   "facetStats": {
+    "fever": {
+     "patientPct": 11.1,
+     "doctorAskPct": 0.7
+    },
+    "tried_medicine": {
+     "patientPct": 11.6,
+     "doctorAskPct": 0.2
+    },
+    "reflux": {
+     "patientPct": 4.8,
+     "doctorAskPct": 0.4
+    },
+    "urinary_symptoms": {
+     "patientPct": 13.4,
+     "doctorAskPct": 0.8
+    }
+   },
+   "eval": {
+    "labelledHoldout": 503,
+    "hit3Tree": 0.688,
+    "hit3Baseline": 0.67,
+    "meanLogLikTree": -1.9843,
+    "meanLogLikBaseline": -2.065,
+    "logLikGain": 0.0807
+   },
+   "flagAudit": [
+    {
+     "id": "rigid",
+     "mentions": 345,
+     "urgentPct": 13.6,
+     "baseUrgentPct": 8.6
+    },
+    {
+     "id": "blood",
+     "mentions": 51,
+     "urgentPct": 5.9,
+     "baseUrgentPct": 8.6
+    },
+    {
+     "id": "ectopic",
+     "mentions": 65,
+     "urgentPct": 12.3,
+     "baseUrgentPct": 8.6
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "fever",
+    "gain": 0.0316,
+    "n": 5415,
+    "yesShare": 0.113,
+    "probs": {
+     "Gastroenteritis or food poisoning": 0.1775,
+     "Gastritis or peptic ulcer": 0.1134,
+     "Urinary tract infection": 0.0748,
+     "Gallstones or gallbladder disease": 0.0659,
+     "Pregnancy": 0.0615,
+     "Acid reflux (GERD)": 0.0587,
+     "Appendicitis": 0.0569,
+     "Fibroid or ovarian cyst": 0.0528
+    },
+    "yes": {
+     "leaf": false,
+     "facet": "tried_medicine",
+     "gain": 0.2919,
+     "n": 614,
+     "yesShare": 0.28,
+     "probs": {
+      "Gastroenteritis or food poisoning": 0.3648,
+      "Gastritis or peptic ulcer": 0.0749,
+      "Urinary tract infection": 0.0782,
+      "Gallstones or gallbladder disease": 0.0342,
+      "Pregnancy": 0.0098,
+      "Acid reflux (GERD)": 0.0309,
+      "Appendicitis": 0.0798,
+      "Fibroid or ovarian cyst": 0.0309
+     },
+     "yes": {
+      "leaf": true,
+      "n": 172,
+      "probs": {
+       "Gastroenteritis or food poisoning": 0.8023,
+       "Gastritis or peptic ulcer": 0.0233,
+       "Urinary tract infection": 0.0407,
+       "Gallstones or gallbladder disease": 0.0174,
+       "Pregnancy": 0,
+       "Acid reflux (GERD)": 0.0116,
+       "Appendicitis": 0.0174,
+       "Fibroid or ovarian cyst": 0.0058
+      }
+     },
+     "no": {
+      "leaf": true,
+      "n": 442,
+      "probs": {
+       "Gastroenteritis or food poisoning": 0.1946,
+       "Gastritis or peptic ulcer": 0.095,
+       "Urinary tract infection": 0.0928,
+       "Gallstones or gallbladder disease": 0.0407,
+       "Pregnancy": 0.0136,
+       "Acid reflux (GERD)": 0.0385,
+       "Appendicitis": 0.1041,
+       "Fibroid or ovarian cyst": 0.0407
+      }
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "reflux",
+     "gain": 0.0262,
+     "n": 4801,
+     "yesShare": 0.052,
+     "probs": {
+      "Gastroenteritis or food poisoning": 0.1535,
+      "Gastritis or peptic ulcer": 0.1183,
+      "Urinary tract infection": 0.0744,
+      "Gallstones or gallbladder disease": 0.07,
+      "Pregnancy": 0.0681,
+      "Acid reflux (GERD)": 0.0623,
+      "Appendicitis": 0.0539,
+      "Fibroid or ovarian cyst": 0.0556
+     },
+     "yes": {
+      "leaf": true,
+      "n": 251,
+      "probs": {
+       "Gastroenteritis or food poisoning": 0.2829,
+       "Gastritis or peptic ulcer": 0.259,
+       "Urinary tract infection": 0.0518,
+       "Gallstones or gallbladder disease": 0.1076,
+       "Pregnancy": 0.0438,
+       "Acid reflux (GERD)": 0.243,
+       "Appendicitis": 0.0359,
+       "Fibroid or ovarian cyst": 0.0438
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "urinary_symptoms",
+      "gain": 0.0256,
+      "n": 4550,
+      "yesShare": 0.129,
+      "probs": {
+       "Gastroenteritis or food poisoning": 0.1464,
+       "Gastritis or peptic ulcer": 0.1105,
+       "Urinary tract infection": 0.0756,
+       "Gallstones or gallbladder disease": 0.0679,
+       "Pregnancy": 0.0695,
+       "Acid reflux (GERD)": 0.0523,
+       "Appendicitis": 0.0549,
+       "Fibroid or ovarian cyst": 0.0563
+      },
+      "yes": {
+       "leaf": true,
+       "n": 589,
+       "probs": {
+        "Gastroenteritis or food poisoning": 0.1002,
+        "Gastritis or peptic ulcer": 0.0713,
+        "Urinary tract infection": 0.2105,
+        "Gallstones or gallbladder disease": 0.0577,
+        "Pregnancy": 0.0764,
+        "Acid reflux (GERD)": 0.039,
+        "Appendicitis": 0.056,
+        "Fibroid or ovarian cyst": 0.0645
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 3961,
+       "probs": {
+        "Gastroenteritis or food poisoning": 0.1532,
+        "Gastritis or peptic ulcer": 0.1164,
+        "Urinary tract infection": 0.0555,
+        "Gallstones or gallbladder disease": 0.0694,
+        "Pregnancy": 0.0684,
+        "Acid reflux (GERD)": 0.0543,
+        "Appendicitis": 0.0548,
+        "Fibroid or ovarian cyst": 0.055
+       }
+      }
+     }
+    }
+   }
+  },
+  "fever": {
+   "dialogs": 6021,
+   "train": 4213,
+   "validation": 928,
+   "holdout": 880,
+   "minLeaf": 126,
+   "splitsBeforePruning": 4,
+   "splitsAfterPruning": 3,
+   "conditions": [
+    "Viral fever",
+    "Viral skin infection",
+    "Intestinal infection or parasites",
+    "Bacterial skin infection",
+    "Typhoid",
+    "Malaria or dengue",
+    "Tuberculosis",
+    "Urinary tract infection"
+   ],
+   "facetStats": {
+    "mosquito_travel": {
+     "patientPct": 6.7,
+     "doctorAskPct": 0.3
+    },
+    "cold_symptoms": {
+     "patientPct": 18.2,
+     "doctorAskPct": 0.4
+    },
+    "long_duration": {
+     "patientPct": 23.3,
+     "doctorAskPct": 0.3
+    }
+   },
+   "eval": {
+    "labelledHoldout": 392,
+    "hit3Tree": 0.735,
+    "hit3Baseline": 0.668,
+    "meanLogLikTree": -2.2746,
+    "meanLogLikBaseline": -2.3034,
+    "logLikGain": 0.0288
+   },
+   "flagAudit": [
+    {
+     "id": "neck",
+     "mentions": 102,
+     "urgentPct": 12.7,
+     "baseUrgentPct": 9.4
+    },
+    {
+     "id": "infant",
+     "mentions": 667,
+     "urgentPct": 9.6,
+     "baseUrgentPct": 9.4
+    },
+    {
+     "id": "breath",
+     "mentions": 263,
+     "urgentPct": 11.8,
+     "baseUrgentPct": 9.4
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "mosquito_travel",
+    "gain": 0.0545,
+    "n": 4213,
+    "yesShare": 0.069,
+    "probs": {
+     "Viral fever": 0.231,
+     "Viral skin infection": 0.1011,
+     "Intestinal infection or parasites": 0.0845,
+     "Bacterial skin infection": 0.0712,
+     "Typhoid": 0.0695,
+     "Malaria or dengue": 0.0674,
+     "Tuberculosis": 0.0427,
+     "Urinary tract infection": 0.0406
+    },
+    "yes": {
+     "leaf": true,
+     "n": 290,
+     "probs": {
+      "Viral fever": 0.2414,
+      "Viral skin infection": 0.1069,
+      "Intestinal infection or parasites": 0.1414,
+      "Bacterial skin infection": 0.0552,
+      "Typhoid": 0.1172,
+      "Malaria or dengue": 0.3931,
+      "Tuberculosis": 0.069,
+      "Urinary tract infection": 0.0379
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "cold_symptoms",
+     "gain": 0.0303,
+     "n": 3923,
+     "yesShare": 0.189,
+     "probs": {
+      "Viral fever": 0.2302,
+      "Viral skin infection": 0.1007,
+      "Intestinal infection or parasites": 0.0803,
+      "Bacterial skin infection": 0.0724,
+      "Typhoid": 0.066,
+      "Malaria or dengue": 0.0433,
+      "Tuberculosis": 0.0408,
+      "Urinary tract infection": 0.0408
+     },
+     "yes": {
+      "leaf": true,
+      "n": 742,
+      "probs": {
+       "Viral fever": 0.3113,
+       "Viral skin infection": 0.1402,
+       "Intestinal infection or parasites": 0.0229,
+       "Bacterial skin infection": 0.066,
+       "Typhoid": 0.0189,
+       "Malaria or dengue": 0.0418,
+       "Tuberculosis": 0.0148,
+       "Urinary tract infection": 0.031
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "long_duration",
+      "gain": 0.0223,
+      "n": 3181,
+      "yesShare": 0.237,
+      "probs": {
+       "Viral fever": 0.2113,
+       "Viral skin infection": 0.0915,
+       "Intestinal infection or parasites": 0.0937,
+       "Bacterial skin infection": 0.0739,
+       "Typhoid": 0.077,
+       "Malaria or dengue": 0.0437,
+       "Tuberculosis": 0.0468,
+       "Urinary tract infection": 0.0431
+      },
+      "yes": {
+       "leaf": true,
+       "n": 754,
+       "probs": {
+        "Viral fever": 0.1406,
+        "Viral skin infection": 0.069,
+        "Intestinal infection or parasites": 0.1114,
+        "Bacterial skin infection": 0.0822,
+        "Typhoid": 0.0889,
+        "Malaria or dengue": 0.0491,
+        "Tuberculosis": 0.0995,
+        "Urinary tract infection": 0.0491
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 2427,
+       "probs": {
+        "Viral fever": 0.2332,
+        "Viral skin infection": 0.0985,
+        "Intestinal infection or parasites": 0.0882,
+        "Bacterial skin infection": 0.0713,
+        "Typhoid": 0.0733,
+        "Malaria or dengue": 0.042,
+        "Tuberculosis": 0.0305,
+        "Urinary tract infection": 0.0412
+       }
+      }
+     }
+    }
+   }
+  },
+  "vomiting": {
+   "dialogs": 5934,
+   "train": 4138,
+   "validation": 882,
+   "holdout": 914,
+   "minLeaf": 124,
+   "splitsBeforePruning": 5,
+   "splitsAfterPruning": 3,
+   "conditions": [
+    "Anxiety or panic",
+    "Depression",
+    "Gastroenteritis or food poisoning",
+    "Gastritis or peptic ulcer",
+    "Dehydration",
+    "Acid reflux (GERD)",
+    "Viral fever"
+   ],
+   "facetStats": {
+    "diarrhea": {
+     "patientPct": 27.4,
+     "doctorAskPct": 0.5
+    },
+    "long_duration": {
+     "patientPct": 21.9,
+     "doctorAskPct": 0.1
+    },
+    "fever": {
+     "patientPct": 11.9,
+     "doctorAskPct": 0.5
+    }
+   },
+   "eval": {
+    "labelledHoldout": 427,
+    "hit3Tree": 0.845,
+    "hit3Baseline": 0.752,
+    "meanLogLikTree": -1.9415,
+    "meanLogLikBaseline": -2.2485,
+    "logLikGain": 0.307
+   },
+   "flagAudit": [
+    {
+     "id": "blood",
+     "mentions": 35,
+     "urgentPct": 22.9,
+     "baseUrgentPct": 8.2
+    },
+    {
+     "id": "dehydrated",
+     "mentions": 100,
+     "urgentPct": 9,
+     "baseUrgentPct": 8.2
+    },
+    {
+     "id": "neck",
+     "mentions": 53,
+     "urgentPct": 9.4,
+     "baseUrgentPct": 8.2
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "diarrhea",
+    "gain": 0.231,
+    "n": 4138,
+    "yesShare": 0.272,
+    "probs": {
+     "Anxiety or panic": 0.2083,
+     "Depression": 0.1945,
+     "Gastroenteritis or food poisoning": 0.137,
+     "Gastritis or peptic ulcer": 0.0662,
+     "Dehydration": 0.0587,
+     "Acid reflux (GERD)": 0.0505,
+     "Viral fever": 0.0488
+    },
+    "yes": {
+     "leaf": true,
+     "n": 1127,
+     "probs": {
+      "Anxiety or panic": 0.0098,
+      "Depression": 0,
+      "Gastroenteritis or food poisoning": 0.2041,
+      "Gastritis or peptic ulcer": 0.0408,
+      "Dehydration": 0.126,
+      "Acid reflux (GERD)": 0.0293,
+      "Viral fever": 0.0728
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "long_duration",
+     "gain": 0.1605,
+     "n": 3011,
+     "yesShare": 0.189,
+     "probs": {
+      "Anxiety or panic": 0.2826,
+      "Depression": 0.2674,
+      "Gastroenteritis or food poisoning": 0.1119,
+      "Gastritis or peptic ulcer": 0.0757,
+      "Dehydration": 0.0335,
+      "Acid reflux (GERD)": 0.0585,
+      "Viral fever": 0.0399
+     },
+     "yes": {
+      "leaf": true,
+      "n": 570,
+      "probs": {
+       "Anxiety or panic": 0.0298,
+       "Depression": 0.0105,
+       "Gastroenteritis or food poisoning": 0.1509,
+       "Gastritis or peptic ulcer": 0.107,
+       "Dehydration": 0.0263,
+       "Acid reflux (GERD)": 0.086,
+       "Viral fever": 0.0386
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "fever",
+      "gain": 0.1353,
+      "n": 2441,
+      "yesShare": 0.097,
+      "probs": {
+       "Anxiety or panic": 0.3417,
+       "Depression": 0.3273,
+       "Gastroenteritis or food poisoning": 0.1028,
+       "Gastritis or peptic ulcer": 0.0684,
+       "Dehydration": 0.0352,
+       "Acid reflux (GERD)": 0.052,
+       "Viral fever": 0.0401
+      },
+      "yes": {
+       "leaf": true,
+       "n": 236,
+       "probs": {
+        "Anxiety or panic": 0.0169,
+        "Depression": 0,
+        "Gastroenteritis or food poisoning": 0.1568,
+        "Gastritis or peptic ulcer": 0.0932,
+        "Dehydration": 0.072,
+        "Acid reflux (GERD)": 0.0551,
+        "Viral fever": 0.1653
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 2205,
+       "probs": {
+        "Anxiety or panic": 0.3764,
+        "Depression": 0.3624,
+        "Gastroenteritis or food poisoning": 0.0971,
+        "Gastritis or peptic ulcer": 0.0658,
+        "Dehydration": 0.0313,
+        "Acid reflux (GERD)": 0.0517,
+        "Viral fever": 0.0268
+       }
+      }
+     }
+    }
+   }
+  },
+  "cough": {
+   "dialogs": 5556,
+   "train": 3854,
+   "validation": 875,
+   "holdout": 827,
+   "minLeaf": 116,
+   "splitsBeforePruning": 7,
+   "splitsAfterPruning": 5,
+   "conditions": [
+    "Asthma or reactive airway",
+    "Bronchitis",
+    "Allergic rhinitis or allergy",
+    "Pneumonia or chest infection",
+    "Viral fever",
+    "Tuberculosis",
+    "Common cold or viral upper respiratory infection",
+    "Viral skin infection"
+   ],
+   "facetStats": {
+    "allergy": {
+     "patientPct": 18.1,
+     "doctorAskPct": 2.8
+    },
+    "long_duration": {
+     "patientPct": 36.7,
+     "doctorAskPct": 0.4
+    },
+    "cold_symptoms": {
+     "patientPct": 36.4,
+     "doctorAskPct": 0.9
+    },
+    "fever": {
+     "patientPct": 17.2,
+     "doctorAskPct": 2.4
+    },
+    "breathless": {
+     "patientPct": 9.2,
+     "doctorAskPct": 2.1
+    }
+   },
+   "eval": {
+    "labelledHoldout": 477,
+    "hit3Tree": 0.688,
+    "hit3Baseline": 0.648,
+    "meanLogLikTree": -2.6403,
+    "meanLogLikBaseline": -2.7022,
+    "logLikGain": 0.0619
+   },
+   "flagAudit": [
+    {
+     "id": "breath",
+     "mentions": 29,
+     "urgentPct": 13.8,
+     "baseUrgentPct": 5.9
+    },
+    {
+     "id": "blood",
+     "mentions": 64,
+     "urgentPct": 7.8,
+     "baseUrgentPct": 5.9
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "allergy",
+    "gain": 0.0444,
+    "n": 3854,
+    "yesShare": 0.179,
+    "probs": {
+     "Asthma or reactive airway": 0.1783,
+     "Bronchitis": 0.1528,
+     "Allergic rhinitis or allergy": 0.131,
+     "Pneumonia or chest infection": 0.1061,
+     "Viral fever": 0.0825,
+     "Tuberculosis": 0.076,
+     "Common cold or viral upper respiratory infection": 0.0667,
+     "Viral skin infection": 0.0516
+    },
+    "yes": {
+     "leaf": false,
+     "facet": "long_duration",
+     "gain": 0.0404,
+     "n": 691,
+     "yesShare": 0.421,
+     "probs": {
+      "Asthma or reactive airway": 0.2301,
+      "Bronchitis": 0.1013,
+      "Allergic rhinitis or allergy": 0.288,
+      "Pneumonia or chest infection": 0.0564,
+      "Viral fever": 0.0651,
+      "Tuberculosis": 0.042,
+      "Common cold or viral upper respiratory infection": 0.0463,
+      "Viral skin infection": 0.0564
+     },
+     "yes": {
+      "leaf": true,
+      "n": 291,
+      "probs": {
+       "Asthma or reactive airway": 0.3127,
+       "Bronchitis": 0.1409,
+       "Allergic rhinitis or allergy": 0.3333,
+       "Pneumonia or chest infection": 0.0447,
+       "Viral fever": 0.0481,
+       "Tuberculosis": 0.0412,
+       "Common cold or viral upper respiratory infection": 0.0378,
+       "Viral skin infection": 0.0447
+      }
+     },
+     "no": {
+      "leaf": true,
+      "n": 400,
+      "probs": {
+       "Asthma or reactive airway": 0.17,
+       "Bronchitis": 0.0725,
+       "Allergic rhinitis or allergy": 0.255,
+       "Pneumonia or chest infection": 0.065,
+       "Viral fever": 0.0775,
+       "Tuberculosis": 0.0425,
+       "Common cold or viral upper respiratory infection": 0.0525,
+       "Viral skin infection": 0.065
+      }
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "cold_symptoms",
+     "gain": 0.0405,
+     "n": 3163,
+     "yesShare": 0.302,
+     "probs": {
+      "Asthma or reactive airway": 0.1669,
+      "Bronchitis": 0.1641,
+      "Allergic rhinitis or allergy": 0.0967,
+      "Pneumonia or chest infection": 0.117,
+      "Viral fever": 0.0863,
+      "Tuberculosis": 0.0835,
+      "Common cold or viral upper respiratory infection": 0.0711,
+      "Viral skin infection": 0.0506
+     },
+     "yes": {
+      "leaf": false,
+      "facet": "fever",
+      "gain": 0.0341,
+      "n": 956,
+      "yesShare": 0.238,
+      "probs": {
+       "Asthma or reactive airway": 0.181,
+       "Bronchitis": 0.1276,
+       "Allergic rhinitis or allergy": 0.114,
+       "Pneumonia or chest infection": 0.0973,
+       "Viral fever": 0.1318,
+       "Tuberculosis": 0.045,
+       "Common cold or viral upper respiratory infection": 0.1255,
+       "Viral skin infection": 0.0858
+      },
+      "yes": {
+       "leaf": true,
+       "n": 228,
+       "probs": {
+        "Asthma or reactive airway": 0.1184,
+        "Bronchitis": 0.0965,
+        "Allergic rhinitis or allergy": 0.057,
+        "Pneumonia or chest infection": 0.136,
+        "Viral fever": 0.2018,
+        "Tuberculosis": 0.0439,
+        "Common cold or viral upper respiratory infection": 0.1623,
+        "Viral skin infection": 0.114
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 728,
+       "probs": {
+        "Asthma or reactive airway": 0.2005,
+        "Bronchitis": 0.1374,
+        "Allergic rhinitis or allergy": 0.1319,
+        "Pneumonia or chest infection": 0.0852,
+        "Viral fever": 0.1099,
+        "Tuberculosis": 0.0453,
+        "Common cold or viral upper respiratory infection": 0.114,
+        "Viral skin infection": 0.0769
+       }
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "breathless",
+      "gain": 0.031,
+      "n": 2207,
+      "yesShare": 0.083,
+      "probs": {
+       "Asthma or reactive airway": 0.1609,
+       "Bronchitis": 0.1799,
+       "Allergic rhinitis or allergy": 0.0893,
+       "Pneumonia or chest infection": 0.1255,
+       "Viral fever": 0.0666,
+       "Tuberculosis": 0.1001,
+       "Common cold or viral upper respiratory infection": 0.0476,
+       "Viral skin infection": 0.0353
+      },
+      "yes": {
+       "leaf": true,
+       "n": 184,
+       "probs": {
+        "Asthma or reactive airway": 0.375,
+        "Bronchitis": 0.2935,
+        "Allergic rhinitis or allergy": 0.1196,
+        "Pneumonia or chest infection": 0.163,
+        "Viral fever": 0.0326,
+        "Tuberculosis": 0.0489,
+        "Common cold or viral upper respiratory infection": 0.038,
+        "Viral skin infection": 0.0054
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 2023,
+       "probs": {
+        "Asthma or reactive airway": 0.1414,
+        "Bronchitis": 0.1696,
+        "Allergic rhinitis or allergy": 0.0865,
+        "Pneumonia or chest infection": 0.1221,
+        "Viral fever": 0.0697,
+        "Tuberculosis": 0.1048,
+        "Common cold or viral upper respiratory infection": 0.0484,
+        "Viral skin infection": 0.0381
+       }
+      }
+     }
+    }
+   }
+  },
+  "anxiety": {
+   "dialogs": 5318,
+   "train": 3678,
+   "validation": 814,
+   "holdout": 826,
+   "minLeaf": 110,
+   "splitsBeforePruning": 3,
+   "splitsAfterPruning": 3,
+   "conditions": [
+    "Anxiety or panic",
+    "Depression",
+    "Angina or heart disease",
+    "Thyroid disorder"
+   ],
+   "facetStats": {
+    "low_mood": {
+     "patientPct": 14.1,
+     "doctorAskPct": 0.4
+    },
+    "panic_attacks": {
+     "patientPct": 19.8,
+     "doctorAskPct": 0.3
+    }
+   },
+   "eval": {
+    "labelledHoldout": 351,
+    "hit3Tree": 0.954,
+    "hit3Baseline": 0.946,
+    "meanLogLikTree": -1.2717,
+    "meanLogLikBaseline": -1.3747,
+    "logLikGain": 0.1029
+   },
+   "flagAudit": [
+    {
+     "id": "suicide",
+     "mentions": 77,
+     "urgentPct": 7.8,
+     "baseUrgentPct": 4.8
+    },
+    {
+     "id": "cardiac",
+     "mentions": 72,
+     "urgentPct": 2.8,
+     "baseUrgentPct": 4.8
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "low_mood",
+    "gain": 0.0929,
+    "n": 3678,
+    "yesShare": 0.141,
+    "probs": {
+     "Anxiety or panic": 0.329,
+     "Depression": 0.1058,
+     "Angina or heart disease": 0.0476,
+     "Thyroid disorder": 0.0424
+    },
+    "yes": {
+     "leaf": false,
+     "facet": "panic_attacks",
+     "gain": 0.0448,
+     "n": 520,
+     "yesShare": 0.238,
+     "probs": {
+      "Anxiety or panic": 0.4962,
+      "Depression": 0.3942,
+      "Angina or heart disease": 0.0154,
+      "Thyroid disorder": 0.0481
+     },
+     "yes": {
+      "leaf": true,
+      "n": 124,
+      "probs": {
+       "Anxiety or panic": 0.6935,
+       "Depression": 0.3226,
+       "Angina or heart disease": 0.0323,
+       "Thyroid disorder": 0.0403
+      }
+     },
+     "no": {
+      "leaf": true,
+      "n": 396,
+      "probs": {
+       "Anxiety or panic": 0.4343,
+       "Depression": 0.4167,
+       "Angina or heart disease": 0.0101,
+       "Thyroid disorder": 0.0505
+      }
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "panic_attacks",
+     "gain": 0.0773,
+     "n": 3158,
+     "yesShare": 0.182,
+     "probs": {
+      "Anxiety or panic": 0.3015,
+      "Depression": 0.0583,
+      "Angina or heart disease": 0.0529,
+      "Thyroid disorder": 0.0415
+     },
+     "yes": {
+      "leaf": true,
+      "n": 575,
+      "probs": {
+       "Anxiety or panic": 0.607,
+       "Depression": 0.0557,
+       "Angina or heart disease": 0.113,
+       "Thyroid disorder": 0.0643
+      }
+     },
+     "no": {
+      "leaf": true,
+      "n": 2583,
+      "probs": {
+       "Anxiety or panic": 0.2334,
+       "Depression": 0.0588,
+       "Angina or heart disease": 0.0395,
+       "Thyroid disorder": 0.0364
+      }
+     }
+    }
+   }
+  },
+  "numbness": {
+   "dialogs": 4542,
+   "train": 3171,
+   "validation": 690,
+   "holdout": 681,
+   "minLeaf": 95,
+   "splitsBeforePruning": 4,
+   "splitsAfterPruning": 3,
+   "conditions": [
+    "Neuropathy or nerve compression",
+    "Injury or fracture",
+    "Vitamin deficiency",
+    "Diabetes",
+    "Cervical spondylosis",
+    "Anxiety or panic",
+    "Vitamin D or calcium deficiency",
+    "Thyroid disorder"
+   ],
+   "facetStats": {
+    "hands_feet": {
+     "patientPct": 45.3,
+     "doctorAskPct": 0.6
+    },
+    "injury": {
+     "patientPct": 14.7,
+     "doctorAskPct": 0.5
+    }
+   },
+   "eval": {
+    "labelledHoldout": 338,
+    "hit3Tree": 0.76,
+    "hit3Baseline": 0.751,
+    "meanLogLikTree": -2.3885,
+    "meanLogLikBaseline": -2.5075,
+    "logLikGain": 0.119
+   },
+   "flagAudit": [
+    {
+     "id": "stroke",
+     "mentions": 124,
+     "urgentPct": 10.5,
+     "baseUrgentPct": 6.6
+    },
+    {
+     "id": "cauda",
+     "mentions": 5,
+     "urgentPct": 0,
+     "baseUrgentPct": 6.6
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "hands_feet",
+    "gain": 0.0736,
+    "n": 3171,
+    "yesShare": 0.45,
+    "probs": {
+     "Neuropathy or nerve compression": 0.2264,
+     "Injury or fracture": 0.1325,
+     "Vitamin deficiency": 0.1189,
+     "Diabetes": 0.0908,
+     "Cervical spondylosis": 0.0716,
+     "Anxiety or panic": 0.0479,
+     "Vitamin D or calcium deficiency": 0.0438,
+     "Thyroid disorder": 0.041
+    },
+    "yes": {
+     "leaf": false,
+     "facet": "injury",
+     "gain": 0.054,
+     "n": 1427,
+     "yesShare": 0.163,
+     "probs": {
+      "Neuropathy or nerve compression": 0.3287,
+      "Injury or fracture": 0.1444,
+      "Vitamin deficiency": 0.1535,
+      "Diabetes": 0.1254,
+      "Cervical spondylosis": 0.1065,
+      "Anxiety or panic": 0.0434,
+      "Vitamin D or calcium deficiency": 0.0645,
+      "Thyroid disorder": 0.0596
+     },
+     "yes": {
+      "leaf": true,
+      "n": 233,
+      "probs": {
+       "Neuropathy or nerve compression": 0.2532,
+       "Injury or fracture": 0.3476,
+       "Vitamin deficiency": 0.103,
+       "Diabetes": 0.0815,
+       "Cervical spondylosis": 0.0858,
+       "Anxiety or panic": 0.0215,
+       "Vitamin D or calcium deficiency": 0.0343,
+       "Thyroid disorder": 0.0429
+      }
+     },
+     "no": {
+      "leaf": true,
+      "n": 1194,
+      "probs": {
+       "Neuropathy or nerve compression": 0.3434,
+       "Injury or fracture": 0.1047,
+       "Vitamin deficiency": 0.1633,
+       "Diabetes": 0.134,
+       "Cervical spondylosis": 0.1106,
+       "Anxiety or panic": 0.0477,
+       "Vitamin D or calcium deficiency": 0.0704,
+       "Thyroid disorder": 0.0628
+      }
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "injury",
+     "gain": 0.0558,
+     "n": 1744,
+     "yesShare": 0.12,
+     "probs": {
+      "Neuropathy or nerve compression": 0.1428,
+      "Injury or fracture": 0.1227,
+      "Vitamin deficiency": 0.0906,
+      "Diabetes": 0.0625,
+      "Cervical spondylosis": 0.043,
+      "Anxiety or panic": 0.0516,
+      "Vitamin D or calcium deficiency": 0.0269,
+      "Thyroid disorder": 0.0258
+     },
+     "yes": {
+      "leaf": true,
+      "n": 209,
+      "probs": {
+       "Neuropathy or nerve compression": 0.201,
+       "Injury or fracture": 0.3876,
+       "Vitamin deficiency": 0.0622,
+       "Diabetes": 0.0431,
+       "Cervical spondylosis": 0.0239,
+       "Anxiety or panic": 0.0383,
+       "Vitamin D or calcium deficiency": 0.0096,
+       "Thyroid disorder": 0.0096
+      }
+     },
+     "no": {
+      "leaf": true,
+      "n": 1535,
+      "probs": {
+       "Neuropathy or nerve compression": 0.1349,
+       "Injury or fracture": 0.0866,
+       "Vitamin deficiency": 0.0945,
+       "Diabetes": 0.0651,
+       "Cervical spondylosis": 0.0456,
+       "Anxiety or panic": 0.0534,
+       "Vitamin D or calcium deficiency": 0.0293,
+       "Thyroid disorder": 0.028
+      }
+     }
+    }
+   }
+  },
+  "jointpain": {
+   "dialogs": 4452,
+   "train": 3148,
+   "validation": 650,
+   "holdout": 654,
+   "minLeaf": 94,
+   "splitsBeforePruning": 6,
+   "splitsAfterPruning": 4,
+   "conditions": [
+    "Injury or fracture",
+    "Rheumatoid or inflammatory arthritis",
+    "Neuropathy or nerve compression",
+    "Vitamin D or calcium deficiency",
+    "Osteoarthritis",
+    "Vitamin deficiency",
+    "Muscle or chest wall strain",
+    "Lumbar strain or muscle spasm"
+   ],
+   "facetStats": {
+    "injury": {
+     "patientPct": 17,
+     "doctorAskPct": 0.7
+    },
+    "multiple_joints": {
+     "patientPct": 14.4,
+     "doctorAskPct": 0.6
+    },
+    "long_duration": {
+     "patientPct": 33.7,
+     "doctorAskPct": 0.1
+    },
+    "swelling": {
+     "patientPct": 17.7,
+     "doctorAskPct": 0.4
+    }
+   },
+   "eval": {
+    "labelledHoldout": 358,
+    "hit3Tree": 0.793,
+    "hit3Baseline": 0.802,
+    "meanLogLikTree": -2.4722,
+    "meanLogLikBaseline": -2.5239,
+    "logLikGain": 0.0517
+   },
+   "flagAudit": [
+    {
+     "id": "septic",
+     "mentions": 15,
+     "urgentPct": 13.3,
+     "baseUrgentPct": 3.9
+    },
+    {
+     "id": "deformity",
+     "mentions": 156,
+     "urgentPct": 2.6,
+     "baseUrgentPct": 3.9
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "injury",
+    "gain": 0.0834,
+    "n": 3148,
+    "yesShare": 0.172,
+    "probs": {
+     "Injury or fracture": 0.2294,
+     "Rheumatoid or inflammatory arthritis": 0.2043,
+     "Neuropathy or nerve compression": 0.0896,
+     "Vitamin D or calcium deficiency": 0.0737,
+     "Osteoarthritis": 0.0661,
+     "Vitamin deficiency": 0.0677,
+     "Muscle or chest wall strain": 0.0594,
+     "Lumbar strain or muscle spasm": 0.0619
+    },
+    "yes": {
+     "leaf": true,
+     "n": 543,
+     "probs": {
+      "Injury or fracture": 0.5138,
+      "Rheumatoid or inflammatory arthritis": 0.1289,
+      "Neuropathy or nerve compression": 0.07,
+      "Vitamin D or calcium deficiency": 0.0442,
+      "Osteoarthritis": 0.0497,
+      "Vitamin deficiency": 0.035,
+      "Muscle or chest wall strain": 0.0718,
+      "Lumbar strain or muscle spasm": 0.1326
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "multiple_joints",
+     "gain": 0.0298,
+     "n": 2605,
+     "yesShare": 0.157,
+     "probs": {
+      "Injury or fracture": 0.1701,
+      "Rheumatoid or inflammatory arthritis": 0.22,
+      "Neuropathy or nerve compression": 0.0937,
+      "Vitamin D or calcium deficiency": 0.0798,
+      "Osteoarthritis": 0.0695,
+      "Vitamin deficiency": 0.0745,
+      "Muscle or chest wall strain": 0.0568,
+      "Lumbar strain or muscle spasm": 0.0472
+     },
+     "yes": {
+      "leaf": false,
+      "facet": "long_duration",
+      "gain": 0.012,
+      "n": 409,
+      "yesShare": 0.44,
+      "probs": {
+       "Injury or fracture": 0.1002,
+       "Rheumatoid or inflammatory arthritis": 0.3716,
+       "Neuropathy or nerve compression": 0.0929,
+       "Vitamin D or calcium deficiency": 0.1198,
+       "Osteoarthritis": 0.0685,
+       "Vitamin deficiency": 0.1051,
+       "Muscle or chest wall strain": 0.0293,
+       "Lumbar strain or muscle spasm": 0.0244
+      },
+      "yes": {
+       "leaf": true,
+       "n": 180,
+       "probs": {
+        "Injury or fracture": 0.1111,
+        "Rheumatoid or inflammatory arthritis": 0.3444,
+        "Neuropathy or nerve compression": 0.0833,
+        "Vitamin D or calcium deficiency": 0.1389,
+        "Osteoarthritis": 0.0833,
+        "Vitamin deficiency": 0.1333,
+        "Muscle or chest wall strain": 0.0278,
+        "Lumbar strain or muscle spasm": 0.0222
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 229,
+       "probs": {
+        "Injury or fracture": 0.0917,
+        "Rheumatoid or inflammatory arthritis": 0.393,
+        "Neuropathy or nerve compression": 0.1004,
+        "Vitamin D or calcium deficiency": 0.1048,
+        "Osteoarthritis": 0.0568,
+        "Vitamin deficiency": 0.083,
+        "Muscle or chest wall strain": 0.0306,
+        "Lumbar strain or muscle spasm": 0.0262
+       }
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "swelling",
+      "gain": 0.0149,
+      "n": 2196,
+      "yesShare": 0.153,
+      "probs": {
+       "Injury or fracture": 0.1831,
+       "Rheumatoid or inflammatory arthritis": 0.1917,
+       "Neuropathy or nerve compression": 0.0938,
+       "Vitamin D or calcium deficiency": 0.0724,
+       "Osteoarthritis": 0.0697,
+       "Vitamin deficiency": 0.0688,
+       "Muscle or chest wall strain": 0.0619,
+       "Lumbar strain or muscle spasm": 0.0515
+      },
+      "yes": {
+       "leaf": true,
+       "n": 335,
+       "probs": {
+        "Injury or fracture": 0.2388,
+        "Rheumatoid or inflammatory arthritis": 0.194,
+        "Neuropathy or nerve compression": 0.0358,
+        "Vitamin D or calcium deficiency": 0.0418,
+        "Osteoarthritis": 0.0567,
+        "Vitamin deficiency": 0.0537,
+        "Muscle or chest wall strain": 0.0358,
+        "Lumbar strain or muscle spasm": 0.0299
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 1861,
+       "probs": {
+        "Injury or fracture": 0.173,
+        "Rheumatoid or inflammatory arthritis": 0.1913,
+        "Neuropathy or nerve compression": 0.1042,
+        "Vitamin D or calcium deficiency": 0.0779,
+        "Osteoarthritis": 0.072,
+        "Vitamin deficiency": 0.0715,
+        "Muscle or chest wall strain": 0.0666,
+        "Lumbar strain or muscle spasm": 0.0553
+       }
+      }
+     }
+    }
+   }
+  },
+  "chestpain": {
+   "dialogs": 3787,
+   "train": 2678,
+   "validation": 542,
+   "holdout": 567,
+   "minLeaf": 80,
+   "splitsBeforePruning": 4,
+   "splitsAfterPruning": 3,
+   "conditions": [
+    "Angina or heart disease",
+    "Muscle or chest wall strain",
+    "Anxiety or panic",
+    "Acid reflux (GERD)",
+    "Gastroenteritis or food poisoning",
+    "Gastritis or peptic ulcer",
+    "Bronchitis",
+    "High blood pressure"
+   ],
+   "facetStats": {
+    "anxiety": {
+     "patientPct": 8.5,
+     "doctorAskPct": 0.2
+    },
+    "reflux": {
+     "patientPct": 7.8,
+     "doctorAskPct": 0.4
+    },
+    "cough": {
+     "patientPct": 7.9,
+     "doctorAskPct": 0.3
+    }
+   },
+   "eval": {
+    "labelledHoldout": 378,
+    "hit3Tree": 0.815,
+    "hit3Baseline": 0.772,
+    "meanLogLikTree": -2.7968,
+    "meanLogLikBaseline": -2.8774,
+    "logLikGain": 0.0806
+   },
+   "flagAudit": [
+    {
+     "id": "heart",
+     "mentions": 994,
+     "urgentPct": 9.8,
+     "baseUrgentPct": 7.7
+    },
+    {
+     "id": "breath",
+     "mentions": 71,
+     "urgentPct": 8.5,
+     "baseUrgentPct": 7.7
+    },
+    {
+     "id": "faint",
+     "mentions": 67,
+     "urgentPct": 10.4,
+     "baseUrgentPct": 7.7
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "anxiety",
+    "gain": 0.0644,
+    "n": 2678,
+    "yesShare": 0.084,
+    "probs": {
+     "Angina or heart disease": 0.2991,
+     "Muscle or chest wall strain": 0.1979,
+     "Anxiety or panic": 0.1602,
+     "Acid reflux (GERD)": 0.1531,
+     "Gastroenteritis or food poisoning": 0.087,
+     "Gastritis or peptic ulcer": 0.0855,
+     "Bronchitis": 0.0541,
+     "High blood pressure": 0.0534
+    },
+    "yes": {
+     "leaf": true,
+     "n": 224,
+     "probs": {
+      "Angina or heart disease": 0.2679,
+      "Muscle or chest wall strain": 0.1027,
+      "Anxiety or panic": 0.558,
+      "Acid reflux (GERD)": 0.2143,
+      "Gastroenteritis or food poisoning": 0.1027,
+      "Gastritis or peptic ulcer": 0.0536,
+      "Bronchitis": 0.0446,
+      "High blood pressure": 0.0536
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "reflux",
+     "gain": 0.0652,
+     "n": 2454,
+     "yesShare": 0.076,
+     "probs": {
+      "Angina or heart disease": 0.302,
+      "Muscle or chest wall strain": 0.2066,
+      "Anxiety or panic": 0.1239,
+      "Acid reflux (GERD)": 0.1475,
+      "Gastroenteritis or food poisoning": 0.0856,
+      "Gastritis or peptic ulcer": 0.0884,
+      "Bronchitis": 0.055,
+      "High blood pressure": 0.0534
+     },
+     "yes": {
+      "leaf": true,
+      "n": 187,
+      "probs": {
+       "Angina or heart disease": 0.2834,
+       "Muscle or chest wall strain": 0.0963,
+       "Anxiety or panic": 0.1497,
+       "Acid reflux (GERD)": 0.4813,
+       "Gastroenteritis or food poisoning": 0.2727,
+       "Gastritis or peptic ulcer": 0.1123,
+       "Bronchitis": 0.0214,
+       "High blood pressure": 0.0749
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "cough",
+      "gain": 0.0575,
+      "n": 2267,
+      "yesShare": 0.091,
+      "probs": {
+       "Angina or heart disease": 0.3035,
+       "Muscle or chest wall strain": 0.2157,
+       "Anxiety or panic": 0.1217,
+       "Acid reflux (GERD)": 0.12,
+       "Gastroenteritis or food poisoning": 0.0701,
+       "Gastritis or peptic ulcer": 0.0865,
+       "Bronchitis": 0.0578,
+       "High blood pressure": 0.0516
+      },
+      "yes": {
+       "leaf": true,
+       "n": 206,
+       "probs": {
+        "Angina or heart disease": 0.1262,
+        "Muscle or chest wall strain": 0.2039,
+        "Anxiety or panic": 0.0485,
+        "Acid reflux (GERD)": 0.0437,
+        "Gastroenteritis or food poisoning": 0.0146,
+        "Gastritis or peptic ulcer": 0.0243,
+        "Bronchitis": 0.2282,
+        "High blood pressure": 0.0243
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 2061,
+       "probs": {
+        "Angina or heart disease": 0.3212,
+        "Muscle or chest wall strain": 0.2169,
+        "Anxiety or panic": 0.1291,
+        "Acid reflux (GERD)": 0.1276,
+        "Gastroenteritis or food poisoning": 0.0757,
+        "Gastritis or peptic ulcer": 0.0927,
+        "Bronchitis": 0.0408,
+        "High blood pressure": 0.0543
+       }
+      }
+     }
+    }
+   }
+  },
+  "fatigue": {
+   "dialogs": 3508,
+   "train": 2492,
+   "validation": 535,
+   "holdout": 481,
+   "minLeaf": 75,
+   "splitsBeforePruning": 3,
+   "splitsAfterPruning": 3,
+   "conditions": [
+    "Anemia",
+    "Vitamin deficiency",
+    "Thyroid disorder",
+    "Diabetes",
+    "Anxiety or panic",
+    "Depression",
+    "Vitamin D or calcium deficiency",
+    "Viral fever"
+   ],
+   "facetStats": {
+    "pale_tired": {
+     "patientPct": 7.7,
+     "doctorAskPct": 0.3
+    },
+    "low_mood": {
+     "patientPct": 5.5,
+     "doctorAskPct": 0.2
+    },
+    "diabetes": {
+     "patientPct": 5.5,
+     "doctorAskPct": 0.5
+    }
+   },
+   "eval": {
+    "labelledHoldout": 183,
+    "hit3Tree": 0.672,
+    "hit3Baseline": 0.596,
+    "meanLogLikTree": -2.036,
+    "meanLogLikBaseline": -2.1379,
+    "logLikGain": 0.1019
+   },
+   "flagAudit": [
+    {
+     "id": "cardiac",
+     "mentions": 86,
+     "urgentPct": 8.1,
+     "baseUrgentPct": 5.7
+    },
+    {
+     "id": "gi",
+     "mentions": 3,
+     "urgentPct": 33.3,
+     "baseUrgentPct": 5.7
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "pale_tired",
+    "gain": 0.1155,
+    "n": 2492,
+    "yesShare": 0.072,
+    "probs": {
+     "Anemia": 0.1268,
+     "Vitamin deficiency": 0.0923,
+     "Thyroid disorder": 0.0795,
+     "Diabetes": 0.0714,
+     "Anxiety or panic": 0.057,
+     "Depression": 0.0566,
+     "Vitamin D or calcium deficiency": 0.051,
+     "Viral fever": 0.0437
+    },
+    "yes": {
+     "leaf": true,
+     "n": 179,
+     "probs": {
+      "Anemia": 0.676,
+      "Vitamin deficiency": 0.2737,
+      "Thyroid disorder": 0.0782,
+      "Diabetes": 0.0391,
+      "Anxiety or panic": 0.0279,
+      "Depression": 0.0223,
+      "Vitamin D or calcium deficiency": 0.0559,
+      "Viral fever": 0.0447
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "low_mood",
+     "gain": 0.0795,
+     "n": 2313,
+     "yesShare": 0.054,
+     "probs": {
+      "Anemia": 0.0843,
+      "Vitamin deficiency": 0.0783,
+      "Thyroid disorder": 0.0796,
+      "Diabetes": 0.0739,
+      "Anxiety or panic": 0.0592,
+      "Depression": 0.0592,
+      "Vitamin D or calcium deficiency": 0.0506,
+      "Viral fever": 0.0437
+     },
+     "yes": {
+      "leaf": true,
+      "n": 126,
+      "probs": {
+       "Anemia": 0.0952,
+       "Vitamin deficiency": 0.1429,
+       "Thyroid disorder": 0.1746,
+       "Diabetes": 0.0556,
+       "Anxiety or panic": 0.1746,
+       "Depression": 0.4762,
+       "Vitamin D or calcium deficiency": 0.0794,
+       "Viral fever": 0
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "diabetes",
+      "gain": 0.0629,
+      "n": 2187,
+      "yesShare": 0.056,
+      "probs": {
+       "Anemia": 0.0837,
+       "Vitamin deficiency": 0.0745,
+       "Thyroid disorder": 0.0741,
+       "Diabetes": 0.075,
+       "Anxiety or panic": 0.0526,
+       "Depression": 0.0352,
+       "Vitamin D or calcium deficiency": 0.0489,
+       "Viral fever": 0.0462
+      },
+      "yes": {
+       "leaf": true,
+       "n": 122,
+       "probs": {
+        "Anemia": 0.0984,
+        "Vitamin deficiency": 0.123,
+        "Thyroid disorder": 0.1066,
+        "Diabetes": 0.4918,
+        "Anxiety or panic": 0.0164,
+        "Depression": 0.0164,
+        "Vitamin D or calcium deficiency": 0.0656,
+        "Viral fever": 0.0082
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 2065,
+       "probs": {
+        "Anemia": 0.0828,
+        "Vitamin deficiency": 0.0717,
+        "Thyroid disorder": 0.0722,
+        "Diabetes": 0.0504,
+        "Anxiety or panic": 0.0547,
+        "Depression": 0.0363,
+        "Vitamin D or calcium deficiency": 0.0479,
+        "Viral fever": 0.0484
+       }
+      }
+     }
+    }
+   }
+  },
+  "dizziness": {
+   "dialogs": 3016,
+   "train": 2100,
+   "validation": 445,
+   "holdout": 471,
+   "minLeaf": 63,
+   "splitsBeforePruning": 4,
+   "splitsAfterPruning": 3,
+   "conditions": [
+    "Vertigo (BPPV or inner ear)",
+    "Diabetes",
+    "Low blood pressure or postural drop",
+    "Anxiety or panic",
+    "High blood pressure",
+    "Anemia",
+    "Thyroid disorder",
+    "Injury or fracture"
+   ],
+   "facetStats": {
+    "spinning": {
+     "patientPct": 17.4,
+     "doctorAskPct": 0.5
+    },
+    "injury": {
+     "patientPct": 12.4,
+     "doctorAskPct": 0.3
+    },
+    "hypertension": {
+     "patientPct": 14.2,
+     "doctorAskPct": 1
+    }
+   },
+   "eval": {
+    "labelledHoldout": 225,
+    "hit3Tree": 0.756,
+    "hit3Baseline": 0.587,
+    "meanLogLikTree": -2.1345,
+    "meanLogLikBaseline": -2.2685,
+    "logLikGain": 0.134
+   },
+   "flagAudit": [
+    {
+     "id": "stroke",
+     "mentions": 95,
+     "urgentPct": 9.5,
+     "baseUrgentPct": 9.8
+    },
+    {
+     "id": "cardiac",
+     "mentions": 314,
+     "urgentPct": 8,
+     "baseUrgentPct": 9.8
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "spinning",
+    "gain": 0.103,
+    "n": 2100,
+    "yesShare": 0.173,
+    "probs": {
+     "Vertigo (BPPV or inner ear)": 0.1862,
+     "Diabetes": 0.1029,
+     "Low blood pressure or postural drop": 0.1043,
+     "Anxiety or panic": 0.0857,
+     "High blood pressure": 0.0948,
+     "Anemia": 0.0824,
+     "Thyroid disorder": 0.0595,
+     "Injury or fracture": 0.0605
+    },
+    "yes": {
+     "leaf": true,
+     "n": 364,
+     "probs": {
+      "Vertigo (BPPV or inner ear)": 0.5247,
+      "Diabetes": 0.0714,
+      "Low blood pressure or postural drop": 0.0824,
+      "Anxiety or panic": 0.0495,
+      "High blood pressure": 0.0879,
+      "Anemia": 0.0604,
+      "Thyroid disorder": 0.044,
+      "Injury or fracture": 0.0385
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "injury",
+     "gain": 0.0764,
+     "n": 1736,
+     "yesShare": 0.119,
+     "probs": {
+      "Vertigo (BPPV or inner ear)": 0.1152,
+      "Diabetes": 0.1094,
+      "Low blood pressure or postural drop": 0.1089,
+      "Anxiety or panic": 0.0933,
+      "High blood pressure": 0.0962,
+      "Anemia": 0.087,
+      "Thyroid disorder": 0.0628,
+      "Injury or fracture": 0.0651
+     },
+     "yes": {
+      "leaf": true,
+      "n": 207,
+      "probs": {
+       "Vertigo (BPPV or inner ear)": 0.1401,
+       "Diabetes": 0.0773,
+       "Low blood pressure or postural drop": 0.1014,
+       "Anxiety or panic": 0.0435,
+       "High blood pressure": 0.0628,
+       "Anemia": 0.0435,
+       "Thyroid disorder": 0.0193,
+       "Injury or fracture": 0.314
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "hypertension",
+      "gain": 0.0558,
+      "n": 1529,
+      "yesShare": 0.148,
+      "probs": {
+       "Vertigo (BPPV or inner ear)": 0.1118,
+       "Diabetes": 0.1138,
+       "Low blood pressure or postural drop": 0.1099,
+       "Anxiety or panic": 0.1001,
+       "High blood pressure": 0.1007,
+       "Anemia": 0.0929,
+       "Thyroid disorder": 0.0687,
+       "Injury or fracture": 0.0314
+      },
+      "yes": {
+       "leaf": true,
+       "n": 227,
+       "probs": {
+        "Vertigo (BPPV or inner ear)": 0.1013,
+        "Diabetes": 0.1454,
+        "Low blood pressure or postural drop": 0.2379,
+        "Anxiety or panic": 0.0881,
+        "High blood pressure": 0.2643,
+        "Anemia": 0.1057,
+        "Thyroid disorder": 0.0793,
+        "Injury or fracture": 0
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 1302,
+       "probs": {
+        "Vertigo (BPPV or inner ear)": 0.1137,
+        "Diabetes": 0.1083,
+        "Low blood pressure or postural drop": 0.0876,
+        "Anxiety or panic": 0.1022,
+        "High blood pressure": 0.0722,
+        "Anemia": 0.0906,
+        "Thyroid disorder": 0.0668,
+        "Injury or fracture": 0.0369
+       }
+      }
+     }
+    }
+   }
+  },
+  "breathless": {
+   "dialogs": 2948,
+   "train": 2074,
+   "validation": 422,
+   "holdout": 452,
+   "minLeaf": 62,
+   "splitsBeforePruning": 4,
+   "splitsAfterPruning": 3,
+   "conditions": [
+    "Asthma or reactive airway",
+    "Angina or heart disease",
+    "Bronchitis",
+    "Anxiety or panic",
+    "Allergic rhinitis or allergy",
+    "Pneumonia or chest infection",
+    "Anemia",
+    "Acid reflux (GERD)"
+   ],
+   "facetStats": {
+    "allergy": {
+     "patientPct": 11.8,
+     "doctorAskPct": 1.5
+    },
+    "anxiety": {
+     "patientPct": 7,
+     "doctorAskPct": 0.2
+    },
+    "cough": {
+     "patientPct": 16.2,
+     "doctorAskPct": 0.9
+    }
+   },
+   "eval": {
+    "labelledHoldout": 271,
+    "hit3Tree": 0.815,
+    "hit3Baseline": 0.745,
+    "meanLogLikTree": -2.4656,
+    "meanLogLikBaseline": -2.6308,
+    "logLikGain": 0.1652
+   },
+   "flagAudit": [
+    {
+     "id": "rest",
+     "mentions": 86,
+     "urgentPct": 8.1,
+     "baseUrgentPct": 7.5
+    },
+    {
+     "id": "chest",
+     "mentions": 133,
+     "urgentPct": 12.8,
+     "baseUrgentPct": 7.5
+    },
+    {
+     "id": "allergy",
+     "mentions": 1,
+     "urgentPct": 0,
+     "baseUrgentPct": 7.5
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "allergy",
+    "gain": 0.0926,
+    "n": 2074,
+    "yesShare": 0.122,
+    "probs": {
+     "Asthma or reactive airway": 0.2488,
+     "Angina or heart disease": 0.1321,
+     "Bronchitis": 0.1278,
+     "Anxiety or panic": 0.1205,
+     "Allergic rhinitis or allergy": 0.1008,
+     "Pneumonia or chest infection": 0.0526,
+     "Anemia": 0.0463,
+     "Acid reflux (GERD)": 0.0468
+    },
+    "yes": {
+     "leaf": true,
+     "n": 253,
+     "probs": {
+      "Asthma or reactive airway": 0.4229,
+      "Angina or heart disease": 0.0356,
+      "Bronchitis": 0.1542,
+      "Anxiety or panic": 0.0395,
+      "Allergic rhinitis or allergy": 0.3676,
+      "Pneumonia or chest infection": 0.0553,
+      "Anemia": 0.0158,
+      "Acid reflux (GERD)": 0.0316
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "anxiety",
+     "gain": 0.0679,
+     "n": 1821,
+     "yesShare": 0.064,
+     "probs": {
+      "Asthma or reactive airway": 0.2246,
+      "Angina or heart disease": 0.1455,
+      "Bronchitis": 0.1241,
+      "Anxiety or panic": 0.1318,
+      "Allergic rhinitis or allergy": 0.0637,
+      "Pneumonia or chest infection": 0.0522,
+      "Anemia": 0.0505,
+      "Acid reflux (GERD)": 0.0489
+     },
+     "yes": {
+      "leaf": true,
+      "n": 116,
+      "probs": {
+       "Asthma or reactive airway": 0.1034,
+       "Angina or heart disease": 0.1983,
+       "Bronchitis": 0.0603,
+       "Anxiety or panic": 0.569,
+       "Allergic rhinitis or allergy": 0.0345,
+       "Pneumonia or chest infection": 0.0086,
+       "Anemia": 0.0431,
+       "Acid reflux (GERD)": 0.0948
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "cough",
+      "gain": 0.0634,
+      "n": 1705,
+      "yesShare": 0.159,
+      "probs": {
+       "Asthma or reactive airway": 0.2328,
+       "Angina or heart disease": 0.1419,
+       "Bronchitis": 0.1284,
+       "Anxiety or panic": 0.1021,
+       "Allergic rhinitis or allergy": 0.0657,
+       "Pneumonia or chest infection": 0.0551,
+       "Anemia": 0.051,
+       "Acid reflux (GERD)": 0.0457
+      },
+      "yes": {
+       "leaf": true,
+       "n": 271,
+       "probs": {
+        "Asthma or reactive airway": 0.3801,
+        "Angina or heart disease": 0.0517,
+        "Bronchitis": 0.2066,
+        "Anxiety or panic": 0.0406,
+        "Allergic rhinitis or allergy": 0.107,
+        "Pneumonia or chest infection": 0.1328,
+        "Anemia": 0.0074,
+        "Acid reflux (GERD)": 0.048
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 1434,
+       "probs": {
+        "Asthma or reactive airway": 0.205,
+        "Angina or heart disease": 0.159,
+        "Bronchitis": 0.1137,
+        "Anxiety or panic": 0.1137,
+        "Allergic rhinitis or allergy": 0.0579,
+        "Pneumonia or chest infection": 0.0404,
+        "Anemia": 0.0593,
+        "Acid reflux (GERD)": 0.0453
+       }
+      }
+     }
+    }
+   }
+  },
+  "sorethroat": {
+   "dialogs": 2872,
+   "train": 2045,
+   "validation": 432,
+   "holdout": 395,
+   "minLeaf": 61,
+   "splitsBeforePruning": 7,
+   "splitsAfterPruning": 6,
+   "conditions": [
+    "Sinusitis",
+    "Allergic rhinitis or allergy",
+    "Tonsillitis or pharyngitis",
+    "Viral fever",
+    "Common cold or viral upper respiratory infection",
+    "Bacterial skin infection",
+    "Viral skin infection",
+    "Asthma or reactive airway"
+   ],
+   "facetStats": {
+    "allergy": {
+     "patientPct": 21.6,
+     "doctorAskPct": 0.8
+    },
+    "cold_symptoms": {
+     "patientPct": 35.3,
+     "doctorAskPct": 0.9
+    },
+    "long_duration": {
+     "patientPct": 33.3,
+     "doctorAskPct": 0.1
+    },
+    "fever": {
+     "patientPct": 15.7,
+     "doctorAskPct": 0.7
+    },
+    "cough": {
+     "patientPct": 17.9,
+     "doctorAskPct": 0.5
+    }
+   },
+   "eval": {
+    "labelledHoldout": 182,
+    "hit3Tree": 0.769,
+    "hit3Baseline": 0.747,
+    "meanLogLikTree": -2.2849,
+    "meanLogLikBaseline": -2.3877,
+    "logLikGain": 0.1028
+   },
+   "flagAudit": [
+    {
+     "id": "airway",
+     "mentions": 12,
+     "urgentPct": 8.3,
+     "baseUrgentPct": 4.7
+    },
+    {
+     "id": "neck",
+     "mentions": 32,
+     "urgentPct": 9.4,
+     "baseUrgentPct": 4.7
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "allergy",
+    "gain": 0.0919,
+    "n": 2045,
+    "yesShare": 0.22,
+    "probs": {
+     "Sinusitis": 0.1496,
+     "Allergic rhinitis or allergy": 0.1222,
+     "Tonsillitis or pharyngitis": 0.1046,
+     "Viral fever": 0.09,
+     "Common cold or viral upper respiratory infection": 0.0733,
+     "Bacterial skin infection": 0.0655,
+     "Viral skin infection": 0.0587,
+     "Asthma or reactive airway": 0.0474
+    },
+    "yes": {
+     "leaf": false,
+     "facet": "cold_symptoms",
+     "gain": 0.0622,
+     "n": 450,
+     "yesShare": 0.644,
+     "probs": {
+      "Sinusitis": 0.1867,
+      "Allergic rhinitis or allergy": 0.3311,
+      "Tonsillitis or pharyngitis": 0.0467,
+      "Viral fever": 0.0689,
+      "Common cold or viral upper respiratory infection": 0.0467,
+      "Bacterial skin infection": 0.0356,
+      "Viral skin infection": 0.04,
+      "Asthma or reactive airway": 0.08
+     },
+     "yes": {
+      "leaf": true,
+      "n": 290,
+      "probs": {
+       "Sinusitis": 0.1379,
+       "Allergic rhinitis or allergy": 0.3862,
+       "Tonsillitis or pharyngitis": 0.031,
+       "Viral fever": 0.0862,
+       "Common cold or viral upper respiratory infection": 0.0621,
+       "Bacterial skin infection": 0.0276,
+       "Viral skin infection": 0.0414,
+       "Asthma or reactive airway": 0.0793
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "long_duration",
+      "gain": 0.0614,
+      "n": 160,
+      "yesShare": 0.4,
+      "probs": {
+       "Sinusitis": 0.275,
+       "Allergic rhinitis or allergy": 0.2313,
+       "Tonsillitis or pharyngitis": 0.075,
+       "Viral fever": 0.0375,
+       "Common cold or viral upper respiratory infection": 0.0187,
+       "Bacterial skin infection": 0.05,
+       "Viral skin infection": 0.0375,
+       "Asthma or reactive airway": 0.0813
+      },
+      "yes": {
+       "leaf": true,
+       "n": 64,
+       "probs": {
+        "Sinusitis": 0.3906,
+        "Allergic rhinitis or allergy": 0.2344,
+        "Tonsillitis or pharyngitis": 0.0625,
+        "Viral fever": 0.0156,
+        "Common cold or viral upper respiratory infection": 0,
+        "Bacterial skin infection": 0.0469,
+        "Viral skin infection": 0.0156,
+        "Asthma or reactive airway": 0.0781
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 96,
+       "probs": {
+        "Sinusitis": 0.1979,
+        "Allergic rhinitis or allergy": 0.2292,
+        "Tonsillitis or pharyngitis": 0.0833,
+        "Viral fever": 0.0521,
+        "Common cold or viral upper respiratory infection": 0.0313,
+        "Bacterial skin infection": 0.0521,
+        "Viral skin infection": 0.0521,
+        "Asthma or reactive airway": 0.0833
+       }
+      }
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "fever",
+     "gain": 0.0461,
+     "n": 1595,
+     "yesShare": 0.158,
+     "probs": {
+      "Sinusitis": 0.1392,
+      "Allergic rhinitis or allergy": 0.0633,
+      "Tonsillitis or pharyngitis": 0.121,
+      "Viral fever": 0.0959,
+      "Common cold or viral upper respiratory infection": 0.0809,
+      "Bacterial skin infection": 0.074,
+      "Viral skin infection": 0.0639,
+      "Asthma or reactive airway": 0.0382
+     },
+     "yes": {
+      "leaf": false,
+      "facet": "cough",
+      "gain": 0.0809,
+      "n": 252,
+      "yesShare": 0.325,
+      "probs": {
+       "Sinusitis": 0.0754,
+       "Allergic rhinitis or allergy": 0.0476,
+       "Tonsillitis or pharyngitis": 0.1984,
+       "Viral fever": 0.2183,
+       "Common cold or viral upper respiratory infection": 0.1548,
+       "Bacterial skin infection": 0.1032,
+       "Viral skin infection": 0.1111,
+       "Asthma or reactive airway": 0.0317
+      },
+      "yes": {
+       "leaf": true,
+       "n": 82,
+       "probs": {
+        "Sinusitis": 0.061,
+        "Allergic rhinitis or allergy": 0.1098,
+        "Tonsillitis or pharyngitis": 0.0976,
+        "Viral fever": 0.2195,
+        "Common cold or viral upper respiratory infection": 0.2317,
+        "Bacterial skin infection": 0.0732,
+        "Viral skin infection": 0.122,
+        "Asthma or reactive airway": 0.061
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 170,
+       "probs": {
+        "Sinusitis": 0.0824,
+        "Allergic rhinitis or allergy": 0.0176,
+        "Tonsillitis or pharyngitis": 0.2471,
+        "Viral fever": 0.2176,
+        "Common cold or viral upper respiratory infection": 0.1176,
+        "Bacterial skin infection": 0.1176,
+        "Viral skin infection": 0.1059,
+        "Asthma or reactive airway": 0.0176
+       }
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "cold_symptoms",
+      "gain": 0.0333,
+      "n": 1343,
+      "yesShare": 0.24,
+      "probs": {
+       "Sinusitis": 0.1512,
+       "Allergic rhinitis or allergy": 0.0663,
+       "Tonsillitis or pharyngitis": 0.1065,
+       "Viral fever": 0.073,
+       "Common cold or viral upper respiratory infection": 0.067,
+       "Bacterial skin infection": 0.0685,
+       "Viral skin infection": 0.0551,
+       "Asthma or reactive airway": 0.0395
+      },
+      "yes": {
+       "leaf": true,
+       "n": 322,
+       "probs": {
+        "Sinusitis": 0.1677,
+        "Allergic rhinitis or allergy": 0.1242,
+        "Tonsillitis or pharyngitis": 0.0745,
+        "Viral fever": 0.1149,
+        "Common cold or viral upper respiratory infection": 0.118,
+        "Bacterial skin infection": 0.0683,
+        "Viral skin infection": 0.087,
+        "Asthma or reactive airway": 0.0559
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 1021,
+       "probs": {
+        "Sinusitis": 0.1459,
+        "Allergic rhinitis or allergy": 0.048,
+        "Tonsillitis or pharyngitis": 0.1166,
+        "Viral fever": 0.0597,
+        "Common cold or viral upper respiratory infection": 0.0509,
+        "Bacterial skin infection": 0.0686,
+        "Viral skin infection": 0.0451,
+        "Asthma or reactive airway": 0.0343
+       }
+      }
+     }
+    }
+   }
+  },
+  "headache": {
+   "dialogs": 2830,
+   "train": 1965,
+   "validation": 434,
+   "holdout": 431,
+   "minLeaf": 60,
+   "splitsBeforePruning": 4,
+   "splitsAfterPruning": 4,
+   "conditions": [
+    "Migraine",
+    "Injury or fracture",
+    "Epilepsy or seizure disorder",
+    "Viral fever",
+    "High blood pressure",
+    "Anxiety or panic",
+    "Sinusitis"
+   ],
+   "facetStats": {
+    "injury": {
+     "patientPct": 12.2,
+     "doctorAskPct": 0.5
+    },
+    "long_duration": {
+     "patientPct": 33.4,
+     "doctorAskPct": 0.4
+    },
+    "hypertension": {
+     "patientPct": 6.3,
+     "doctorAskPct": 0.5
+    },
+    "fever": {
+     "patientPct": 9.6,
+     "doctorAskPct": 0.7
+    }
+   },
+   "eval": {
+    "labelledHoldout": 170,
+    "hit3Tree": 0.724,
+    "hit3Baseline": 0.653,
+    "meanLogLikTree": -1.5777,
+    "meanLogLikBaseline": -1.6948,
+    "logLikGain": 0.1171
+   },
+   "flagAudit": [
+    {
+     "id": "thunderclap",
+     "mentions": 10,
+     "urgentPct": 10,
+     "baseUrgentPct": 10.2
+    },
+    {
+     "id": "stroke",
+     "mentions": 195,
+     "urgentPct": 16.4,
+     "baseUrgentPct": 10.2
+    },
+    {
+     "id": "neck",
+     "mentions": 52,
+     "urgentPct": 32.7,
+     "baseUrgentPct": 10.2
+    },
+    {
+     "id": "injury",
+     "mentions": 160,
+     "urgentPct": 27.5,
+     "baseUrgentPct": 10.2
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "injury",
+    "gain": 0.0827,
+    "n": 1965,
+    "yesShare": 0.119,
+    "probs": {
+     "Migraine": 0.1211,
+     "Injury or fracture": 0.0875,
+     "Epilepsy or seizure disorder": 0.055,
+     "Viral fever": 0.0509,
+     "High blood pressure": 0.0539,
+     "Anxiety or panic": 0.0519,
+     "Sinusitis": 0.0417
+    },
+    "yes": {
+     "leaf": false,
+     "facet": "long_duration",
+     "gain": 0.0131,
+     "n": 234,
+     "yesShare": 0.325,
+     "probs": {
+      "Migraine": 0.0769,
+      "Injury or fracture": 0.3803,
+      "Epilepsy or seizure disorder": 0.0983,
+      "Viral fever": 0.0043,
+      "High blood pressure": 0.0641,
+      "Anxiety or panic": 0.0513,
+      "Sinusitis": 0.0214
+     },
+     "yes": {
+      "leaf": true,
+      "n": 76,
+      "probs": {
+       "Migraine": 0.0921,
+       "Injury or fracture": 0.3158,
+       "Epilepsy or seizure disorder": 0.1184,
+       "Viral fever": 0,
+       "High blood pressure": 0.0658,
+       "Anxiety or panic": 0.0658,
+       "Sinusitis": 0.0263
+      }
+     },
+     "no": {
+      "leaf": true,
+      "n": 158,
+      "probs": {
+       "Migraine": 0.0696,
+       "Injury or fracture": 0.4114,
+       "Epilepsy or seizure disorder": 0.0886,
+       "Viral fever": 0.0063,
+       "High blood pressure": 0.0633,
+       "Anxiety or panic": 0.0443,
+       "Sinusitis": 0.019
+      }
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "hypertension",
+     "gain": 0.0466,
+     "n": 1731,
+     "yesShare": 0.066,
+     "probs": {
+      "Migraine": 0.1271,
+      "Injury or fracture": 0.0479,
+      "Epilepsy or seizure disorder": 0.0491,
+      "Viral fever": 0.0572,
+      "High blood pressure": 0.0526,
+      "Anxiety or panic": 0.052,
+      "Sinusitis": 0.0445
+     },
+     "yes": {
+      "leaf": true,
+      "n": 114,
+      "probs": {
+       "Migraine": 0.114,
+       "Injury or fracture": 0.0263,
+       "Epilepsy or seizure disorder": 0.0351,
+       "Viral fever": 0.0088,
+       "High blood pressure": 0.3246,
+       "Anxiety or panic": 0.0439,
+       "Sinusitis": 0.0088
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "fever",
+      "gain": 0.0434,
+      "n": 1617,
+      "yesShare": 0.109,
+      "probs": {
+       "Migraine": 0.128,
+       "Injury or fracture": 0.0495,
+       "Epilepsy or seizure disorder": 0.0501,
+       "Viral fever": 0.0606,
+       "High blood pressure": 0.0334,
+       "Anxiety or panic": 0.0526,
+       "Sinusitis": 0.047
+      },
+      "yes": {
+       "leaf": true,
+       "n": 176,
+       "probs": {
+        "Migraine": 0.0795,
+        "Injury or fracture": 0.0341,
+        "Epilepsy or seizure disorder": 0.0284,
+        "Viral fever": 0.25,
+        "High blood pressure": 0.0057,
+        "Anxiety or panic": 0.0341,
+        "Sinusitis": 0.0511
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 1441,
+       "probs": {
+        "Migraine": 0.1339,
+        "Injury or fracture": 0.0514,
+        "Epilepsy or seizure disorder": 0.0527,
+        "Viral fever": 0.0375,
+        "High blood pressure": 0.0368,
+        "Anxiety or panic": 0.0548,
+        "Sinusitis": 0.0465
+       }
+      }
+     }
+    }
+   }
+  },
+  "depression": {
+   "dialogs": 2541,
+   "train": 1773,
+   "validation": 399,
+   "holdout": 369,
+   "minLeaf": 60,
+   "splitsBeforePruning": 1,
+   "splitsAfterPruning": 1,
+   "conditions": [
+    "Depression",
+    "Anxiety or panic"
+   ],
+   "facetStats": {
+    "anxiety": {
+     "patientPct": 21.4,
+     "doctorAskPct": 0.3
+    }
+   },
+   "eval": {
+    "labelledHoldout": 192,
+    "hit3Tree": 1,
+    "hit3Baseline": 1,
+    "meanLogLikTree": -1.09,
+    "meanLogLikBaseline": -1.1622,
+    "logLikGain": 0.0722
+   },
+   "flagAudit": [
+    {
+     "id": "suicide",
+     "mentions": 358,
+     "urgentPct": 12.3,
+     "baseUrgentPct": 5.9
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "anxiety",
+    "gain": 0.0783,
+    "n": 1773,
+    "yesShare": 0.211,
+    "probs": {
+     "Depression": 0.4693,
+     "Anxiety or panic": 0.1517
+    },
+    "yes": {
+     "leaf": true,
+     "n": 374,
+     "probs": {
+      "Depression": 0.4893,
+      "Anxiety or panic": 0.4011
+     }
+    },
+    "no": {
+     "leaf": true,
+     "n": 1399,
+     "probs": {
+      "Depression": 0.4639,
+      "Anxiety or panic": 0.0851
+     }
+    }
+   }
+  },
+  "palpitation": {
+   "dialogs": 2142,
+   "train": 1482,
+   "validation": 313,
+   "holdout": 347,
+   "minLeaf": 60,
+   "splitsBeforePruning": 5,
+   "splitsAfterPruning": 4,
+   "conditions": [
+    "Arrhythmia or ectopic beats",
+    "Anxiety or panic",
+    "Thyroid disorder",
+    "Anemia",
+    "Angina or heart disease",
+    "Hormonal imbalance or PCOS",
+    "High blood pressure",
+    "Diabetes"
+   ],
+   "facetStats": {
+    "anxiety": {
+     "patientPct": 14.3,
+     "doctorAskPct": 0.6
+    },
+    "hypertension": {
+     "patientPct": 17,
+     "doctorAskPct": 1
+    },
+    "long_duration": {
+     "patientPct": 30.3,
+     "doctorAskPct": 0.1
+    },
+    "stress": {
+     "patientPct": 32.4,
+     "doctorAskPct": 1.3
+    }
+   },
+   "eval": {
+    "labelledHoldout": 219,
+    "hit3Tree": 0.89,
+    "hit3Baseline": 0.881,
+    "meanLogLikTree": -3.2596,
+    "meanLogLikBaseline": -3.2794,
+    "logLikGain": 0.0198
+   },
+   "flagAudit": [
+    {
+     "id": "cardiac",
+     "mentions": 170,
+     "urgentPct": 7.6,
+     "baseUrgentPct": 7.7
+    },
+    {
+     "id": "sustained",
+     "mentions": 99,
+     "urgentPct": 7.1,
+     "baseUrgentPct": 7.7
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "anxiety",
+    "gain": 0.0662,
+    "n": 1482,
+    "yesShare": 0.14,
+    "probs": {
+     "Arrhythmia or ectopic beats": 0.4399,
+     "Anxiety or panic": 0.2719,
+     "Thyroid disorder": 0.2247,
+     "Anemia": 0.1464,
+     "Angina or heart disease": 0.1377,
+     "Hormonal imbalance or PCOS": 0.1026,
+     "High blood pressure": 0.0783,
+     "Diabetes": 0.0459
+    },
+    "yes": {
+     "leaf": true,
+     "n": 208,
+     "probs": {
+      "Arrhythmia or ectopic beats": 0.4231,
+      "Anxiety or panic": 0.6154,
+      "Thyroid disorder": 0.2356,
+      "Anemia": 0.149,
+      "Angina or heart disease": 0.1779,
+      "Hormonal imbalance or PCOS": 0.1442,
+      "High blood pressure": 0.0769,
+      "Diabetes": 0.0481
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "hypertension",
+     "gain": 0.0349,
+     "n": 1274,
+     "yesShare": 0.165,
+     "probs": {
+      "Arrhythmia or ectopic beats": 0.4427,
+      "Anxiety or panic": 0.2159,
+      "Thyroid disorder": 0.2229,
+      "Anemia": 0.146,
+      "Angina or heart disease": 0.1311,
+      "Hormonal imbalance or PCOS": 0.0958,
+      "High blood pressure": 0.0785,
+      "Diabetes": 0.0455
+     },
+     "yes": {
+      "leaf": false,
+      "facet": "long_duration",
+      "gain": 0.0175,
+      "n": 210,
+      "yesShare": 0.367,
+      "probs": {
+       "Arrhythmia or ectopic beats": 0.4905,
+       "Anxiety or panic": 0.1952,
+       "Thyroid disorder": 0.2667,
+       "Anemia": 0.1333,
+       "Angina or heart disease": 0.119,
+       "Hormonal imbalance or PCOS": 0.1143,
+       "High blood pressure": 0.219,
+       "Diabetes": 0.0619
+      },
+      "yes": {
+       "leaf": true,
+       "n": 77,
+       "probs": {
+        "Arrhythmia or ectopic beats": 0.5065,
+        "Anxiety or panic": 0.1948,
+        "Thyroid disorder": 0.2078,
+        "Anemia": 0.1169,
+        "Angina or heart disease": 0.1039,
+        "Hormonal imbalance or PCOS": 0.1039,
+        "High blood pressure": 0.1688,
+        "Diabetes": 0.0519
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 133,
+       "probs": {
+        "Arrhythmia or ectopic beats": 0.4812,
+        "Anxiety or panic": 0.1955,
+        "Thyroid disorder": 0.3008,
+        "Anemia": 0.1429,
+        "Angina or heart disease": 0.1278,
+        "Hormonal imbalance or PCOS": 0.1203,
+        "High blood pressure": 0.2481,
+        "Diabetes": 0.0677
+       }
+      }
+     },
+     "no": {
+      "leaf": false,
+      "facet": "stress",
+      "gain": 0.0157,
+      "n": 1064,
+      "yesShare": 0.219,
+      "probs": {
+       "Arrhythmia or ectopic beats": 0.4333,
+       "Anxiety or panic": 0.2199,
+       "Thyroid disorder": 0.2143,
+       "Anemia": 0.1485,
+       "Angina or heart disease": 0.1335,
+       "Hormonal imbalance or PCOS": 0.0921,
+       "High blood pressure": 0.0508,
+       "Diabetes": 0.0423
+      },
+      "yes": {
+       "leaf": true,
+       "n": 233,
+       "probs": {
+        "Arrhythmia or ectopic beats": 0.4807,
+        "Anxiety or panic": 0.2918,
+        "Thyroid disorder": 0.2532,
+        "Anemia": 0.1459,
+        "Angina or heart disease": 0.1845,
+        "Hormonal imbalance or PCOS": 0.0987,
+        "High blood pressure": 0.073,
+        "Diabetes": 0.0429
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 831,
+       "probs": {
+        "Arrhythmia or ectopic beats": 0.42,
+        "Anxiety or panic": 0.1998,
+        "Thyroid disorder": 0.2034,
+        "Anemia": 0.1492,
+        "Angina or heart disease": 0.1191,
+        "Hormonal imbalance or PCOS": 0.0903,
+        "High blood pressure": 0.0445,
+        "Diabetes": 0.0421
+       }
+      }
+     }
+    }
+   }
+  },
+  "acne": {
+   "dialogs": 2093,
+   "train": 1447,
+   "validation": 318,
+   "holdout": 328,
+   "minLeaf": 60,
+   "splitsBeforePruning": 4,
+   "splitsAfterPruning": 3,
+   "conditions": [
+    "Acne",
+    "Hormonal imbalance or PCOS",
+    "Bacterial skin infection",
+    "Fibroid or ovarian cyst"
+   ],
+   "facetStats": {
+    "stress": {
+     "patientPct": 8.2,
+     "doctorAskPct": 0.2
+    },
+    "acne_cysts": {
+     "patientPct": 27,
+     "doctorAskPct": 0.5
+    },
+    "tried_medicine": {
+     "patientPct": 16.9,
+     "doctorAskPct": 0.2
+    }
+   },
+   "eval": {
+    "labelledHoldout": 209,
+    "hit3Tree": 0.943,
+    "hit3Baseline": 0.933,
+    "meanLogLikTree": -1.6362,
+    "meanLogLikBaseline": -1.6863,
+    "logLikGain": 0.0501
+   },
+   "flagAudit": [
+    {
+     "id": "cellulitis",
+     "mentions": 1,
+     "urgentPct": 0,
+     "baseUrgentPct": 10.9
+    }
+   ],
+   "tree": {
+    "leaf": false,
+    "facet": "stress",
+    "gain": 0.0349,
+    "n": 1447,
+    "yesShare": 0.08,
+    "probs": {
+     "Acne": 0.5121,
+     "Hormonal imbalance or PCOS": 0.188,
+     "Bacterial skin infection": 0.1092,
+     "Fibroid or ovarian cyst": 0.0581
+    },
+    "yes": {
+     "leaf": true,
+     "n": 116,
+     "probs": {
+      "Acne": 0.3017,
+      "Hormonal imbalance or PCOS": 0.0259,
+      "Bacterial skin infection": 0.1897,
+      "Fibroid or ovarian cyst": 0.1293
+     }
+    },
+    "no": {
+     "leaf": false,
+     "facet": "acne_cysts",
+     "gain": 0.0179,
+     "n": 1331,
+     "yesShare": 0.267,
+     "probs": {
+      "Acne": 0.5304,
+      "Hormonal imbalance or PCOS": 0.2021,
+      "Bacterial skin infection": 0.1022,
+      "Fibroid or ovarian cyst": 0.0518
+     },
+     "yes": {
+      "leaf": false,
+      "facet": "tried_medicine",
+      "gain": 0.023,
+      "n": 356,
+      "yesShare": 0.199,
+      "probs": {
+       "Acne": 0.5506,
+       "Hormonal imbalance or PCOS": 0.1124,
+       "Bacterial skin infection": 0.1096,
+       "Fibroid or ovarian cyst": 0.0758
+      },
+      "yes": {
+       "leaf": true,
+       "n": 71,
+       "probs": {
+        "Acne": 0.6197,
+        "Hormonal imbalance or PCOS": 0.1549,
+        "Bacterial skin infection": 0.0704,
+        "Fibroid or ovarian cyst": 0.0141
+       }
+      },
+      "no": {
+       "leaf": true,
+       "n": 285,
+       "probs": {
+        "Acne": 0.5333,
+        "Hormonal imbalance or PCOS": 0.1018,
+        "Bacterial skin infection": 0.1193,
+        "Fibroid or ovarian cyst": 0.0912
+       }
+      }
+     },
+     "no": {
+      "leaf": true,
+      "n": 975,
+      "probs": {
+       "Acne": 0.5231,
+       "Hormonal imbalance or PCOS": 0.2349,
+       "Bacterial skin infection": 0.0995,
+       "Fibroid or ovarian cyst": 0.0431
+      }
+     }
+    }
+   }
+  }
+ }
+}

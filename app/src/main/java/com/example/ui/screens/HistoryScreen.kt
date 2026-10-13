@@ -57,26 +57,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.data.local.TriageRecordEntity
 import com.example.data.model.ConsultationTranscriptItem
-import com.example.ui.theme.BorderEmergencyRed
-import com.example.ui.theme.BorderRoutineBlue
-import com.example.ui.theme.BorderSelfCareGreen
-import com.example.ui.theme.BorderUrgentOrange
-import com.example.ui.theme.CardBorderSubtle
-import com.example.ui.theme.CrispCanvasBackground
-import com.example.ui.theme.DeepEmergencyRed
-import com.example.ui.theme.DeepRoutineBlue
-import com.example.ui.theme.DeepSelfCareGreen
-import com.example.ui.theme.DeepTealPrimary
-import com.example.ui.theme.DeepTextBody
-import com.example.ui.theme.DeepTextHeadlines
-import com.example.ui.theme.DeepUrgentOrange
-import com.example.ui.theme.LightEmergencyContainer
-import com.example.ui.theme.LightRoutineContainer
-import com.example.ui.theme.LightSelfCareContainer
-import com.example.ui.theme.LightUrgentContainer
-import com.example.ui.theme.MutedTextSlate
-import com.example.ui.theme.PureWhiteSurface
-import com.example.ui.theme.SoftAquaContainer
+import com.example.ui.theme.getUrgencyThemeColors
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -100,14 +81,14 @@ fun HistoryScreen(
     var showClearConfirmDialog by remember { mutableStateOf(false) }
 
     Scaffold(
-        containerColor = CrispCanvasBackground,
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(
                 title = {
                     Text(
                         text = "Assessment History",
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        color = DeepTextHeadlines
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 },
                 navigationIcon = {
@@ -118,7 +99,7 @@ fun HistoryScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
-                            tint = DeepTextHeadlines
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 },
@@ -131,13 +112,13 @@ fun HistoryScreen(
                             Icon(
                                 imageVector = Icons.Default.DeleteSweep,
                                 contentDescription = "Clear History",
-                                tint = DeepEmergencyRed
+                                tint = MaterialTheme.colorScheme.error
                             )
                         }
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = PureWhiteSurface
+                    containerColor = MaterialTheme.colorScheme.surface
                 )
             )
         },
@@ -158,13 +139,13 @@ fun HistoryScreen(
                     Box(
                         modifier = Modifier
                             .size(76.dp)
-                            .background(SoftAquaContainer, CircleShape),
+                            .background(MaterialTheme.colorScheme.primaryContainer, CircleShape),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.History,
                             contentDescription = "No consultations",
-                            tint = DeepTealPrimary,
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(38.dp)
                         )
                     }
@@ -172,21 +153,21 @@ fun HistoryScreen(
                     Text(
                         text = "No Past Consultations",
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                        color = DeepTextHeadlines
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = "Your completed clinical assessments are automatically recorded here for doctor reference.",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MutedTextSlate,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(22.dp))
                     Button(
                         onClick = onBack,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = DeepTealPrimary,
-                            contentColor = Color.White
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
                         ),
                         shape = RoundedCornerShape(14.dp)
                     ) {
@@ -227,22 +208,34 @@ fun HistoryScreen(
     if (showClearConfirmDialog) {
         AlertDialog(
             onDismissRequest = { showClearConfirmDialog = false },
-            title = { Text("Clear All Intake History?", color = DeepTextHeadlines, fontWeight = FontWeight.Bold) },
-            text = { Text("This will permanently remove all stored triage records from this device.", color = DeepTextBody) },
+            containerColor = MaterialTheme.colorScheme.surface,
+            title = {
+                Text(
+                    "Clear All Intake History?",
+                    color = MaterialTheme.colorScheme.onSurface,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            text = {
+                Text(
+                    "This will permanently remove all stored triage records from this device.",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            },
             confirmButton = {
                 TextButton(
                     onClick = {
                         onClearAllHistory()
                         showClearConfirmDialog = false
                     },
-                    colors = ButtonDefaults.textButtonColors(contentColor = DeepEmergencyRed)
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
                 ) {
                     Text("Clear All", fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showClearConfirmDialog = false }) {
-                    Text("Cancel", color = MutedTextSlate)
+                    Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         )
@@ -258,19 +251,13 @@ fun CrispHistoryItemCard(
 ) {
     val dateFormat = SimpleDateFormat("MMM dd, yyyy • hh:mm a", Locale.getDefault())
     val dateText = dateFormat.format(Date(record.timestamp))
-
-    val (containerColor, onContainerColor, borderColor) = when (record.urgencyLevel) {
-        "EMERGENCY" -> Triple(LightEmergencyContainer, DeepEmergencyRed, BorderEmergencyRed)
-        "URGENT_CARE" -> Triple(LightUrgentContainer, DeepUrgentOrange, BorderUrgentOrange)
-        "ROUTINE_DOCTOR" -> Triple(LightRoutineContainer, DeepRoutineBlue, BorderRoutineBlue)
-        else -> Triple(LightSelfCareContainer, DeepSelfCareGreen, BorderSelfCareGreen)
-    }
+    val urgencyColors = getUrgencyThemeColors(record.urgencyLevel)
 
     Card(
-        colors = CardDefaults.cardColors(containerColor = PureWhiteSurface),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
-        border = androidx.compose.foundation.BorderStroke(1.dp, CardBorderSubtle),
+        border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
@@ -290,13 +277,13 @@ fun CrispHistoryItemCard(
                 Text(
                     text = dateText,
                     style = MaterialTheme.typography.labelSmall,
-                    color = MutedTextSlate
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
 
                 Surface(
-                    color = containerColor,
+                    color = urgencyColors.container,
                     shape = RoundedCornerShape(8.dp),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, borderColor)
+                    border = androidx.compose.foundation.BorderStroke(1.dp, urgencyColors.border)
                 ) {
                     Text(
                         text = when (record.urgencyLevel) {
@@ -306,7 +293,7 @@ fun CrispHistoryItemCard(
                             else -> "Self-Care"
                         },
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                        color = onContainerColor,
+                        color = urgencyColors.primary,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                     )
                 }
@@ -317,7 +304,7 @@ fun CrispHistoryItemCard(
             Text(
                 text = record.chiefComplaint,
                 style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
-                color = DeepTextHeadlines
+                color = MaterialTheme.colorScheme.onSurface
             )
 
             Spacer(modifier = Modifier.height(4.dp))
@@ -325,7 +312,7 @@ fun CrispHistoryItemCard(
             Text(
                 text = "Specialty: ${record.category}",
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                color = DeepTealPrimary
+                color = MaterialTheme.colorScheme.primary
             )
 
             if (record.likelyConditions.isNotBlank()) {
@@ -333,7 +320,7 @@ fun CrispHistoryItemCard(
                 Text(
                     text = "Matched: ${record.likelyConditions}",
                     style = MaterialTheme.typography.bodySmall,
-                    color = MutedTextSlate,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2
                 )
             }
@@ -352,7 +339,7 @@ fun CrispHistoryItemCard(
                     Icon(
                         imageVector = Icons.Default.Share,
                         contentDescription = "Share",
-                        tint = DeepTealPrimary,
+                        tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(19.dp)
                     )
                 }
@@ -366,7 +353,7 @@ fun CrispHistoryItemCard(
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "Delete",
-                        tint = MutedTextSlate,
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(19.dp)
                     )
                 }
@@ -384,12 +371,13 @@ fun CrispRecordDetailDialog(
 ) {
     val dateFormat = SimpleDateFormat("MMMM dd, yyyy 'at' hh:mm a", Locale.getDefault())
     val dateText = dateFormat.format(Date(record.timestamp))
+    val urgencyColors = getUrgencyThemeColors(record.urgencyLevel)
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
             shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(containerColor = PureWhiteSurface),
-            border = androidx.compose.foundation.BorderStroke(1.2.dp, CardBorderSubtle),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            border = androidx.compose.foundation.BorderStroke(1.2.dp, MaterialTheme.colorScheme.outline),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
             modifier = Modifier
                 .fillMaxWidth()
@@ -403,36 +391,64 @@ fun CrispRecordDetailDialog(
                 verticalArrangement = Arrangement.spacedBy(14.dp)
             ) {
                 item {
-                    Text(
-                        text = "Clinical Intake Record",
-                        style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-                        color = DeepTextHeadlines
-                    )
-                    Text(
-                        text = "$dateText • ${record.category}",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MutedTextSlate
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.Top
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Clinical Intake Record",
+                                style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                            Text(
+                                text = "$dateText • ${record.category}",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                        Surface(
+                            color = urgencyColors.container,
+                            shape = RoundedCornerShape(8.dp),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, urgencyColors.border)
+                        ) {
+                            Text(
+                                text = when (record.urgencyLevel) {
+                                    "EMERGENCY" -> "Emergency"
+                                    "URGENT_CARE" -> "Urgent"
+                                    "ROUTINE_DOCTOR" -> "Routine"
+                                    else -> "Self-Care"
+                                },
+                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
+                                color = urgencyColors.primary,
+                                modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                            )
+                        }
+                    }
                 }
 
                 item {
                     Surface(
-                        color = SoftAquaContainer,
+                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.5f),
                         shape = RoundedCornerShape(14.dp),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, DeepTealPrimary.copy(alpha = 0.2f)),
+                        border = androidx.compose.foundation.BorderStroke(
+                            1.dp,
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.25f)
+                        ),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Column(modifier = Modifier.padding(14.dp)) {
                             Text(
                                 text = "Chief Symptom / Complaint",
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                color = DeepTealPrimary
+                                color = MaterialTheme.colorScheme.primary
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
                                 text = record.chiefComplaint,
                                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold),
-                                color = DeepTextHeadlines
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                         }
                     }
@@ -443,12 +459,12 @@ fun CrispRecordDetailDialog(
                         Text(
                             text = "Potential Conditions:",
                             style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-                            color = DeepTextHeadlines
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Text(
                             text = record.likelyConditions,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = DeepTextBody
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -457,12 +473,12 @@ fun CrispRecordDetailDialog(
                     Text(
                         text = "Clinical Guidance:",
                         style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-                        color = DeepTextHeadlines
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         text = record.clinicalAdvice,
                         style = MaterialTheme.typography.bodyMedium,
-                        color = DeepTextBody,
+                        color = MaterialTheme.colorScheme.onSurface,
                         lineHeight = 20.sp
                     )
                 }
@@ -472,28 +488,28 @@ fun CrispRecordDetailDialog(
                         Text(
                             text = "Multi-turn Transcript Log:",
                             style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
-                            color = DeepTextHeadlines
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                     }
 
                     items(transcript) { item ->
                         Surface(
-                            color = CrispCanvasBackground,
+                            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.6f),
                             shape = RoundedCornerShape(12.dp),
-                            border = androidx.compose.foundation.BorderStroke(1.dp, CardBorderSubtle),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Column(modifier = Modifier.padding(12.dp)) {
                                 Text(
                                     text = item.question,
                                     style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Bold),
-                                    color = DeepTextHeadlines
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = "→ Answer: ${item.answer}",
                                     style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
-                                    color = DeepTealPrimary
+                                    color = MaterialTheme.colorScheme.primary
                                 )
                             }
                         }
@@ -509,17 +525,17 @@ fun CrispRecordDetailDialog(
                         OutlinedButton(
                             onClick = onDismiss,
                             shape = RoundedCornerShape(12.dp),
-                            border = androidx.compose.foundation.BorderStroke(1.dp, CardBorderSubtle),
+                            border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                             modifier = Modifier.weight(1f)
                         ) {
-                            Text("Close", color = DeepTextBody)
+                            Text("Close", color = MaterialTheme.colorScheme.onSurface)
                         }
                         Button(
                             onClick = onShare,
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = DeepTealPrimary,
-                                contentColor = Color.White
+                                containerColor = MaterialTheme.colorScheme.primary,
+                                contentColor = MaterialTheme.colorScheme.onPrimary
                             ),
                             modifier = Modifier.weight(1f)
                         ) {

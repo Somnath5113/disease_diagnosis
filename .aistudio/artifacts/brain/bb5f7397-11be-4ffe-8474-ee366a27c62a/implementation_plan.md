@@ -1,6 +1,6 @@
 # MedTriage: Offline Clinical Intake & Symptom Triage Engine
 
-MedTriage is a 100% offline, privacy-first patient intake and symptom evaluation Android app built with Kotlin and Jetpack Compose. Inspired by multi-turn doctor-patient dialogues from the MedDialog clinical dataset, it executes rule-based decision trees covering respiratory, gastrointestinal, neurological, dermatological, and systemic/fever conditions with immediate red-flag emergency detection, local Room history, and exportable clinical visit summaries.
+MedTriage is a 100% offline, privacy-first patient intake and symptom evaluation Android app built with Kotlin and Jetpack Compose. Its questions and likely-condition statistics are **mined offline from the English MedDialog corpus** (~212k iCliniq + HealthCareMagic doctor-patient dialogs, `lighteval/med_dialog`) by the pipeline in `tools/meddialog/`. The result is a static decision tree (`triage_tree.json`) covering the 20 most frequent triage-relevant chief complaints, with hand-written emergency red-flag screens, local Room history, and exportable clinical visit summaries. No backend and no AI at run time.
 
 ---
 
@@ -9,7 +9,7 @@ MedTriage is a 100% offline, privacy-first patient intake and symptom evaluation
 > [!IMPORTANT]
 > The following architectural parameters have been established based on your choices:
 
-- **Symptom Domains (Confirmed)**: Core clinical systems covering **Respiratory** (Cough, Shortness of Breath, Sore Throat), **Gastrointestinal** (Abdominal Pain, Nausea/Vomiting, Diarrhea), **Neurological** (Headache, Dizziness, Migraine patterns), **Dermatological** (Rash, Itching, Lesions), and **General / Fever** (High Temperature, Chills, Fatigue).
+- **Symptom Domains (Data-selected)**: Chief complaints are chosen by corpus frequency (≥ 2,000 MedDialog dialogs), excluding topics that cannot be triaged by symptom questions (sexual health, dental, blood-pressure readings). Result: 20 complaints in 9 body-system groups — Respiratory (cough, shortness of breath, sore throat/cold), Heart & chest (chest pain, palpitations), Digestion (stomach pain, vomiting/diarrhea), Head & nerves (headache, dizziness, numbness), Skin (rash/itching, acne), Fever & general (fever, tiredness), Bones & muscles (back/neck pain, joint pain), Urine & reproductive (urinary, periods/pregnancy), Mind & mood (anxiety, depression).
 - **Data Persistence & Privacy (Confirmed)**: 100% local on-device SQLite storage using **Room Database**. No network permissions or cloud backend needed; patient data never leaves the device.
 - **Consultation Export (Confirmed)**: Generates a structured "Doctor Consultation Summary" (Chief Complaint, Chronological Answers, Clinical Rule Path, Urgency Level, and Timestamp) shareable via the standard Android share sheet.
 - **Emergency Safety Intercept (Confirmed)**: Instant detection of red-flag symptoms (e.g. crushing chest pain, sudden unilateral numbness, anaphylactic breathing distress, stiff neck with high fever). Triggers a full-screen emergency alert modal with one-touch emergency hotline dialing (`Intent.ACTION_DIAL`).
@@ -70,8 +70,10 @@ MedTriage is a 100% offline, privacy-first patient intake and symptom evaluation
 ## 3. Key Product Decisions & Trade-Offs
 
 ### Decision 1: Bundled Structured JSON vs. Hardcoded Kotlin Logic
-- **Chosen Approach**: Store the MedDialog decision tree in an optimized, typed JSON asset (`assets/triage_tree.json`) loaded and cached into memory via Moshi on startup, backed by domain models.
-- **Why**: Allows expanding and editing symptom pathways, question branches, and medical advice without rewriting UI or business logic. Separates medical content from presentation code.
+- **Chosen Approach**: Store the MedDialog-derived decision tree in a typed JSON asset (`assets/triage_tree.json`) loaded and cached into memory via Moshi on startup. The file is **generated** by `tools/meddialog/` (mine → prune → emit → validate), never edited by hand.
+- **How the data is used**: per complaint, a multi-label decision tree is trained on patient-text facets (e.g. "mentions fever") against conditions named in the doctor's reply, then pruned on a validation slice and scored on an untouched 15% test slice (see `tools/meddialog/REPORT.md`). Leaf percentages are mention rates among similar dialogs, not diagnoses.
+- **What is not data-derived**: emergency red-flag screens, urgency floors, and advice text are curated (`lib/safety.mjs`, `lib/kb.mjs`) because forum text is not a safe source for them. Every complaint starts with the red-flag screen; a leaf's lead advice comes from its most urgent plausible condition, not the most frequent.
+- **Why**: Separates medical content from presentation code, makes the question set reproducible and auditable from the dataset, and lets the corpus decide which questions matter.
 - **Alternatives Considered**: Hardcoded Kotlin `when` expressions would create maintenance bloat and violate the 500-line modularity guideline.
 
 ### Decision 2: Zero-Permission Share Sheet vs. PDF Generation
@@ -168,7 +170,8 @@ MedTriage is a 100% offline, privacy-first patient intake and symptom evaluation
 
 ## 5. Verification Plan
 
-1. **JSON Tree Validation**: Verify `triage_tree.json` parsing and ensure no dead-end `nextId` references exist across all 5 clinical categories.
+1. **JSON Tree Validation**: `npm run emit` in `tools/meddialog/` fails on any dead end, unreachable node, cycle, missing advice, or condition name containing ", ". `ExampleRobolectricTest` re-checks the shipped asset (all categories start on an emergency screen; every red flag leads to a conclusion).
+   - **Data check**: held-out log-likelihood gain over a no-question baseline is positive for all 20 complaints (`REPORT.md`).
 2. **Build & Compilation**: Run `compile_applet` to ensure Room annotations, KSP generation, Moshi converters, and Compose UI compile cleanly.
 3. **Emergency Intercept Test**: Verify red-flag triggers immediately display emergency overlay and dispatch dial intent.
 4. **Room Persistence & Summary Export**: Verify past intakes correctly save, load reactively, and produce a well-formatted doctor consultation summary.
