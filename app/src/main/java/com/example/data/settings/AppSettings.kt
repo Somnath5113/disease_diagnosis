@@ -20,7 +20,7 @@ enum class AppLanguage(
 ) {
     ENGLISH("en", "English", "English", true),
     HINDI("hi", "हिन्दी", "Hindi", true),
-    BENGALI("bn", "বাংলা", "Bengali", false),
+    BENGALI("bn", "বাংলা", "Bengali", true),
     MARATHI("mr", "मराठी", "Marathi", false),
     TAMIL("ta", "தமிழ்", "Tamil", false),
     TELUGU("te", "తెలుగు", "Telugu", false);

@@ -16,6 +16,17 @@ const idOf = new Map(Object.entries(en.atoms).map(([id, text]) => [text, id]))
 const names = new Set([...Object.keys(KB), ...Object.keys(KB_DEEP)])
 const placeholders = (s) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort().join(',')
 
+// Native digits (Devanagari, Bengali, Tamil, Telugu) count as the same number as Latin digits.
+const DIGIT_BLOCKS = [0x0966, 0x09e6, 0x0be6, 0x0c66]
+const toLatin = (s) =>
+  [...s].map((ch) => {
+    const c = ch.codePointAt(0)
+    for (const base of DIGIT_BLOCKS) if (c >= base && c < base + 10) return String(c - base)
+    return ch
+  }).join('')
+const numbers = (s) => (toLatin(s).match(/\d+(?:\.\d+)?/g) || []).sort().join(',')
+const sameNumbers = (english, translated) => numbers(english) === numbers(translated)
+
 function load(lang) {
   const dir = join(here, 'i18n', lang)
   const atoms = {}
@@ -34,6 +45,7 @@ function problems(lang, { atoms, tmpl }) {
     if (!en.atoms[id]) out.push(`${lang}: unknown atom id ${id}`)
     // Condition names are joined with ", " in saved history and with "; " in advice, so they may not contain either.
     else if (id[0] === 'c' && /, |; /.test(atoms[id])) out.push(`${lang}: condition ${id} may not contain ", " or "; ": ${atoms[id]}`)
+    else if (!sameNumbers(en.atoms[id], atoms[id])) out.push(`${lang}: ${id} changes a number (doses, durations and helpline numbers must survive translation)\n    en: ${en.atoms[id]}\n    ${lang}: ${atoms[id]}`)
   }
   for (const [k, v] of Object.entries(tmpl)) {
     if (!TEMPLATES[k]) out.push(`${lang}: unknown template ${k}`)
