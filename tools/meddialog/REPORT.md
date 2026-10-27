@@ -93,6 +93,39 @@ Categories were selected by corpus frequency. Topics that are frequent but not t
 
 **Acne or pimples** — “Are you under a lot of stress or worry?” (8.2% mention); “Are the pimples deep, painful, or leaving scars?” (27% mention); “Have you already tried medicine without much relief?” (16.9% mention)
 
+## Follow-up stage (layers 5–10): clinical questions, not mined
+
+After the emergency screen and up to 3 MedDialog-derived questions, each complaint continues with up to 6 clinical follow-up questions (`lib/deep.mjs`, sources in [SOURCES.md](SOURCES.md)). The first stage’s leaf seeds the starting scores, so the dataset still shapes where the follow-up begins. Layers: emergency screen (1) + MedDialog questions (≤ 3) + follow-ups (≤ 6) = at most 10.
+
+| Complaint | Conditions considered | Follow-up questions in bank |
+|---|---:|---:|
+| Headache | 9 | 18 |
+| Chest pain | 6 | 14 |
+| Shortness of breath | 8 | 14 |
+| Cough | 9 | 14 |
+| Sore throat, cold or sinus | 6 | 13 |
+| Fever or chills | 9 | 14 |
+| Vomiting or diarrhea | 9 | 13 |
+| Stomach pain | 9 | 15 |
+| Urinary problem | 6 | 13 |
+| Period or pregnancy concern | 7 | 15 |
+| Rash or itching | 9 | 15 |
+| Acne or pimples | 6 | 12 |
+| Back or neck pain | 8 | 13 |
+| Joint or limb pain | 6 | 14 |
+| Numbness or tingling | 8 | 14 |
+| Tiredness or weakness | 8 | 14 |
+| Anxiety or stress | 6 | 11 |
+| Low mood or depression | 7 | 13 |
+| Dizziness or vertigo | 9 | 12 |
+| Palpitations or racing heart | 7 | 13 |
+
+Total: 274 questions, 152 complaint-condition pairs.
+
+The policy is compiled offline into ordinary tree nodes. It always asks the question that best separates the leading conditions, but a plausible serious condition (kidney infection, appendicitis, kidney stone, heart failure, typhoid, malaria or dengue, pneumonia, angina, vestibular neuritis) is always screened before the questions may stop, and every plausible condition gets one screening question where the budget allows. A few answers (progressive weakness, fainting, an irregular pulse, unrelenting pain with weight loss) raise urgency directly.
+
+**Verification (`node verify_deep.mjs`, latest run).** A simulated “textbook patient” for each of 152 conditions reaches that condition as the lead in 89% of cases and has it in the assessment list in 93%. No simulated patient received a lower urgency than their condition warrants. The misses are mostly overlapping pairs (reflux vs ulcer, dehydration vs postural drop) or conditions crowded out by the 6-question budget. This tests that the authored bank is wired correctly; it does not measure clinical accuracy, because the point values are judgement, not fitted to data.
+
 ## Audit of the hand-written red flags against real doctor language
 
 For each red flag, the share of dialogs whose patient text matches the flag and whose doctor reply uses urgent language (emergency, hospital, immediately, ambulance, …), compared with that complaint overall. Rows with few matches are weak evidence either way; this is an audit, not a validation.

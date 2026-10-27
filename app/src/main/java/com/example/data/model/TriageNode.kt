@@ -58,6 +58,7 @@ data class TriageConclusion(
     val likelyConditions: List<String> = emptyList(),
     val clinicalAdvice: String,
     val homeCareInstructions: List<String> = emptyList(),
+    val indianHomeRemedies: List<String> = emptyList(),
     val whenToSeekImmediateHelp: String
 )
 

@@ -6,7 +6,7 @@
  * Condition names must not contain ", " (the app joins/splits on it).
  */
 
-export const EMERGENCY_NUMBER = '911 / 112 (or your local emergency number)'
+export const EMERGENCY_NUMBER = '112 (ambulance 108 or 102 in many states)'
 
 /** Emergency conclusion templates, reused by many red flags. */
 export const EMERGENCY_KINDS = {
@@ -16,7 +16,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Stroke or TIA', 'Brain bleed', 'Other sudden brain or nerve emergency'],
     advice: 'Sudden weakness, face drooping, slurred speech, or loss of vision can mean a stroke. Treatment works best in the first hours, so do not wait to see if it passes.',
     care: ['Note the exact time the symptoms began and tell the ambulance crew', 'Do not eat, drink, or take aspirin or other medicine unless a doctor tells you to', 'Lie down with your head slightly raised and stay with someone'],
-    seek: `Call ${'911 / 112'} now. Do not drive yourself.`,
+    seek: `Call 112 now. Do not drive yourself.`,
   },
   cardiac: {
     title: 'Possible heart or lung emergency',
@@ -24,7 +24,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Heart attack', 'Dangerous heart rhythm', 'Blood clot in the lung'],
     advice: 'Chest pressure, pain spreading to the arm or jaw, fainting, or breathlessness with these symptoms can mean a heart or lung emergency. Do not wait for it to pass or try home remedies.',
     care: ['Stop what you are doing and sit or lie down', 'Only take aspirin if the emergency operator tells you to', 'Unlock the door and keep your phone with you'],
-    seek: `Call ${'911 / 112'} now. Do not drive yourself.`,
+    seek: `Call 112 now. Do not drive yourself.`,
   },
   breathing: {
     title: 'Severe breathing difficulty',
@@ -32,7 +32,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Severe asthma attack', 'Severe allergic reaction', 'Serious chest infection'],
     advice: 'Struggling to breathe, being unable to speak a full sentence, or blue lips needs emergency treatment. It can worsen within minutes.',
     care: ['Sit upright and loosen tight clothing', 'Use your rescue inhaler or adrenaline pen if you have one', 'Stay with someone and do not lie flat'],
-    seek: `Call ${'911 / 112'} now.`,
+    seek: `Call 112 now.`,
   },
   airway: {
     title: 'Possible airway swelling or blockage',
@@ -40,7 +40,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Severe allergic reaction (anaphylaxis)', 'Deep throat infection', 'Swollen airway'],
     advice: 'Swelling of the lips, tongue, or throat, drooling, or noisy breathing can close the airway. This is an emergency even if you feel only mildly unwell.',
     care: ['Use an adrenaline pen if you have one', 'Sit upright and do not try to swallow food or pills', 'Stay with someone until help arrives'],
-    seek: `Call ${'911 / 112'} now.`,
+    seek: `Call 112 now.`,
   },
   meningitis: {
     title: 'Possible meningitis or brain infection',
@@ -48,7 +48,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Meningitis', 'Blood infection (sepsis)', 'Bleeding around the brain'],
     advice: 'Fever with a stiff neck, severe headache, confusion, or a rash that does not fade when pressed can mean meningitis or a blood infection. Hospital treatment is needed straight away.',
     care: ['Do not wait for the rash to spread', 'Press a clear glass on the rash: if it does not fade, say so on the phone', 'Stay with someone and keep warm'],
-    seek: `Call ${'911 / 112'} now or go to the nearest emergency department.`,
+    seek: `Call 112 now or go to the nearest emergency department.`,
   },
   thunderclap: {
     title: 'Possible bleeding in the brain',
@@ -56,7 +56,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Bleeding around the brain (subarachnoid haemorrhage)', 'Stroke or TIA', 'Meningitis'],
     advice: 'A headache that reaches full strength within seconds, or the worst headache of your life, needs emergency scanning.',
     care: ['Rest in a quiet place and avoid straining', 'Do not drive yourself', 'Do not take extra pain medicine while waiting'],
-    seek: `Call ${'911 / 112'} now.`,
+    seek: `Call 112 now.`,
   },
   head_injury: {
     title: 'Possible serious head injury',
@@ -64,7 +64,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Head injury with bleeding or swelling', 'Concussion', 'Skull fracture'],
     advice: 'Headache after a head injury with vomiting, drowsiness, confusion, or a seizure needs urgent scanning.',
     care: ['Keep the person still and awake if possible', 'Do not give food, drink, or alcohol', 'Note vomiting, drowsiness, or any change in behaviour'],
-    seek: `Call ${'911 / 112'} now.`,
+    seek: `Call 112 now.`,
   },
   gi_bleed: {
     title: 'Possible internal bleeding',
@@ -72,7 +72,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Bleeding stomach ulcer', 'Bleeding from the gut', 'Torn food pipe'],
     advice: 'Vomiting blood, black tarry stools, or passing blood can mean internal bleeding that needs urgent treatment.',
     care: ['Do not eat or drink anything', 'Lie down with your legs raised if you feel faint', 'Do not take aspirin or ibuprofen'],
-    seek: `Call ${'911 / 112'} now or go to the nearest emergency department.`,
+    seek: `Call 112 now or go to the nearest emergency department.`,
   },
   acute_abdomen: {
     title: 'Possible surgical abdominal emergency',
@@ -80,7 +80,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Appendicitis', 'Bowel blockage or perforation', 'Pancreatitis'],
     advice: 'Severe constant belly pain, a hard rigid belly, or pain that keeps you from moving can mean a surgical emergency.',
     care: ['Do not eat or drink in case an operation is needed', 'Do not use a heating pad or take laxatives', 'Avoid strong painkillers until you are seen'],
-    seek: `Go to the nearest emergency department now. Call ${'911 / 112'} if you cannot travel safely.`,
+    seek: `Go to the nearest emergency department now. Call 112 if you cannot travel safely.`,
   },
   ectopic: {
     title: 'Possible ectopic pregnancy or internal bleeding',
@@ -88,7 +88,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Ectopic pregnancy', 'Ruptured ovarian cyst', 'Miscarriage'],
     advice: 'Severe one-sided lower belly pain or heavy bleeding when you might be pregnant needs same-hour emergency assessment.',
     care: ['Do not eat or drink in case surgery is needed', 'Lie down and have someone take you to hospital', 'Bring a pregnancy test result if you have one'],
-    seek: `Call ${'911 / 112'} now or go to the nearest emergency department.`,
+    seek: `Call 112 now or go to the nearest emergency department.`,
   },
   heavy_bleeding: {
     title: 'Dangerous vaginal bleeding',
@@ -96,7 +96,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Heavy menstrual bleeding', 'Miscarriage', 'Bleeding disorder'],
     advice: 'Soaking a pad every hour for two hours or more, or feeling faint, can lead to dangerous blood loss.',
     care: ['Lie down with your feet raised', 'Sip water if you can drink', 'Have someone take you to hospital'],
-    seek: `Call ${'911 / 112'} or go to the nearest emergency department now.`,
+    seek: `Call 112 or go to the nearest emergency department now.`,
   },
   urinary_retention: {
     title: 'Unable to pass urine',
@@ -112,7 +112,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Kidney infection (pyelonephritis)', 'Blood infection (sepsis)', 'Kidney stone with infection'],
     advice: 'High fever with shaking chills and severe back or side pain can mean a kidney infection that has reached the blood.',
     care: ['Sip fluids if you can', 'Take paracetamol for the fever only if you have no allergy', 'Go to an emergency department now'],
-    seek: `Call ${'911 / 112'} or go to the nearest emergency department now.`,
+    seek: `Call 112 or go to the nearest emergency department now.`,
   },
   cauda_equina: {
     title: 'Possible spinal nerve compression',
@@ -120,7 +120,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Cauda equina syndrome', 'Severe disc prolapse', 'Spinal cord compression'],
     advice: 'New numbness around the groin, loss of bladder or bowel control, or sudden leg weakness with back pain needs an urgent spinal scan. Delay can cause permanent damage.',
     care: ['Do not wait to see if it improves', 'Avoid bending or lifting', 'Go to an emergency department now'],
-    seek: `Go to the nearest emergency department now. Call ${'911 / 112'} if you cannot walk.`,
+    seek: `Go to the nearest emergency department now. Call 112 if you cannot walk.`,
   },
   spine_trauma: {
     title: 'Possible spinal or bone injury',
@@ -128,7 +128,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Spinal fracture', 'Bone fracture', 'Internal injury'],
     advice: 'Back pain after a serious fall, road accident, or heavy blow can mean a fracture or internal injury.',
     care: ['Do not move if you have severe neck or back pain', 'Do not eat or drink', 'Wait for the ambulance'],
-    seek: `Call ${'911 / 112'} now.`,
+    seek: `Call 112 now.`,
   },
   septic_joint: {
     title: 'Possible infected joint',
@@ -144,7 +144,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Bone fracture', 'Ligament tear', 'Dislocated joint'],
     advice: 'Obvious deformity, being unable to bear weight, or severe pain after an injury needs an X-ray today.',
     care: ['Rest and avoid putting weight on the limb', 'Apply a cold pack wrapped in cloth for 15 minutes at a time', 'Support the limb in the most comfortable position'],
-    seek: `Go to urgent care or an emergency department today. Call ${'911 / 112'} if there is heavy bleeding or the limb looks pale or blue.`,
+    seek: `Go to urgent care or an emergency department today. Call 112 if there is heavy bleeding or the limb looks pale or blue.`,
   },
   serious_skin: {
     title: 'Possible serious skin or drug reaction',
@@ -152,7 +152,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Stevens-Johnson reaction', 'Severe drug reaction', 'Blood infection (sepsis)'],
     advice: 'Widespread blistering, peeling skin, or sores in the mouth or eyes after starting a medicine can be a serious drug reaction.',
     care: ['Stop any new medicine and tell the doctors which one', 'Do not pick at blisters or peel skin', 'Go to an emergency department now'],
-    seek: `Go to an emergency department now. Call ${'911 / 112'} if breathing is affected.`,
+    seek: `Go to an emergency department now. Call 112 if breathing is affected.`,
   },
   dehydration: {
     title: 'Severe dehydration',
@@ -160,7 +160,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Severe dehydration', 'Kidney strain', 'Electrolyte imbalance'],
     advice: 'Being unable to keep any fluids down, passing almost no urine, or being very drowsy means you probably need fluids through a drip.',
     care: ['Sip oral rehydration solution a teaspoon at a time if you can', 'Do not drink large amounts quickly', 'Go to an emergency department now'],
-    seek: `Go to an emergency department now. Call ${'911 / 112'} if you are confused or cannot stay awake.`,
+    seek: `Go to an emergency department now. Call 112 if you are confused or cannot stay awake.`,
   },
   sepsis_fever: {
     title: 'Dangerous fever',
@@ -168,15 +168,15 @@ export const EMERGENCY_KINDS = {
     conditions: ['Blood infection (sepsis)', 'Meningitis', 'Severe infection'],
     advice: 'Fever in a baby under 3 months, a very high temperature, fits, or confusion needs emergency assessment.',
     care: ['Do not wait to see if the fever settles', 'Remove heavy blankets but do not cool with ice or alcohol', 'Go to an emergency department now'],
-    seek: `Call ${'911 / 112'} or go to the nearest emergency department now.`,
+    seek: `Call 112 or go to the nearest emergency department now.`,
   },
   crisis: {
     title: 'You may be in crisis',
     urgency: 'EMERGENCY',
     conditions: ['Suicidal thoughts', 'Severe depression', 'Acute mental health crisis'],
     advice: 'Thoughts of ending your life or hurting yourself are a medical emergency. You do not have to face them alone, and help works.',
-    care: ['Stay with someone you trust and tell them how you feel', 'Move anything you could use to hurt yourself out of reach', 'Contact a crisis line or emergency services now'],
-    seek: `Call ${'911 / 112'} or a local crisis helpline now.`,
+    care: ['Stay with someone you trust and tell them how you feel', 'Move anything you could use to hurt yourself out of reach', 'Call Tele-MANAS (14416) or 112 now'],
+    seek: `Call 112 or Tele-MANAS (14416) now.`,
   },
   throat_blocked: {
     title: 'Possible deep throat infection',
@@ -184,7 +184,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Peritonsillar abscess', 'Epiglottitis', 'Deep neck infection'],
     advice: 'Drooling, being unable to swallow saliva, a muffled voice, or noisy breathing can mean the throat is closing. This is an emergency.',
     care: ['Sit upright and lean slightly forward', 'Do not force food, drink, or pills down', 'Go to an emergency department now'],
-    seek: `Call ${'911 / 112'} now.`,
+    seek: `Call 112 now.`,
   },
   coughing_blood: {
     title: 'Coughing up blood',
@@ -192,7 +192,7 @@ export const EMERGENCY_KINDS = {
     conditions: ['Chest infection', 'Tuberculosis', 'Lung clot or tumour'],
     advice: 'Coughing up blood needs a doctor and usually a chest X-ray the same day.',
     care: ['Rest and avoid exertion', 'Do not take aspirin or ibuprofen', 'Note how much blood and how often'],
-    seek: `Go to an emergency department now if there is more than a teaspoon, you feel faint, or you are breathless. Call ${'911 / 112'} if severe.`,
+    seek: `Go to an emergency department now if there is more than a teaspoon, you feel faint, or you are breathless. Call 112 if severe.`,
   },
 }
 

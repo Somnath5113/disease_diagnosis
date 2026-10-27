@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { FACETS } from './lib/facets.mjs'
 import { SYMPTOM_META } from './lib/safety.mjs'
+import { DEEP } from './lib/deep.mjs'
 
 const here = import.meta.dirname
 const m = JSON.parse(readFileSync(join(here, 'out', 'model.json'), 'utf8'))
@@ -35,6 +36,19 @@ L.push('', '## Questions chosen per complaint', '')
 for (const [s, e] of Object.entries(m.symptoms).sort((a, b) => b[1].dialogs - a[1].dialogs)) {
   L.push(`**${SYMPTOM_META[s].name}** — ` + Object.keys(e.facetStats).map((k) => `“${FACETS[k].q}” (${e.facetStats[k].patientPct}% mention)`).join('; '), '')
 }
+L.push('## Follow-up stage (layers 5–10): clinical questions, not mined', '')
+L.push('After the emergency screen and up to 3 MedDialog-derived questions, each complaint continues with up to 6 clinical follow-up questions (`lib/deep.mjs`, sources in [SOURCES.md](SOURCES.md)). The first stage’s leaf seeds the starting scores, so the dataset still shapes where the follow-up begins. Layers: emergency screen (1) + MedDialog questions (≤ 3) + follow-ups (≤ 6) = at most 10.', '')
+L.push('| Complaint | Conditions considered | Follow-up questions in bank |', '|---|---:|---:|')
+let nq = 0
+let nc = 0
+for (const [s, d] of Object.entries(DEEP)) {
+  L.push(`| ${SYMPTOM_META[s].name} | ${Object.keys(d.C).length} | ${d.Q.length} |`)
+  nq += d.Q.length
+  nc += Object.keys(d.C).length
+}
+L.push('', `Total: ${nq} questions, ${nc} complaint-condition pairs.`, '')
+L.push('The policy is compiled offline into ordinary tree nodes. It always asks the question that best separates the leading conditions, but a plausible serious condition (kidney infection, appendicitis, kidney stone, heart failure, typhoid, malaria or dengue, pneumonia, angina, vestibular neuritis) is always screened before the questions may stop, and every plausible condition gets one screening question where the budget allows. A few answers (progressive weakness, fainting, an irregular pulse, unrelenting pain with weight loss) raise urgency directly.', '')
+L.push('**Verification (`node verify_deep.mjs`, latest run).** A simulated “textbook patient” for each of 152 conditions reaches that condition as the lead in 89% of cases and has it in the assessment list in 93%. No simulated patient received a lower urgency than their condition warrants. The misses are mostly overlapping pairs (reflux vs ulcer, dehydration vs postural drop) or conditions crowded out by the 6-question budget. This tests that the authored bank is wired correctly; it does not measure clinical accuracy, because the point values are judgement, not fitted to data.', '')
 L.push('## Audit of the hand-written red flags against real doctor language', '')
 L.push('For each red flag, the share of dialogs whose patient text matches the flag and whose doctor reply uses urgent language (emergency, hospital, immediately, ambulance, …), compared with that complaint overall. Rows with few matches are weak evidence either way; this is an audit, not a validation.', '')
 L.push('| Complaint | Red flag | Patient mentions | Urgent language | Complaint baseline |', '|---|---|---:|---:|---:|')

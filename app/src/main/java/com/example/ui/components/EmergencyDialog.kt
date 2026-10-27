@@ -1,7 +1,5 @@
 package com.example.ui.components
 
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,6 +38,10 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.data.model.TriageOption
 import com.example.ui.theme.getUrgencyThemeColors
+import androidx.compose.ui.res.stringResource
+import com.example.R
+import com.example.data.settings.LocalAppSettings
+import com.example.data.settings.dialNumber
 
 @Composable
 fun EmergencyDialog(
@@ -48,6 +50,7 @@ fun EmergencyDialog(
     onDismiss: () -> Unit
 ) {
     val context = LocalContext.current
+    val emergencyNumber = LocalAppSettings.current.emergencyNumber
     val emergencyColors = getUrgencyThemeColors("EMERGENCY")
 
     Dialog(onDismissRequest = onDismiss) {
@@ -78,7 +81,7 @@ fun EmergencyDialog(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Warning,
-                        contentDescription = "Emergency Alert",
+                        contentDescription = stringResource(R.string.cd_emergency_alert),
                         tint = emergencyColors.primary,
                         modifier = Modifier.size(36.dp)
                     )
@@ -87,7 +90,7 @@ fun EmergencyDialog(
                 Spacer(modifier = Modifier.height(18.dp))
 
                 Text(
-                    text = "CRITICAL RED-FLAG ALERT",
+                    text = stringResource(R.string.emergency_alert_title),
                     style = MaterialTheme.typography.titleMedium.copy(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.8.sp
@@ -129,7 +132,7 @@ fun EmergencyDialog(
                         .padding(14.dp)
                 ) {
                     Text(
-                        text = "This symptom indicates high risk of an acute medical emergency. Immediate clinical evaluation or emergency services is strongly advised.",
+                        text = stringResource(R.string.emergency_dialog_body),
                         style = MaterialTheme.typography.bodySmall,
                         color = emergencyColors.onContainer,
                         textAlign = TextAlign.Center,
@@ -142,8 +145,7 @@ fun EmergencyDialog(
 
                 Button(
                     onClick = {
-                        val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:911"))
-                        context.startActivity(dialIntent)
+                        dialNumber(context, emergencyNumber)
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = emergencyColors.primary,
@@ -161,11 +163,11 @@ fun EmergencyDialog(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Call,
-                            contentDescription = "Call 911"
+                            contentDescription = stringResource(R.string.call_number, emergencyNumber)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Call Emergency (911 / 112)",
+                            text = stringResource(R.string.emergency_call_button, emergencyNumber),
                             fontWeight = FontWeight.Bold,
                             fontSize = 15.sp
                         )
@@ -185,7 +187,7 @@ fun EmergencyDialog(
                         .testTag("view_emergency_protocol_button")
                 ) {
                     Text(
-                        text = "View Clinical Care Instructions",
+                        text = stringResource(R.string.emergency_view_care),
                         style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold)
                     )
                 }
@@ -197,7 +199,7 @@ fun EmergencyDialog(
                     modifier = Modifier.testTag("dismiss_emergency_dialog_button")
                 ) {
                     Text(
-                        text = "Return to Questionnaire",
+                        text = stringResource(R.string.emergency_return),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }

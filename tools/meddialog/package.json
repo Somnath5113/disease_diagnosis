@@ -5,6 +5,7 @@
   "scripts": {
     "mine": "node --max-old-space-size=6000 train.mjs",
     "emit": "node emit.mjs && node verify_tree.mjs",
+    "verify": "node verify_tree.mjs && node verify_deep.mjs",
     "report": "node report.mjs",
     "trees": "node print_trees.mjs"
   },
