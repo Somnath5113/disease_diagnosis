@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.example.data.repository.TriageRepository
 import kotlinx.coroutines.runBlocking
+import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
@@ -83,6 +84,56 @@ class ExampleRobolectricTest {
             for (option in node.options) {
                 val nextNode = treeData.nodes[option.nextId]
                 assertNotNull("Option in node $nodeId points to missing nextId: ${option.nextId}", nextNode)
+            }
+        }
+    }
+
+    @Test
+    fun `translated trees have exactly the same structure and urgency as the English tree`() {
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        fun load(name: String) = JSONObject(context.assets.open(name).bufferedReader().use { it.readText() })
+
+        val english = load("triage_tree.json")
+        val translated = context.assets.list("").orEmpty()
+            .filter { it.startsWith("triage_tree_") && it.endsWith(".json") }
+        assertTrue("Expected at least one translated tree", translated.isNotEmpty())
+
+        val enNodes = english.getJSONObject("nodes")
+        for (asset in translated) {
+            val tree = load(asset)
+            val nodes = tree.getJSONObject("nodes")
+            assertEquals("$asset: node ids", enNodes.keys().asSequence().toSet(), nodes.keys().asSequence().toSet())
+            assertEquals("$asset: category count", english.getJSONArray("categories").length(), tree.getJSONArray("categories").length())
+
+            for (id in enNodes.keys()) {
+                val a = enNodes.getJSONObject(id)
+                val b = nodes.getJSONObject(id)
+                val aOpts = a.optJSONArray("options")
+                val bOpts = b.optJSONArray("options")
+                assertEquals("$asset/$id: option count", aOpts?.length() ?: 0, bOpts?.length() ?: 0)
+                for (i in 0 until (aOpts?.length() ?: 0)) {
+                    val ao = aOpts!!.getJSONObject(i)
+                    val bo = bOpts!!.getJSONObject(i)
+                    assertEquals("$asset/$id: nextId", ao.getString("nextId"), bo.getString("nextId"))
+                    assertEquals("$asset/$id: red flag", ao.optBoolean("isRedFlag"), bo.optBoolean("isRedFlag"))
+                    assertTrue("$asset/$id: option text empty", bo.getString("text").isNotBlank())
+                }
+                assertEquals("$asset/$id: emergency screen", a.optBoolean("isEmergencyCheck"), b.optBoolean("isEmergencyCheck"))
+                val ac = a.optJSONObject("conclusion")
+                val bc = b.optJSONObject("conclusion")
+                assertEquals("$asset/$id: has conclusion", ac != null, bc != null)
+                if (ac != null && bc != null) {
+                    assertEquals("$asset/$id: urgency", ac.getString("urgencyLevel"), bc.getString("urgencyLevel"))
+                    for (field in listOf("likelyConditions", "homeCareInstructions", "indianHomeRemedies")) {
+                        assertEquals("$asset/$id: $field size", ac.optJSONArray(field)?.length() ?: 0, bc.optJSONArray(field)?.length() ?: 0)
+                    }
+                    for (i in 0 until bc.getJSONArray("likelyConditions").length()) {
+                        val condition = bc.getJSONArray("likelyConditions").getString(i)
+                        assertTrue("$asset/$id: condition '$condition' contains ', '", !condition.contains(", "))
+                    }
+                    assertTrue("$asset/$id: advice empty", bc.getString("clinicalAdvice").isNotBlank())
+                    assertTrue("$asset/$id: seek text empty", bc.getString("whenToSeekImmediateHelp").isNotBlank())
+                }
             }
         }
     }

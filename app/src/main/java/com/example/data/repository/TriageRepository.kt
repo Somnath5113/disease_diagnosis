@@ -16,9 +16,14 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
+import com.example.data.settings.AppLanguage
+import com.example.data.settings.SettingsRepository
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.ConcurrentHashMap
+
+private const val DEFAULT_TREE_ASSET = "triage_tree.json"
 
 class TriageRepository(
     private val context: Context,
@@ -28,15 +33,27 @@ class TriageRepository(
         .addLast(KotlinJsonAdapterFactory())
         .build()
 
-    private var cachedTreeData: TriageTreeData? = null
+    private val settingsRepository = SettingsRepository.get(context)
+
+    /** One parsed tree per asset file, so switching language back and forth does not re-parse. */
+    private val treeCache = ConcurrentHashMap<String, TriageTreeData>()
+
+    private val assetNames: Set<String> by lazy { context.assets.list("")?.toSet().orEmpty() }
+
+    /** `triage_tree_<language>.json` when it was generated for the language, otherwise the English tree. */
+    private fun treeAssetFor(language: AppLanguage): String {
+        val localized = "triage_tree_${language.tag}.json"
+        return if (language != AppLanguage.ENGLISH && localized in assetNames) localized else DEFAULT_TREE_ASSET
+    }
 
     suspend fun getTreeData(): TriageTreeData = withContext(Dispatchers.IO) {
-        cachedTreeData?.let { return@withContext it }
+        val asset = treeAssetFor(settingsRepository.settings.value.language)
+        treeCache[asset]?.let { return@withContext it }
 
-        val jsonString = context.assets.open("triage_tree.json").bufferedReader().use { it.readText() }
+        val jsonString = context.assets.open(asset).bufferedReader().use { it.readText() }
         val adapter = moshi.adapter(TriageTreeData::class.java)
-        val treeData = adapter.fromJson(jsonString) ?: throw IllegalStateException("Failed to parse triage_tree.json")
-        cachedTreeData = treeData
+        val treeData = adapter.fromJson(jsonString) ?: throw IllegalStateException("Failed to parse $asset")
+        treeCache[asset] = treeData
         treeData
     }
 

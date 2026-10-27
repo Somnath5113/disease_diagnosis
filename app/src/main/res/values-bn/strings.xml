@@ -102,7 +102,7 @@
     <string name="settings_title">সেটিংস</string>
     <string name="settings_language">ভাষা</string>
     <string name="settings_language_hint">মেনু ও স্ক্রিনের ভাষা বেছে নিন।</string>
-    <string name="settings_language_note">চিকিৎসা প্রশ্ন ও পরামর্শ এখন শুধু ইংরেজিতে দেখানো হয়।</string>
+    <string name="settings_language_note">এই ভাষায় চিকিৎসা প্রশ্ন ও পরামর্শ ইংরেজিতে দেখানো হবে।</string>
     <string name="settings_emergency_number">এক ট্যাপের জরুরি নম্বর</string>
     <string name="settings_emergency_number_hint">অ্যাপের সব জরুরি বোতাম এই নম্বরে ডায়াল করে। ১১২ সারা ভারতে চলে। ১০৮ ও ১০২ অ্যাম্বুলেন্স পরিষেবা রাজ্যভেদে আলাদা।</string>
     <string name="settings_helplines">ভারতের হেল্পলাইন নম্বর</string>

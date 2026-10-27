@@ -102,7 +102,7 @@
     <string name="settings_title">அமைப்புகள்</string>
     <string name="settings_language">மொழி</string>
     <string name="settings_language_hint">மெனு மற்றும் திரைகளின் மொழியைத் தேர்ந்தெடுங்கள்.</string>
-    <string name="settings_language_note">மருத்துவக் கேள்விகளும் ஆலோசனையும் தற்போது ஆங்கிலத்தில் மட்டுமே காட்டப்படும்.</string>
+    <string name="settings_language_note">இந்த மொழியில் மருத்துவக் கேள்விகளும் ஆலோசனையும் ஆங்கிலத்தில் காட்டப்படும்.</string>
     <string name="settings_emergency_number">ஒரு தட்டலில் அவசர எண்</string>
     <string name="settings_emergency_number_hint">ஆப்பில் உள்ள அனைத்து அவசர பொத்தான்களும் இந்த எண்ணை அழைக்கும். 112 இந்தியா முழுவதும் செயல்படும். 108, 102 ஆம்புலன்ஸ் சேவை மாநிலத்தைப் பொறுத்தது.</string>
     <string name="settings_helplines">இந்திய உதவி எண்கள்</string>

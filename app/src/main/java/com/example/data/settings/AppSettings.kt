@@ -6,16 +6,24 @@ import com.example.R
 
 /**
  * Languages the interface is translated into. To add one, create `res/values-<tag>/strings.xml`
- * and add an entry here. The clinical questions and advice inside `triage_tree.json` are
- * English only; this setting changes the app interface.
+ * and add an entry here.
+ *
+ * [clinicalContent] says whether the questions, answers and advice exist in the language, i.e.
+ * whether `assets/triage_tree_<tag>.json` was generated (tools/meddialog: npm run i18n). Without it
+ * the interface is translated but the medical text is shown in English.
  */
-enum class AppLanguage(val tag: String, val nativeName: String, val englishName: String) {
-    ENGLISH("en", "English", "English"),
-    HINDI("hi", "हिन्दी", "Hindi"),
-    BENGALI("bn", "বাংলা", "Bengali"),
-    MARATHI("mr", "मराठी", "Marathi"),
-    TAMIL("ta", "தமிழ்", "Tamil"),
-    TELUGU("te", "తెలుగు", "Telugu");
+enum class AppLanguage(
+    val tag: String,
+    val nativeName: String,
+    val englishName: String,
+    val clinicalContent: Boolean
+) {
+    ENGLISH("en", "English", "English", true),
+    HINDI("hi", "हिन्दी", "Hindi", true),
+    BENGALI("bn", "বাংলা", "Bengali", false),
+    MARATHI("mr", "मराठी", "Marathi", false),
+    TAMIL("ta", "தமிழ்", "Tamil", false),
+    TELUGU("te", "తెలుగు", "Telugu", false);
 
     companion object {
         fun fromTag(tag: String?): AppLanguage = entries.firstOrNull { it.tag == tag } ?: ENGLISH
