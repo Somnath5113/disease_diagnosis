@@ -107,14 +107,14 @@ class TriageRepository(
 
         val builder = StringBuilder()
         builder.appendLine("========================================")
-        builder.appendLine("🩺 MEDTRIAGE - PATIENT INTAKE SUMMARY")
+        builder.appendLine("MEDTRIAGE - PATIENT INTAKE SUMMARY")
         builder.appendLine("========================================")
         builder.appendLine("Generated: $dateString")
         builder.appendLine("Specialty System: $categoryName")
         builder.appendLine("Chief Complaint: $chiefComplaint")
         builder.appendLine("Triage Urgency: ${urgencyLevel.displayName}")
         builder.appendLine()
-        builder.appendLine("--- CLINICAL CONSIDERATIONS (MedDialog Rules) ---")
+        builder.appendLine("--- POSSIBLE CONDITIONS ---")
         if (likelyConditions.isNotEmpty()) {
             likelyConditions.forEach { builder.appendLine("• $it") }
         } else {
@@ -131,7 +131,7 @@ class TriageRepository(
         }
         builder.appendLine()
         builder.appendLine("========================================")
-        builder.appendLine("Note: Generated for physician consultation. MedTriage is an offline decision-support intake tool.")
+        builder.appendLine("Note: Generated from the patient's answers to a symptom questionnaire to help a consultation. It is not a diagnosis.")
         builder.appendLine("========================================")
 
         return builder.toString()

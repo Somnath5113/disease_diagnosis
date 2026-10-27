@@ -1,7 +1,5 @@
 package com.example.ui.screens
 
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -33,7 +31,6 @@ import androidx.compose.material.icons.filled.Healing
 import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Spa
 import androidx.compose.material.icons.filled.Thermostat
 import androidx.compose.material3.Button
@@ -52,9 +49,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -72,6 +69,10 @@ import com.example.ui.theme.getUrgencyThemeColors
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.compose.ui.res.stringResource
+import com.example.R
+import com.example.data.settings.LocalAppSettings
+import com.example.data.settings.dialNumber
 
 @Composable
 fun HomeScreen(
@@ -85,6 +86,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val emergencyNumber = LocalAppSettings.current.emergencyNumber
     var selectedFilterChip by remember { mutableStateOf<String?>(null) }
 
     val filteredCategories = categories.filter { category ->
@@ -112,10 +114,8 @@ fun HomeScreen(
         // Emergency Hotline Card (Immediate Call Option)
         item {
             EmergencyHotlineCard(
-                onCallEmergency = {
-                    val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:911"))
-                    context.startActivity(intent)
-                }
+                emergencyNumber = emergencyNumber,
+                onCallEmergency = { dialNumber(context, emergencyNumber) }
             )
         }
 
@@ -126,7 +126,7 @@ fun HomeScreen(
                 onValueChange = onSearchQueryChanged,
                 placeholder = {
                     Text(
-                        "Search symptoms, body systems (e.g. chest, fever)...",
+                        stringResource(R.string.home_search_hint),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -134,7 +134,7 @@ fun HomeScreen(
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "Search",
+                        contentDescription = stringResource(R.string.cd_search),
                         tint = MaterialTheme.colorScheme.primary
                     )
                 },
@@ -143,7 +143,7 @@ fun HomeScreen(
                         IconButton(onClick = { onSearchQueryChanged("") }) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
-                                contentDescription = "Clear search",
+                                contentDescription = stringResource(R.string.cd_clear_search),
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
@@ -179,13 +179,13 @@ fun HomeScreen(
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.MedicalServices,
-                            contentDescription = "All",
+                            contentDescription = stringResource(R.string.cd_all),
                             modifier = Modifier.size(16.dp)
                         )
                     },
                     label = {
                         Text(
-                            "All Systems",
+                            stringResource(R.string.filter_all_systems),
                             fontWeight = if (selectedFilterChip == null) FontWeight.Bold else FontWeight.Medium
                         )
                     },
@@ -256,7 +256,7 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Specialty Clinical Pathways",
+                    text = stringResource(R.string.home_pathways_title),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -265,7 +265,7 @@ fun HomeScreen(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        text = "${filteredCategories.size} Available",
+                        text = stringResource(R.string.home_available, filteredCategories.size),
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
@@ -290,7 +290,7 @@ fun HomeScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Recent Intake Assessments",
+                    text = stringResource(R.string.home_recent_title),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                     color = MaterialTheme.colorScheme.onSurface
                 )
@@ -300,7 +300,7 @@ fun HomeScreen(
                         modifier = Modifier.testTag("view_all_history_button")
                     ) {
                         Text(
-                            "View All (${recentRecords.size})",
+                            stringResource(R.string.home_view_all, recentRecords.size),
                             color = MaterialTheme.colorScheme.primary,
                             fontWeight = FontWeight.Bold
                         )
@@ -331,20 +331,20 @@ fun HomeScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.CheckCircle,
-                                contentDescription = "No assessments",
+                                contentDescription = stringResource(R.string.cd_no_assessments),
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(26.dp)
                             )
                         }
                         Spacer(modifier = Modifier.height(12.dp))
                         Text(
-                            text = "No saved assessments yet",
+                            text = stringResource(R.string.home_no_saved),
                             style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Select any clinical pathway above to start an intake consultation.",
+                            text = stringResource(R.string.home_no_saved_hint),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -405,7 +405,7 @@ private fun ModernHeroBanner() {
                         ) {
                             Icon(
                                 imageVector = Icons.Default.MedicalServices,
-                                contentDescription = "MedTriage",
+                                contentDescription = stringResource(R.string.app_name),
                                 tint = Color.White,
                                 modifier = Modifier.size(22.dp)
                             )
@@ -413,7 +413,7 @@ private fun ModernHeroBanner() {
                         Spacer(modifier = Modifier.width(12.dp))
                         Column {
                             Text(
-                                text = "MedTriage",
+                                text = stringResource(R.string.app_name),
                                 style = MaterialTheme.typography.titleLarge.copy(
                                     fontWeight = FontWeight.Bold,
                                     letterSpacing = (-0.3).sp
@@ -421,34 +421,9 @@ private fun ModernHeroBanner() {
                                 color = Color.White
                             )
                             Text(
-                                text = "Clinical Intake Engine",
+                                text = stringResource(R.string.hero_subtitle),
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
                                 color = Color.White.copy(alpha = 0.85f)
-                            )
-                        }
-                    }
-
-                    // Modern Offline Badge
-                    Surface(
-                        color = Color.White.copy(alpha = 0.2f),
-                        shape = RoundedCornerShape(12.dp),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.35f)),
-                        modifier = Modifier.testTag("offline_badge")
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(7.dp)
-                                    .background(Color(0xFF4ADE80), CircleShape)
-                            )
-                            Spacer(modifier = Modifier.width(6.dp))
-                            Text(
-                                text = "100% Offline",
-                                style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                color = Color.White
                             )
                         }
                     }
@@ -457,40 +432,18 @@ private fun ModernHeroBanner() {
                 Spacer(modifier = Modifier.height(14.dp))
 
                 Text(
-                    text = "Evidence-based clinical decision trees validated from 200,000+ medical dialogs, with built-in red-flag emergency screening.",
+                    text = stringResource(R.string.hero_description),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.White.copy(alpha = 0.95f),
                     lineHeight = 20.sp
                 )
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .background(Color.Black.copy(alpha = 0.16f), RoundedCornerShape(10.dp))
-                        .padding(horizontal = 10.dp, vertical = 5.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Shield,
-                        contentDescription = "Shield",
-                        tint = Color.White,
-                        modifier = Modifier.size(14.dp)
-                    )
-                    Spacer(modifier = Modifier.width(6.dp))
-                    Text(
-                        text = "Zero cloud dependency • Health data stays on your device",
-                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
-                        color = Color.White.copy(alpha = 0.92f)
-                    )
-                }
             }
         }
     }
 }
 
 @Composable
-private fun EmergencyHotlineCard(onCallEmergency: () -> Unit) {
+private fun EmergencyHotlineCard(emergencyNumber: String, onCallEmergency: () -> Unit) {
     val emergencyColors = getUrgencyThemeColors("EMERGENCY")
 
     Card(
@@ -521,7 +474,7 @@ private fun EmergencyHotlineCard(onCallEmergency: () -> Unit) {
                 ) {
                     Icon(
                         imageVector = Icons.Default.Call,
-                        contentDescription = "Emergency Call",
+                        contentDescription = stringResource(R.string.cd_emergency_call),
                         tint = Color.White,
                         modifier = Modifier.size(19.dp)
                     )
@@ -529,12 +482,12 @@ private fun EmergencyHotlineCard(onCallEmergency: () -> Unit) {
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
                     Text(
-                        text = "Emergency Quick-Dial",
+                        text = stringResource(R.string.emergency_card_title),
                         style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                         color = emergencyColors.primary
                     )
                     Text(
-                        text = "Immediate access for chest pain, stroke, or choking",
+                        text = stringResource(R.string.emergency_card_subtitle),
                         style = MaterialTheme.typography.bodySmall,
                         color = emergencyColors.onContainer,
                         maxLines = 1
@@ -551,7 +504,7 @@ private fun EmergencyHotlineCard(onCallEmergency: () -> Unit) {
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.testTag("home_quick_dial_button")
             ) {
-                Text("Call 911", fontWeight = FontWeight.Bold)
+                Text(stringResource(R.string.call_number, emergencyNumber), fontWeight = FontWeight.Bold)
             }
         }
     }
@@ -612,18 +565,6 @@ fun CrispCategoryCard(
                     lineHeight = 17.sp,
                     maxLines = 2
                 )
-                Spacer(modifier = Modifier.height(6.dp))
-                Surface(
-                    color = MaterialTheme.colorScheme.surfaceVariant,
-                    shape = RoundedCornerShape(6.dp)
-                ) {
-                    Text(
-                        text = "~2 min intake",
-                        style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Medium),
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
-                    )
-                }
             }
 
             Spacer(modifier = Modifier.width(10.dp))
@@ -636,7 +577,7 @@ fun CrispCategoryCard(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                    contentDescription = "Open",
+                    contentDescription = stringResource(R.string.cd_open),
                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier.size(16.dp)
                 )
@@ -695,7 +636,7 @@ fun CrispRecentRecordCard(
                 if (record.likelyConditions.isNotBlank()) {
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "Matched: ${record.likelyConditions}",
+                        text = stringResource(R.string.home_matched, record.likelyConditions),
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1
@@ -712,10 +653,10 @@ fun CrispRecentRecordCard(
             ) {
                 Text(
                     text = when (record.urgencyLevel) {
-                        "EMERGENCY" -> "Emergency"
-                        "URGENT_CARE" -> "Urgent"
-                        "ROUTINE_DOCTOR" -> "Routine"
-                        else -> "Self-Care"
+                        "EMERGENCY" -> stringResource(R.string.urgency_emergency)
+                        "URGENT_CARE" -> stringResource(R.string.urgency_urgent)
+                        "ROUTINE_DOCTOR" -> stringResource(R.string.urgency_routine)
+                        else -> stringResource(R.string.urgency_self_care)
                     },
                     style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                     color = urgencyColors.primary,

@@ -1,105 +1,100 @@
 // Usage: node emit.mjs [app-assets-dir]
-// Combines out/model.json (mined from MedDialog) with the curated safety layer and
-// advice text into the app's triage_tree.json. Validates the tree before writing.
+// Combines out/model.json (mined from MedDialog) with the curated safety layer, advice text
+// and clinical follow-up questions into the app's triage_tree.json. Validates before writing.
+//
+// Flow per complaint:  red-flag screen -> up to 3 MedDialog-derived questions
+//                      -> up to 7 clinical follow-up questions -> assessment.
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { FACETS } from './lib/facets.mjs'
 import { KB, FALLBACK } from './lib/kb.mjs'
-import { SYMPTOM_META, RED_FLAGS, EMERGENCY_KINDS, GROUPS, URGENCY_RANK, maxUrgency } from './lib/safety.mjs'
+import { KB_DEEP } from './lib/kb_deep.mjs'
+import { REMEDIES, REMEDIES_FALLBACK } from './lib/remedies.mjs'
+import { DEEP } from './lib/deep.mjs'
+import { createPolicy } from './lib/policy.mjs'
+import { SYMPTOM_META, RED_FLAGS, EMERGENCY_KINDS, GROUPS } from './lib/safety.mjs'
 
 const here = import.meta.dirname
 const model = JSON.parse(readFileSync(join(here, 'out', 'model.json'), 'utf8'))
 const assetsDir = process.argv[2] || join(here, '..', '..', 'app', 'src', 'main', 'assets')
+const ADVICE = { ...KB, ...KB_DEEP }
+for (const k of Object.keys(KB_DEEP)) if (KB[k]) throw new Error(`advice defined twice: ${k}`)
+for (const k of Object.keys(REMEDIES)) if (!ADVICE[k]) throw new Error(`remedies for unknown condition: ${k}`)
+for (const k of Object.keys(REMEDIES_FALLBACK)) if (!FALLBACK[k]) throw new Error(`remedies fallback for unknown symptom: ${k}`)
 
-const SHOW_MIN = 0.08 // a condition is shown only if doctors discussed it in >= 8% of the leaf's dialogs
+const SHOW_MIN = 0.08 // stage-1 intro lists conditions doctors discussed in >= 8% of the leaf's dialogs
 const SHOW_MAX = 3
 const pct = (p) => `${Math.round(p * 100)}%`
 const nodes = {}
 const categories = []
+const qmap = {} // node id -> { sym, qid } for verify_deep.mjs
 
+// Nodes are built with every field filled in (so validation is simple) and written without the
+// defaults that the Kotlin models already assume, which shrinks the shipped file considerably.
 function addNode(n) {
   if (nodes[n.id]) throw new Error(`duplicate node ${n.id}`)
-  nodes[n.id] = n
+  nodes[n.id] = {
+    isEmergencyCheck: false,
+    options: [],
+    isConclusion: false,
+    ...n,
+    options: (n.options || []).map((o) => ({ subtitle: null, isRedFlag: false, ...o })),
+  }
 }
 
-function conclusionForLeaf(sym, leaf) {
-  const meta = SYMPTOM_META[sym]
+function compact(n) {
+  const o = { id: n.id, category: n.category, question: n.question }
+  if (n.explanation) o.explanation = n.explanation
+  if (n.isEmergencyCheck) o.isEmergencyCheck = true
+  if (n.options.length) o.options = n.options.map((p) => ({ text: p.text, ...(p.subtitle ? { subtitle: p.subtitle } : {}), nextId: p.nextId, ...(p.isRedFlag ? { isRedFlag: true } : {}) }))
+  if (n.isConclusion) o.isConclusion = true
+  if (n.conclusion) o.conclusion = n.conclusion
+  return o
+}
+
+function stage1Intro(sym, leaf) {
   const shown = Object.entries(leaf.probs)
     .filter(([, p]) => p >= SHOW_MIN)
     .sort((a, b) => b[1] - a[1])
     .slice(0, SHOW_MAX)
-
-  let urgency = meta.floor
-  for (const [name, p] of shown) {
-    const kb = KB[name]
-    if (!kb) throw new Error(`No KB entry for "${name}" (symptom ${sym})`)
-    if (p >= (kb.serious ? 0.1 : 0.15)) urgency = maxUrgency(urgency, kb.urgency)
-  }
-  // Safety: lead with the most urgent condition that crossed its threshold, not merely
-  // the most probable one, so reassuring advice never sits above a serious possibility.
-  const raised = shown.filter(([name, p]) => p >= (KB[name].serious ? 0.1 : 0.15) && URGENCY_RANK[KB[name].urgency] >= URGENCY_RANK[urgency])
-  const lead = raised.length ? raised[0] : shown[0]
-
-  const fb = FALLBACK[sym]
-  if (!fb) throw new Error(`No fallback for ${sym}`)
-  if (!shown.length) {
-    return {
-      title: 'No single cause stands out',
-      explanation: `Among ${leaf.n} similar MedDialog consultations, doctors did not converge on one cause for these answers.`,
-      conclusion: {
-        urgencyLevel: urgency,
-        likelyConditions: ['Needs a doctor’s assessment'],
-        clinicalAdvice: fb.advice,
-        homeCareInstructions: fb.care,
-        whenToSeekImmediateHelp: fb.seek,
-      },
-    }
-  }
-
-  const top = KB[lead[0]]
-  const stats = shown.map(([n, p]) => `${n} (${pct(p)})`).join(', ')
-  // High-floor symptoms (chest pain, breathlessness) always carry their own warning line,
-  // unless the lead condition's advice is already urgent.
-  const needsWarning = meta.floor === 'URGENT_CARE' && URGENCY_RANK[top.urgency] < URGENCY_RANK.URGENT_CARE
-  const seek = needsWarning ? `${top.seek} ${fb.seek}` : top.seek
-  return {
-    title: lead[0],
-    explanation: `Among ${leaf.n} similar MedDialog consultations with these answers, doctors most often discussed: ${stats}. This counts what doctors mentioned in their replies; it is not a diagnosis.`,
-    conclusion: {
-      urgencyLevel: urgency,
-      likelyConditions: shown.map(([n]) => n),
-      clinicalAdvice: `${top.advice}\n\nIn similar MedDialog consultations, doctors most often discussed: ${stats}.`,
-      homeCareInstructions: top.care,
-      whenToSeekImmediateHelp: seek,
-    },
-  }
+  const name = SYMPTOM_META[sym].name
+  const stats = shown.length ? ` In ${leaf.n} similar online doctor consultations, doctors most often discussed: ${shown.map(([n, p]) => `${n} (${pct(p)})`).join(', ')}. These are mention rates, not diagnoses.` : ''
+  return `So far:${stats} The next questions follow standard clinical history-taking for “${name}” to narrow this down.`
 }
 
 for (const [sym, e] of Object.entries(model.symptoms)) {
   const meta = SYMPTOM_META[sym]
+  const deep = DEEP[sym]
+  if (!deep) throw new Error(`No follow-up questions for ${sym}`)
   const cat = sym.toUpperCase()
   const rfId = `${sym}_rf`
+  const policy = createPolicy({
+    sym,
+    deep,
+    KB: ADVICE,
+    REMEDIES,
+    remediesFallback: REMEDIES_FALLBACK[sym],
+    floor: meta.floor,
+    fallback: FALLBACK[sym],
+    addNode: (n) => {
+      addNode(n)
+    },
+  })
   let q = 0
-  let leaf = 0
 
-  // Build the learned part first so the red-flag screen can point at its root.
-  function build(n) {
-    if (n.leaf) {
-      const id = `${sym}_leaf${leaf++}`
-      const c = conclusionForLeaf(sym, n)
-      addNode({ id, category: cat, question: `Assessment: ${c.title}`, explanation: c.explanation, isEmergencyCheck: false, options: [], isConclusion: true, conclusion: c.conclusion })
-      return id
-    }
+  // Stage 1: MedDialog-derived tree. Its leaves hand over to the follow-up policy.
+  function build(n, path) {
+    if (n.leaf) return policy.enter(n.probs, path, stage1Intro(sym, n))
     const id = `${sym}_q${q++}`
-    const yesId = build(n.yes)
-    const noId = build(n.no)
+    const yesId = build(n.yes, [...path, { facet: n.facet, yes: true }])
+    const noId = build(n.no, [...path, { facet: n.facet, yes: false }])
     const fs = e.facetStats[n.facet]
     const asked = fs.doctorAskPct >= 1 ? ` Doctors asked about it in ${fs.doctorAskPct}% of these consultations.` : ''
     addNode({
       id,
       category: cat,
       question: FACETS[n.facet].q,
-      explanation: `Why we ask: this was among the strongest clues separating the conditions doctors discussed in ${e.dialogs.toLocaleString('en-US')} MedDialog “${meta.name}” consultations. ${fs.patientPct}% of patients mentioned it.${asked}`,
+      explanation: `Why we ask: this was among the strongest clues separating the conditions doctors discussed in ${e.dialogs.toLocaleString('en-US')} online doctor consultations about “${meta.name}”. ${fs.patientPct}% of patients mentioned it.${asked}`,
       isEmergencyCheck: false,
       options: [
         { text: 'Yes', subtitle: null, nextId: yesId, isRedFlag: false },
@@ -109,7 +104,7 @@ for (const [sym, e] of Object.entries(model.symptoms)) {
     })
     return id
   }
-  const rootId = build(e.tree)
+  const rootId = build(e.tree, [])
 
   // Curated red-flag screen goes first.
   const flags = RED_FLAGS[sym]
@@ -123,7 +118,7 @@ for (const [sym, e] of Object.entries(model.symptoms)) {
       id: emId,
       category: cat,
       question: `${kind.urgency === 'EMERGENCY' ? 'Emergency' : 'Urgent'}: ${kind.title}`,
-      explanation: 'This warning sign comes from standard clinical triage guidance. It was not learned from the MedDialog data.',
+      explanation: 'This warning sign comes from standard clinical triage guidance.',
       isEmergencyCheck: true,
       options: [],
       isConclusion: true,
@@ -137,16 +132,23 @@ for (const [sym, e] of Object.entries(model.symptoms)) {
     })
     options.push({ text: fl.text, subtitle: fl.subtitle, nextId: emId, isRedFlag: true })
   }
-  options.push({ text: 'None of these', subtitle: 'Continue with a few quick questions', nextId: rootId, isRedFlag: false })
+  options.push({ text: 'None of these', subtitle: 'Continue with the questions', nextId: rootId, isRedFlag: false })
   addNode({
     id: rfId,
     category: cat,
     question: 'First, do any of these apply to you right now?',
-    explanation: 'These warning signs always need urgent care. They come from standard clinical triage guidance, not from the MedDialog data.',
+    explanation: 'These warning signs always need urgent care. They come from standard clinical triage guidance.',
     isEmergencyCheck: true,
     options,
     isConclusion: false,
   })
+
+  // Map follow-up question nodes back to their bank entries (for the simulation check).
+  for (const [id, n] of Object.entries(nodes)) {
+    if (n.category !== cat || n.isConclusion || n.isEmergencyCheck) continue
+    const hit = deep.Q.find((d) => d.q === n.question)
+    if (hit) qmap[id] = { sym, qid: hit.id }
+  }
 
   categories.push({
     id: cat,
@@ -165,10 +167,10 @@ categories.sort((a, b) => b.dialogs - a.dialogs)
 for (const c of categories) delete c.dialogs
 
 const out = {
-  version: '2.0',
+  version: '3.0',
   metadata: {
-    source: 'MedDialog-EN (iCliniq + HealthCareMagic), mined offline',
-    description: `Questions and likely-condition statistics learned from ${model.corpus.dialogs.toLocaleString('en-US')} real doctor-patient dialogs. Emergency red flags and advice text are curated clinical guidance. This is an information tool, not a diagnosis.`,
+    source: 'MedDialog-EN (iCliniq + HealthCareMagic), mined offline, plus clinical follow-up questions',
+    description: `First questions and condition statistics learned from ${model.corpus.dialogs.toLocaleString('en-US')} real doctor-patient dialogs; follow-up questions (up to 10 layers in total) follow standard clinical history-taking; emergency red flags and advice are curated clinical guidance. This is an information tool, not a diagnosis.`,
   },
   categories,
   nodes,
@@ -196,11 +198,15 @@ while (stack.length) {
 }
 for (const id of Object.keys(nodes)) if (!reach.has(id)) errors.push(`unreachable ${id}`)
 if (errors.length) {
-  console.error(errors.join('\n'))
+  console.error(errors.slice(0, 40).join('\n'))
   process.exit(1)
 }
 
 mkdirSync(assetsDir, { recursive: true })
-writeFileSync(join(assetsDir, 'triage_tree.json'), JSON.stringify(out, null, 2) + '\n')
+const shipped = { ...out, nodes: Object.fromEntries(Object.entries(nodes).map(([id, n]) => [id, compact(n)])) }
+const json = JSON.stringify(shipped) + '\n' // minified: the tree is generated, never hand-edited
+writeFileSync(join(assetsDir, 'triage_tree.json'), json)
+mkdirSync(join(here, 'out'), { recursive: true })
+writeFileSync(join(here, 'out', 'qmap.json'), JSON.stringify(qmap))
 const leaves = Object.values(nodes).filter((n) => n.isConclusion && !n.isEmergencyCheck).length
-console.error(`wrote triage_tree.json: ${categories.length} categories, ${Object.keys(nodes).length} nodes (${leaves} data-derived leaves)`)
+console.error(`wrote triage_tree.json: ${categories.length} categories, ${Object.keys(nodes).length} nodes (${leaves} assessments), ${(json.length / 1024).toFixed(0)} KB`)

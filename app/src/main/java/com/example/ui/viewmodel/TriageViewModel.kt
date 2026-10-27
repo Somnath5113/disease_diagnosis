@@ -1,6 +1,7 @@
 package com.example.ui.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.data.local.TriageRecordEntity
@@ -11,6 +12,7 @@ import com.example.data.model.TriageNode
 import com.example.data.model.TriageOption
 import com.example.data.model.UrgencyLevel
 import com.example.data.repository.TriageRepository
+import com.example.data.settings.SettingsRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -35,8 +37,11 @@ data class ConsultationState(
     val savedRecordId: Long? = null
 )
 
+private const val TAG = "TriageViewModel"
+
 class TriageViewModel(application: Application) : AndroidViewModel(application) {
     private val repository = TriageRepository(application.applicationContext)
+    private val settingsRepository = SettingsRepository.get(application)
 
     val allRecords: StateFlow<List<TriageRecordEntity>> = repository.allRecords
         .stateIn(
@@ -71,7 +76,7 @@ class TriageViewModel(application: Application) : AndroidViewModel(application) 
                 val cats = repository.getCategories()
                 _categories.value = cats
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e(TAG, "Could not load the triage tree", e)
             }
         }
     }
@@ -178,6 +183,7 @@ class TriageViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     private fun autoSaveRecord(history: List<ConsultationStep>, conclusion: TriageConclusion) {
+        if (!settingsRepository.settings.value.saveHistory) return
         viewModelScope.launch {
             val category = _consultationState.value.category?.name ?: "General Intake"
             // The first node is the emergency screen, so its answer ("None of these") is not the complaint.

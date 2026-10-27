@@ -1,3 +1,155 @@
 <resources>
     <string name="app_name">MedTriage</string>
+
+    <!-- Navigation -->
+    <string name="nav_intake">Clinical Intake</string>
+    <string name="nav_history">History</string>
+    <string name="nav_settings">Settings</string>
+    <string name="share_chooser_title">Share Clinical Intake Summary</string>
+
+    <!-- Common -->
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    <string name="share">Share</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_share">Share</string>
+    <string name="cd_delete">Delete</string>
+    <string name="cd_open">Open</string>
+    <string name="call_number">Call %1$s</string>
+    <string name="urgency_emergency">Emergency</string>
+    <string name="urgency_urgent">Urgent</string>
+    <string name="urgency_routine">Routine</string>
+    <string name="urgency_self_care">Self-Care</string>
+
+    <!-- Home -->
+    <string name="home_search_hint">Search symptoms, body systems (e.g. chest, fever)…</string>
+    <string name="cd_search">Search</string>
+    <string name="cd_clear_search">Clear search</string>
+    <string name="cd_all">All</string>
+    <string name="filter_all_systems">All Systems</string>
+    <string name="home_pathways_title">Specialty Clinical Pathways</string>
+    <string name="home_available">%1$d Available</string>
+    <string name="home_recent_title">Recent Intake Assessments</string>
+    <string name="home_view_all">View All (%1$d)</string>
+    <string name="cd_no_assessments">No assessments</string>
+    <string name="home_no_saved">No saved assessments yet</string>
+    <string name="home_no_saved_hint">Select any clinical pathway above to start an intake consultation.</string>
+    <string name="hero_subtitle">Symptom check</string>
+    <string name="hero_description">Answer a few questions to find out how urgently you need care.</string>
+    <string name="cd_emergency_call">Emergency Call</string>
+    <string name="emergency_card_title">Emergency Quick-Dial</string>
+    <string name="emergency_card_subtitle">Immediate access for chest pain, stroke, or choking</string>
+    <string name="home_matched">Matched: %1$s</string>
+
+    <!-- History -->
+    <string name="history_title">Assessment History</string>
+    <string name="cd_clear_history">Clear History</string>
+    <string name="cd_no_consultations">No consultations</string>
+    <string name="history_empty_title">No Past Consultations</string>
+    <string name="history_empty_body">Your completed clinical assessments are automatically recorded here for doctor reference.</string>
+    <string name="history_start_first">Start First Intake</string>
+    <string name="history_clear_title">Clear All Intake History?</string>
+    <string name="history_clear_body">This will permanently remove all stored triage records from this device.</string>
+    <string name="history_clear_all">Clear All</string>
+    <string name="history_specialty">Specialty: %1$s</string>
+    <string name="history_record_title">Clinical Intake Record</string>
+    <string name="history_chief">Chief Symptom / Complaint</string>
+    <string name="history_potential">Potential Conditions:</string>
+    <string name="history_guidance">Clinical Guidance:</string>
+    <string name="history_transcript">Multi-turn Transcript Log:</string>
+    <string name="history_answer">→ Answer: %1$s</string>
+
+    <!-- Consultation -->
+    <string name="consult_step">Step %1$d of up to %2$d</string>
+    <string name="cd_previous_question">Previous Question</string>
+    <string name="cd_exit_intake">Exit Intake</string>
+    <string name="cd_doctor_query">Doctor Query</string>
+    <string name="consult_query_title">Clinical Intake Query</string>
+    <string name="cd_rationale">Rationale</string>
+    <string name="consult_rationale">Clinical Rationale</string>
+    <string name="consult_hide">Hide</string>
+    <string name="consult_learn_more">Learn more</string>
+    <string name="consult_select_prompt">Select the option that best describes your symptom:</string>
+    <string name="cd_emergency_flag">Emergency Flag</string>
+    <string name="consult_red_flag_title">Emergency Red Flag Alert</string>
+
+    <!-- Emergency dialog -->
+    <string name="emergency_alert_title">CRITICAL RED-FLAG ALERT</string>
+    <string name="cd_emergency_alert">Emergency Alert</string>
+    <string name="emergency_dialog_body">This symptom indicates high risk of an acute medical emergency. Immediate clinical evaluation or emergency services is strongly advised.</string>
+    <string name="emergency_call_button">Call Emergency (%1$s)</string>
+    <string name="emergency_view_care">View Clinical Care Instructions</string>
+    <string name="emergency_return">Return to Questionnaire</string>
+
+    <!-- Conclusion -->
+    <string name="badge_emergency">CRITICAL EMERGENCY • CALL %1$s</string>
+    <string name="badge_urgent">URGENT CARE • SEEK CLINIC WITHIN 12-24H</string>
+    <string name="badge_routine">ROUTINE PHYSICIAN EVALUATION</string>
+    <string name="badge_self_care">SUPPORTIVE AT-HOME MONITORING</string>
+    <string name="cd_saved">Saved</string>
+    <string name="saved_locally">Saved locally</string>
+    <string name="conclusion_title">Clinical Triage Evaluation</string>
+    <string name="conclusion_specialty">Specialty: %1$s</string>
+    <string name="cd_call">Call</string>
+    <string name="conclusion_call_now">Call %1$s Immediately</string>
+    <string name="conclusion_matches_title">Potential Clinical Matches</string>
+    <string name="conclusion_matches_hint">Based on your answers:</string>
+    <string name="conclusion_assessment_title">Clinical Assessment &amp; Guidance</string>
+    <string name="conclusion_care_title">Recommended Care &amp; Symptom Relief</string>
+    <string name="cd_care_step">Care step</string>
+    <string name="remedies_title">Indian Home Remedies (Gharelu Nuskhe)</string>
+    <string name="remedies_hint">Traditional comfort measures. They support, and do not replace, the medical advice above.</string>
+    <string name="remedies_footer">Check with a doctor first if you are pregnant, diabetic, on regular medicines, or treating a child. Honey is not for babies under 1 year.</string>
+    <string name="cd_warning_thresholds">Warning thresholds</string>
+    <string name="conclusion_seek_title">When to Seek Immediate Medical Evaluation</string>
+    <string name="conclusion_share_button">Share Summary with Doctor</string>
+    <string name="conclusion_home_button">Finish &amp; Return to Home</string>
+    <string name="cd_home">Home</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_hint">Choose the language of menus and screens.</string>
+    <string name="settings_language_note">Medical questions and advice are currently shown in English only.</string>
+    <string name="settings_emergency_number">One-tap emergency number</string>
+    <string name="settings_emergency_number_hint">Used by every emergency button in the app. 112 works across India. Ambulance 108 and 102 availability depends on your state.</string>
+    <string name="settings_helplines">Indian helplines</string>
+    <string name="settings_helplines_hint">Tap Call to open the dialler. Check that the number is right before you press call.</string>
+    <string name="settings_call">Call</string>
+    <string name="settings_appearance">Appearance</string>
+    <string name="settings_theme">Theme</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="settings_text_size">Text size</string>
+    <string name="text_normal">Normal</string>
+    <string name="text_large">Large</string>
+    <string name="text_extra_large">Extra large</string>
+    <string name="settings_preferences">Preferences</string>
+    <string name="settings_remedies">Show Indian home remedies</string>
+    <string name="settings_remedies_hint">Show traditional remedies on assessment results.</string>
+    <string name="settings_save_history">Save assessments on this device</string>
+    <string name="settings_save_history_hint">Turn off to stop recording new assessments in History.</string>
+    <string name="settings_data">Your data</string>
+    <string name="settings_clear_history">Clear assessment history</string>
+    <string name="settings_clear_history_hint">Permanently delete all saved assessments from this device.</string>
+    <string name="settings_about">About</string>
+    <string name="settings_about_version">MedTriage %1$s</string>
+    <string name="settings_disclaimer">MedTriage is an information tool and not a medical diagnosis. In an emergency, call %1$s now.</string>
+
+    <!-- Helplines -->
+    <string name="helpline_112">National emergency</string>
+    <string name="helpline_112_note">Police, fire, and ambulance</string>
+    <string name="helpline_108">Emergency ambulance</string>
+    <string name="helpline_108_note">Available in many states</string>
+    <string name="helpline_102">Ambulance</string>
+    <string name="helpline_102_note">National Ambulance Service</string>
+    <string name="helpline_100">Police</string>
+    <string name="helpline_100_note">Crime and safety</string>
+    <string name="helpline_101">Fire</string>
+    <string name="helpline_101_note">Fire and rescue</string>
+    <string name="helpline_1098">Childline</string>
+    <string name="helpline_1098_note">Children in need of help</string>
+    <string name="helpline_14416">Tele-MANAS</string>
+    <string name="helpline_14416_note">Mental health support</string>
 </resources>

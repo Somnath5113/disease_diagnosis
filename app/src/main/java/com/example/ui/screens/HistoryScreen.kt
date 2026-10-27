@@ -61,6 +61,8 @@ import com.example.ui.theme.getUrgencyThemeColors
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.compose.ui.res.stringResource
+import com.example.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,7 +88,7 @@ fun HistoryScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Assessment History",
+                        text = stringResource(R.string.history_title),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -98,7 +100,7 @@ fun HistoryScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.cd_back),
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
@@ -111,7 +113,7 @@ fun HistoryScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.DeleteSweep,
-                                contentDescription = "Clear History",
+                                contentDescription = stringResource(R.string.cd_clear_history),
                                 tint = MaterialTheme.colorScheme.error
                             )
                         }
@@ -144,20 +146,20 @@ fun HistoryScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.History,
-                            contentDescription = "No consultations",
+                            contentDescription = stringResource(R.string.cd_no_consultations),
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(38.dp)
                         )
                     }
                     Spacer(modifier = Modifier.height(18.dp))
                     Text(
-                        text = "No Past Consultations",
+                        text = stringResource(R.string.history_empty_title),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "Your completed clinical assessments are automatically recorded here for doctor reference.",
+                        text = stringResource(R.string.history_empty_body),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         textAlign = androidx.compose.ui.text.style.TextAlign.Center
@@ -171,7 +173,7 @@ fun HistoryScreen(
                         ),
                         shape = RoundedCornerShape(14.dp)
                     ) {
-                        Text("Start First Intake", fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.history_start_first), fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -211,14 +213,14 @@ fun HistoryScreen(
             containerColor = MaterialTheme.colorScheme.surface,
             title = {
                 Text(
-                    "Clear All Intake History?",
+                    stringResource(R.string.history_clear_title),
                     color = MaterialTheme.colorScheme.onSurface,
                     fontWeight = FontWeight.Bold
                 )
             },
             text = {
                 Text(
-                    "This will permanently remove all stored triage records from this device.",
+                    stringResource(R.string.history_clear_body),
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             },
@@ -230,12 +232,12 @@ fun HistoryScreen(
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
                 ) {
-                    Text("Clear All", fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.history_clear_all), fontWeight = FontWeight.Bold)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showClearConfirmDialog = false }) {
-                    Text("Cancel", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    Text(stringResource(R.string.cancel), color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
         )
@@ -287,10 +289,10 @@ fun CrispHistoryItemCard(
                 ) {
                     Text(
                         text = when (record.urgencyLevel) {
-                            "EMERGENCY" -> "Emergency"
-                            "URGENT_CARE" -> "Urgent"
-                            "ROUTINE_DOCTOR" -> "Routine"
-                            else -> "Self-Care"
+                            "EMERGENCY" -> stringResource(R.string.urgency_emergency)
+                            "URGENT_CARE" -> stringResource(R.string.urgency_urgent)
+                            "ROUTINE_DOCTOR" -> stringResource(R.string.urgency_routine)
+                            else -> stringResource(R.string.urgency_self_care)
                         },
                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                         color = urgencyColors.primary,
@@ -310,7 +312,7 @@ fun CrispHistoryItemCard(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = "Specialty: ${record.category}",
+                text = stringResource(R.string.history_specialty, record.category),
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
                 color = MaterialTheme.colorScheme.primary
             )
@@ -318,7 +320,7 @@ fun CrispHistoryItemCard(
             if (record.likelyConditions.isNotBlank()) {
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    text = "Matched: ${record.likelyConditions}",
+                    text = stringResource(R.string.home_matched, record.likelyConditions),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2
@@ -338,7 +340,7 @@ fun CrispHistoryItemCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Share,
-                        contentDescription = "Share",
+                        contentDescription = stringResource(R.string.cd_share),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(19.dp)
                     )
@@ -352,7 +354,7 @@ fun CrispHistoryItemCard(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
-                        contentDescription = "Delete",
+                        contentDescription = stringResource(R.string.cd_delete),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(19.dp)
                     )
@@ -398,7 +400,7 @@ fun CrispRecordDetailDialog(
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                text = "Clinical Intake Record",
+                                text = stringResource(R.string.history_record_title),
                                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                                 color = MaterialTheme.colorScheme.onSurface
                             )
@@ -415,10 +417,10 @@ fun CrispRecordDetailDialog(
                         ) {
                             Text(
                                 text = when (record.urgencyLevel) {
-                                    "EMERGENCY" -> "Emergency"
-                                    "URGENT_CARE" -> "Urgent"
-                                    "ROUTINE_DOCTOR" -> "Routine"
-                                    else -> "Self-Care"
+                                    "EMERGENCY" -> stringResource(R.string.urgency_emergency)
+                                    "URGENT_CARE" -> stringResource(R.string.urgency_urgent)
+                                    "ROUTINE_DOCTOR" -> stringResource(R.string.urgency_routine)
+                                    else -> stringResource(R.string.urgency_self_care)
                                 },
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                 color = urgencyColors.primary,
@@ -440,7 +442,7 @@ fun CrispRecordDetailDialog(
                     ) {
                         Column(modifier = Modifier.padding(14.dp)) {
                             Text(
-                                text = "Chief Symptom / Complaint",
+                                text = stringResource(R.string.history_chief),
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                 color = MaterialTheme.colorScheme.primary
                             )
@@ -457,7 +459,7 @@ fun CrispRecordDetailDialog(
                 if (record.likelyConditions.isNotBlank()) {
                     item {
                         Text(
-                            text = "Potential Conditions:",
+                            text = stringResource(R.string.history_potential),
                             style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -471,7 +473,7 @@ fun CrispRecordDetailDialog(
 
                 item {
                     Text(
-                        text = "Clinical Guidance:",
+                        text = stringResource(R.string.history_guidance),
                         style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -486,7 +488,7 @@ fun CrispRecordDetailDialog(
                 if (transcript.isNotEmpty()) {
                     item {
                         Text(
-                            text = "Multi-turn Transcript Log:",
+                            text = stringResource(R.string.history_transcript),
                             style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -507,7 +509,7 @@ fun CrispRecordDetailDialog(
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
-                                    text = "→ Answer: ${item.answer}",
+                                    text = stringResource(R.string.history_answer, item.answer),
                                     style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.SemiBold),
                                     color = MaterialTheme.colorScheme.primary
                                 )
@@ -528,7 +530,7 @@ fun CrispRecordDetailDialog(
                             border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
                             modifier = Modifier.weight(1f)
                         ) {
-                            Text("Close", color = MaterialTheme.colorScheme.onSurface)
+                            Text(stringResource(R.string.close), color = MaterialTheme.colorScheme.onSurface)
                         }
                         Button(
                             onClick = onShare,
@@ -541,11 +543,11 @@ fun CrispRecordDetailDialog(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Share,
-                                contentDescription = "Share",
+                                contentDescription = stringResource(R.string.cd_share),
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text("Share")
+                            Text(stringResource(R.string.share))
                         }
                     }
                 }

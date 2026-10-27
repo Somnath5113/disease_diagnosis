@@ -25,6 +25,12 @@ npm run report                                    # → REPORT.md
 npm run trees [symptom…]                          # print the learned trees
 ```
 
+## Layers
+
+Each complaint runs: emergency screen (1) → up to 3 MedDialog-derived questions → up to 6 clinical follow-up questions → assessment, so at most **10 screens**. The follow-up questions (`lib/deep.mjs`, sources in [SOURCES.md](SOURCES.md)) are hand-written, scored per condition, and compiled offline by `lib/policy.mjs` into ordinary tree nodes; the app engine is unchanged.
+
+`npm run verify` checks the structure and simulates a textbook patient for every condition. `node trace.mjs <symptom> <conditionKey>` prints the questions such a patient is asked.
+
 ## What is data-derived and what is not
 
 | Learned from MedDialog | Hand-written |
@@ -32,6 +38,7 @@ npm run trees [symptom…]                          # print the learned trees
 | Which chief complaints become categories (≥ 2,000 dialogs) | Emergency red-flag screens: `lib/safety.mjs` |
 | Which yes/no questions are asked and in what order | Advice, home care, when-to-seek text: `lib/kb.mjs` |
 | Which conditions doctors discussed per answer pattern, with % | Urgency floors and per-condition urgency |
+| Starting scores for the follow-up stage | The follow-up questions and their scoring (`lib/deep.mjs`, `lib/kb_deep.mjs`) |
 
 `lib/symptoms.mjs`, `lib/facets.mjs` and `lib/conditions.mjs` are the vocabularies (what to look for); the corpus decides which of them matter.
 

@@ -1,7 +1,9 @@
-// Usage: node verify_tree.mjs — structural checks mirroring ExampleRobolectricTest, plus path enumeration.
+// Usage: node verify_tree.mjs [tree.json] — structural checks mirroring ExampleRobolectricTest.
 import { readFileSync } from 'node:fs'
-const t = JSON.parse(readFileSync(new URL('../../app/src/main/assets/triage_tree.json', import.meta.url)))
+const path = process.argv[2] || new URL('../../app/src/main/assets/triage_tree.json', import.meta.url)
+const t = JSON.parse(readFileSync(path))
 const URG = new Set(['EMERGENCY', 'URGENT_CARE', 'ROUTINE_DOCTOR', 'SELF_CARE'])
+const opts = (n) => n.options || []
 const fail = []
 const ids = t.categories.map((c) => c.id)
 if (new Set(ids).size !== ids.length) fail.push('duplicate category ids')
@@ -12,32 +14,48 @@ for (const c of t.categories) {
   const s = t.nodes[c.startNodeId]
   if (!s) { fail.push(`${c.id}: no start`); continue }
   if (!s.isEmergencyCheck) fail.push(`${c.id}: start not emergency screen`)
-  if (!s.options.some((o) => o.isRedFlag)) fail.push(`${c.id}: no red flag`)
-  if (!s.options.some((o) => !o.isRedFlag)) fail.push(`${c.id}: cannot continue`)
+  if (!opts(s).some((o) => o.isRedFlag)) fail.push(`${c.id}: no red flag`)
+  if (!opts(s).some((o) => !o.isRedFlag)) fail.push(`${c.id}: cannot continue`)
 }
 for (const [id, n] of Object.entries(t.nodes)) {
-  for (const o of n.options) {
+  if (n.id !== id) fail.push(`${id}: id mismatch`)
+  if (!n.category || !n.question) fail.push(`${id}: missing category/question`)
+  if (!n.isConclusion && !opts(n).length) fail.push(`${id}: dead end`)
+  if (n.isConclusion && opts(n).length) fail.push(`${id}: conclusion has options`)
+  for (const o of opts(n)) {
     const tgt = t.nodes[o.nextId]
     if (!tgt) fail.push(`${id}: bad nextId ${o.nextId}`)
     else if (o.isRedFlag && !tgt.isConclusion) fail.push(`${id}: red flag target not conclusion`)
   }
   if (n.conclusion) {
-    if (!URG.has(n.conclusion.urgencyLevel)) fail.push(`${id}: bad urgency`)
-    for (const c of n.conclusion.likelyConditions) if (c.includes(', ')) fail.push(`${id}: comma in "${c}"`)
-    if (!n.conclusion.clinicalAdvice || !n.conclusion.whenToSeekImmediateHelp) fail.push(`${id}: empty advice`)
-    if (n.isEmergencyCheck && !['EMERGENCY', 'URGENT_CARE'].includes(n.conclusion.urgencyLevel)) fail.push(`${id}: emergency node not urgent`)
+    const c = n.conclusion
+    if (!URG.has(c.urgencyLevel)) fail.push(`${id}: bad urgency`)
+    for (const x of c.likelyConditions) if (x.includes(', ')) fail.push(`${id}: comma in "${x}"`)
+    if (!c.clinicalAdvice || !c.whenToSeekImmediateHelp || !c.homeCareInstructions?.length) fail.push(`${id}: empty advice`)
+    if (n.isEmergencyCheck && !['EMERGENCY', 'URGENT_CARE'].includes(c.urgencyLevel)) fail.push(`${id}: emergency node not urgent`)
   }
 }
-// Enumerate every answer path per category: acyclic, ends in a conclusion, record depth + outcome mix.
-let paths = 0, maxDepth = 0
-const mix = {}
-function walk(id, depth, seen) {
-  if (seen.has(id)) { fail.push(`cycle at ${id}`); return }
+// Longest path in screens (emergency screen + questions); memoised DFS also proves acyclicity.
+const memo = new Map()
+function screens(id, visiting) {
+  if (memo.has(id)) return memo.get(id)
+  if (visiting.has(id)) { fail.push(`cycle through ${id}`); return 0 }
+  visiting.add(id)
   const n = t.nodes[id]
-  if (n.isConclusion) { paths++; maxDepth = Math.max(maxDepth, depth); mix[n.conclusion.urgencyLevel] = (mix[n.conclusion.urgencyLevel] || 0) + 1; return }
-  for (const o of n.options) walk(o.nextId, depth + 1, new Set(seen).add(id))
+  const d = n.isConclusion ? 0 : 1 + Math.max(0, ...opts(n).map((o) => screens(o.nextId, visiting)))
+  visiting.delete(id)
+  memo.set(id, d)
+  return d
 }
-for (const c of t.categories) walk(c.startNodeId, 0, new Set())
-console.log(`categories=${t.categories.length} nodes=${Object.keys(t.nodes).length} paths=${paths} maxDepth=${maxDepth}`, mix)
-if (fail.length) { console.error('FAIL\n' + fail.join('\n')); process.exit(1) }
+const longest = Math.max(...t.categories.map((c) => screens(c.startNodeId, new Set())))
+if (longest < 8) fail.push(`longest path only ${longest} screens (expected >= 8)`)
+if (longest > 10) fail.push(`longest path is ${longest} screens (limit 10)`)
+const reach = new Set()
+const stack = t.categories.map((c) => c.startNodeId)
+while (stack.length) { const id = stack.pop(); if (reach.has(id)) continue; reach.add(id); for (const o of opts(t.nodes[id])) stack.push(o.nextId) }
+for (const id of Object.keys(t.nodes)) if (!reach.has(id)) fail.push(`unreachable ${id}`)
+const mix = {}
+for (const n of Object.values(t.nodes)) if (n.conclusion) mix[n.conclusion.urgencyLevel] = (mix[n.conclusion.urgencyLevel] || 0) + 1
+console.log(`categories=${t.categories.length} nodes=${Object.keys(t.nodes).length} longestPath=${longest} screens`, mix)
+if (fail.length) { console.error('FAIL\n' + fail.slice(0, 30).join('\n')); process.exit(1) }
 console.log('OK: all structural checks passed')

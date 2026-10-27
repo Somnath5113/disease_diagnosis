@@ -156,7 +156,6 @@ fun getUrgencyThemeColors(levelString: String): UrgencyColors {
 @Composable
 fun MedTriageTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false,
     content: @Composable () -> Unit,
 ) {
     val colorScheme: ColorScheme = if (darkTheme) {
@@ -170,13 +169,4 @@ fun MedTriageTheme(
         typography = Typography,
         content = content
     )
-}
-
-@Composable
-fun MyApplicationTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = false,
-    content: @Composable () -> Unit,
-) {
-    MedTriageTheme(darkTheme = darkTheme, dynamicColor = dynamicColor, content = content)
 }

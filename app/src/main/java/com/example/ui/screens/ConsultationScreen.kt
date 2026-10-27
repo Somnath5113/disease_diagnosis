@@ -66,6 +66,11 @@ import com.example.data.model.TriageOption
 import com.example.ui.components.EmergencyDialog
 import com.example.ui.theme.getUrgencyThemeColors
 import com.example.ui.viewmodel.ConsultationState
+import androidx.compose.ui.res.stringResource
+import com.example.R
+
+/** Longest possible consultation: emergency screen + 3 MedDialog questions + 6 clinical follow-ups. */
+private const val MAX_LAYERS = 10
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -99,7 +104,7 @@ fun ConsultationScreen(
                             maxLines = 1
                         )
                         Text(
-                            text = "Question $stepCount • Clinical Decision Tree",
+                            text = stringResource(R.string.consult_step, stepCount, MAX_LAYERS),
                             style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -112,7 +117,7 @@ fun ConsultationScreen(
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Previous Question",
+                            contentDescription = stringResource(R.string.cd_previous_question),
                             tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
@@ -124,7 +129,7 @@ fun ConsultationScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Exit Intake",
+                            contentDescription = stringResource(R.string.cd_exit_intake),
                             tint = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
@@ -142,7 +147,7 @@ fun ConsultationScreen(
                 .padding(innerPadding)
         ) {
             // Smooth Precision Progress Bar
-            val targetProgress = (stepCount / 6f).coerceIn(0.15f, 0.95f)
+            val targetProgress = (stepCount / MAX_LAYERS.toFloat()).coerceIn(0.1f, 0.95f)
             val animatedProgress by animateFloatAsState(
                 targetValue = targetProgress,
                 animationSpec = tween(durationMillis = 350, easing = FastOutSlowInEasing),
@@ -236,14 +241,14 @@ private fun CrispQuestionContent(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.MedicalServices,
-                                    contentDescription = "Doctor Query",
+                                    contentDescription = stringResource(R.string.cd_doctor_query),
                                     tint = MaterialTheme.colorScheme.onPrimaryContainer,
                                     modifier = Modifier.size(19.dp)
                                 )
                             }
                             Spacer(modifier = Modifier.width(10.dp))
                             Text(
-                                text = "Clinical Intake Query",
+                                text = stringResource(R.string.consult_query_title),
                                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                                 color = MaterialTheme.colorScheme.primary
                             )
@@ -298,19 +303,19 @@ private fun CrispQuestionContent(
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         Icon(
                                             imageVector = Icons.Default.HelpOutline,
-                                            contentDescription = "Rationale",
+                                            contentDescription = stringResource(R.string.cd_rationale),
                                             tint = MaterialTheme.colorScheme.primary,
                                             modifier = Modifier.size(16.dp)
                                         )
                                         Spacer(modifier = Modifier.width(8.dp))
                                         Text(
-                                            text = "Clinical Rationale",
+                                            text = stringResource(R.string.consult_rationale),
                                             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                                             color = MaterialTheme.colorScheme.primary
                                         )
                                     }
                                     Text(
-                                        text = if (isExplanationExpanded) "Hide" else "Learn more",
+                                        text = if (isExplanationExpanded) stringResource(R.string.consult_hide) else stringResource(R.string.consult_learn_more),
                                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.SemiBold),
                                         color = MaterialTheme.colorScheme.primary
                                     )
@@ -335,7 +340,7 @@ private fun CrispQuestionContent(
         // Section Prompt
         item {
             Text(
-                text = "Select the option that best describes your symptom:",
+                text = stringResource(R.string.consult_select_prompt),
                 style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                 color = MaterialTheme.colorScheme.onSurface
             )
@@ -437,13 +442,13 @@ fun CrispOptionCard(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Warning,
-                                contentDescription = "Emergency Flag",
+                                contentDescription = stringResource(R.string.cd_emergency_flag),
                                 tint = emergencyColors.primary,
                                 modifier = Modifier.size(13.dp)
                             )
                             Spacer(modifier = Modifier.width(5.dp))
                             Text(
-                                text = "Emergency Red Flag Alert",
+                                text = stringResource(R.string.consult_red_flag_title),
                                 style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                 color = emergencyColors.onContainer
                             )

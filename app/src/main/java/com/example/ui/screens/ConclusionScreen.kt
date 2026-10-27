@@ -1,7 +1,5 @@
 package com.example.ui.screens
 
-import android.content.Intent
-import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -52,6 +50,10 @@ import com.example.data.model.TriageConclusion
 import com.example.data.model.UrgencyLevel
 import com.example.ui.theme.getUrgencyThemeColors
 import com.example.ui.viewmodel.ConsultationStep
+import androidx.compose.ui.res.stringResource
+import com.example.R
+import com.example.data.settings.LocalAppSettings
+import com.example.data.settings.dialNumber
 
 @Composable
 fun ConclusionScreen(
@@ -64,6 +66,7 @@ fun ConclusionScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val settings = LocalAppSettings.current
 
     BackHandler {
         onReturnHome()
@@ -73,19 +76,19 @@ fun ConclusionScreen(
 
     val (badgeText, badgeIcon) = when (conclusion.urgencyLevel) {
         UrgencyLevel.EMERGENCY -> Pair(
-            "CRITICAL EMERGENCY • CALL 911 / 112",
+            stringResource(R.string.badge_emergency, settings.emergencyNumber),
             Icons.Default.Warning
         )
         UrgencyLevel.URGENT_CARE -> Pair(
-            "URGENT CARE • SEEK CLINIC WITHIN 12-24H",
+            stringResource(R.string.badge_urgent),
             Icons.Default.Warning
         )
         UrgencyLevel.ROUTINE_DOCTOR -> Pair(
-            "ROUTINE PHYSICIAN EVALUATION",
+            stringResource(R.string.badge_routine),
             Icons.Default.MedicalServices
         )
         UrgencyLevel.SELF_CARE -> Pair(
-            "SUPPORTIVE AT-HOME MONITORING",
+            stringResource(R.string.badge_self_care),
             Icons.Default.CheckCircle
         )
     }
@@ -153,13 +156,13 @@ fun ConclusionScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Check,
-                                        contentDescription = "Saved",
+                                        contentDescription = stringResource(R.string.cd_saved),
                                         tint = urgencyColors.primary,
                                         modifier = Modifier.size(12.dp)
                                     )
                                     Spacer(modifier = Modifier.width(4.dp))
                                     Text(
-                                        text = "Saved locally",
+                                        text = stringResource(R.string.saved_locally),
                                         style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
                                         color = urgencyColors.primary
                                     )
@@ -171,7 +174,7 @@ fun ConclusionScreen(
                     Spacer(modifier = Modifier.height(18.dp))
 
                     Text(
-                        text = "Clinical Triage Evaluation",
+                        text = stringResource(R.string.conclusion_title),
                         style = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Bold,
                             letterSpacing = (-0.4).sp
@@ -180,7 +183,7 @@ fun ConclusionScreen(
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "Specialty: ${category.name} • MedDialog Clinical Pathway",
+                        text = stringResource(R.string.conclusion_specialty, category.name),
                         style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Medium),
                         color = urgencyColors.onContainer
                     )
@@ -189,8 +192,7 @@ fun ConclusionScreen(
                         Spacer(modifier = Modifier.height(18.dp))
                         Button(
                             onClick = {
-                                val dialIntent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:911"))
-                                context.startActivity(dialIntent)
+                                dialNumber(context, settings.emergencyNumber)
                             },
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = urgencyColors.primary,
@@ -202,9 +204,9 @@ fun ConclusionScreen(
                                 .height(50.dp)
                                 .testTag("conclusion_call_emergency_button")
                         ) {
-                            Icon(Icons.Default.Call, contentDescription = "Call")
+                            Icon(Icons.Default.Call, contentDescription = stringResource(R.string.cd_call))
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("Call 911 / 112 Immediately", fontWeight = FontWeight.Bold, fontSize = 16.sp)
+                            Text(stringResource(R.string.conclusion_call_now, settings.emergencyNumber), fontWeight = FontWeight.Bold, fontSize = 16.sp)
                         }
                     }
                 }
@@ -227,13 +229,13 @@ fun ConclusionScreen(
                             .padding(20.dp)
                     ) {
                         Text(
-                            text = "Potential Clinical Matches",
+                            text = stringResource(R.string.conclusion_matches_title),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "Correlation with MedDialog clinical consultation patterns:",
+                            text = stringResource(R.string.conclusion_matches_hint),
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -289,7 +291,7 @@ fun ConclusionScreen(
                         .padding(20.dp)
                 ) {
                     Text(
-                        text = "Clinical Assessment & Guidance",
+                        text = stringResource(R.string.conclusion_assessment_title),
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -321,7 +323,7 @@ fun ConclusionScreen(
                             .padding(20.dp)
                     ) {
                         Text(
-                            text = "Recommended Care & Symptom Relief",
+                            text = stringResource(R.string.conclusion_care_title),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -343,7 +345,7 @@ fun ConclusionScreen(
                                 ) {
                                     Icon(
                                         imageVector = Icons.Default.Check,
-                                        contentDescription = "Care step",
+                                        contentDescription = stringResource(R.string.cd_care_step),
                                         tint = selfCareColors.primary,
                                         modifier = Modifier.size(13.dp)
                                     )
@@ -357,6 +359,72 @@ fun ConclusionScreen(
                                 )
                             }
                         }
+                    }
+                }
+            }
+        }
+
+        // Traditional Indian Home Remedies
+        if (settings.showHomeRemedies && conclusion.indianHomeRemedies.isNotEmpty()) {
+            item {
+                val remedyColors = getUrgencyThemeColors(UrgencyLevel.SELF_CARE)
+                Card(
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    shape = RoundedCornerShape(20.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                    border = androidx.compose.foundation.BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("conclusion_indian_home_remedies_card")
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(20.dp)
+                    ) {
+                        Text(
+                            text = stringResource(R.string.remedies_title),
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = stringResource(R.string.remedies_hint),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(14.dp))
+
+                        conclusion.indianHomeRemedies.forEach { remedy ->
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 5.dp),
+                                verticalAlignment = Alignment.Top
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(top = 7.dp)
+                                        .size(8.dp)
+                                        .background(remedyColors.primary, CircleShape)
+                                )
+                                Spacer(modifier = Modifier.width(14.dp))
+                                Text(
+                                    text = remedy,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    lineHeight = 20.sp
+                                )
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Text(
+                            text = stringResource(R.string.remedies_footer),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            lineHeight = 16.sp
+                        )
                     }
                 }
             }
@@ -381,14 +449,14 @@ fun ConclusionScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Info,
-                        contentDescription = "Warning thresholds",
+                        contentDescription = stringResource(R.string.cd_warning_thresholds),
                         tint = urgentColors.primary,
                         modifier = Modifier.size(24.dp)
                     )
                     Spacer(modifier = Modifier.width(14.dp))
                     Column {
                         Text(
-                            text = "When to Seek Immediate Medical Evaluation",
+                            text = stringResource(R.string.conclusion_seek_title),
                             style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                             color = urgentColors.primary
                         )
@@ -427,12 +495,12 @@ fun ConclusionScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Share,
-                        contentDescription = "Share",
+                        contentDescription = stringResource(R.string.cd_share),
                         modifier = Modifier.size(19.dp)
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text = "Share Summary with Doctor",
+                        text = stringResource(R.string.conclusion_share_button),
                         fontWeight = FontWeight.Bold,
                         fontSize = 15.sp
                     )
@@ -450,12 +518,12 @@ fun ConclusionScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Home,
-                        contentDescription = "Home",
+                        contentDescription = stringResource(R.string.cd_home),
                         modifier = Modifier.size(19.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "Finish & Return to Home",
+                        text = stringResource(R.string.conclusion_home_button),
                         fontWeight = FontWeight.Bold
                     )
                 }

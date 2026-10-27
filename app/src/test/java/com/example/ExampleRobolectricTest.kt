@@ -63,6 +63,21 @@ class ExampleRobolectricTest {
             }
         }
 
+        // Longest answer path in screens (emergency screen + questions). Also proves the graph has no cycles.
+        val memo = HashMap<String, Int>()
+        fun screens(id: String, visiting: MutableSet<String>): Int {
+            memo[id]?.let { return it }
+            assertTrue("Cycle through $id", visiting.add(id))
+            val node = treeData.nodes.getValue(id)
+            val depth = if (node.isConclusion) 0 else 1 + (node.options.maxOfOrNull { screens(it.nextId, visiting) } ?: 0)
+            visiting.remove(id)
+            memo[id] = depth
+            return depth
+        }
+        val longest = treeData.categories.maxOf { screens(it.startNodeId, mutableSetOf()) }
+        assertTrue("Deep diagnosis should reach at least 8 screens, was $longest", longest >= 8)
+        assertTrue("No path may exceed 10 screens, was $longest", longest <= 10)
+
         // Validate that every referenced nextId actually points to a real node
         for ((nodeId, node) in treeData.nodes) {
             for (option in node.options) {
