@@ -32,7 +32,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.HelpOutline
+import androidx.compose.material.icons.automirrored.filled.HelpOutline
 import androidx.compose.material.icons.filled.MedicalServices
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
@@ -302,7 +302,7 @@ private fun CrispQuestionContent(
                                 ) {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         Icon(
-                                            imageVector = Icons.Default.HelpOutline,
+                                            imageVector = Icons.AutoMirrored.Filled.HelpOutline,
                                             contentDescription = stringResource(R.string.cd_rationale),
                                             tint = MaterialTheme.colorScheme.primary,
                                             modifier = Modifier.size(16.dp)

@@ -55,6 +55,8 @@ android {
     compose = true
     buildConfig = true
   }
+  // This Compose library ships already stripped, so the packager has nothing to strip and warns.
+  packaging { jniLibs { keepDebugSymbols += "**/libandroidx.graphics.path.so" } }
   testOptions { unitTests { isIncludeAndroidResources = true } }
   dependenciesInfo {
     includeInApk = false
