@@ -25,7 +25,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.DirectionsRun
+import androidx.compose.material.icons.automirrored.filled.DirectionsRun
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Healing
 import androidx.compose.material.icons.filled.MedicalServices
@@ -675,7 +675,7 @@ private fun getSpecialtyIcon(group: String): ImageVector {
         "NEUROLOGICAL" -> Icons.Default.Psychology
         "SKIN" -> Icons.Default.Spa
         "FEVER" -> Icons.Default.Thermostat
-        "MUSCULOSKELETAL" -> Icons.Default.DirectionsRun
+        "MUSCULOSKELETAL" -> Icons.AutoMirrored.Filled.DirectionsRun
         "UROGENITAL" -> Icons.Default.MedicalServices
         "MENTAL" -> Icons.Default.Psychology
         else -> Icons.Default.MedicalServices

@@ -49,7 +49,7 @@ object EmergencyNumbers {
     /** Numbers the user may choose as the one-tap emergency number. */
     val PRIMARY_OPTIONS = listOf(NATIONAL, AMBULANCE_108, AMBULANCE_102)
 
-    data class Helpline(val number: String, @StringRes val label: Int, @StringRes val note: Int)
+    data class Helpline(val number: String, @param:StringRes val label: Int, @param:StringRes val note: Int)
 
     val HELPLINES = listOf(
         Helpline("112", R.string.helpline_112, R.string.helpline_112_note),
