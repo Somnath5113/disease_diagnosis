@@ -17,6 +17,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -67,17 +69,20 @@ class TriageViewModel(application: Application) : AndroidViewModel(application) 
     val consultationState: StateFlow<ConsultationState> = _consultationState.asStateFlow()
 
     init {
-        loadData()
+        viewModelScope.launch {
+            // The question tree exists once per language, so load it again whenever the language changes.
+            settingsRepository.settings
+                .map { it.language }
+                .distinctUntilChanged()
+                .collect { loadData() }
+        }
     }
 
-    private fun loadData() {
-        viewModelScope.launch {
-            try {
-                val cats = repository.getCategories()
-                _categories.value = cats
-            } catch (e: Exception) {
-                Log.e(TAG, "Could not load the triage tree", e)
-            }
+    private suspend fun loadData() {
+        try {
+            _categories.value = repository.getCategories()
+        } catch (e: Exception) {
+            Log.e(TAG, "Could not load the triage tree", e)
         }
     }
 

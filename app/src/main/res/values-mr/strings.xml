@@ -102,7 +102,7 @@
     <string name="settings_title">सेटिंग्ज</string>
     <string name="settings_language">भाषा</string>
     <string name="settings_language_hint">मेनू आणि स्क्रीनची भाषा निवडा.</string>
-    <string name="settings_language_note">वैद्यकीय प्रश्न आणि सल्ला सध्या फक्त इंग्रजीत दिसतात.</string>
+    <string name="settings_language_note">या भाषेत वैद्यकीय प्रश्न आणि सल्ला इंग्रजीत दिसतील.</string>
     <string name="settings_emergency_number">एका टॅपचा आणीबाणी क्रमांक</string>
     <string name="settings_emergency_number_hint">ॲपमधील सर्व आणीबाणी बटणे हा क्रमांक डायल करतात. 112 संपूर्ण भारतात चालतो. 108 आणि 102 रुग्णवाहिकेची सेवा राज्यावर अवलंबून असते.</string>
     <string name="settings_helplines">भारतातील हेल्पलाइन क्रमांक</string>

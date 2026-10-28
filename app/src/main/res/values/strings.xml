@@ -110,7 +110,7 @@
     <string name="settings_title">Settings</string>
     <string name="settings_language">Language</string>
     <string name="settings_language_hint">Choose the language of menus and screens.</string>
-    <string name="settings_language_note">Medical questions and advice are currently shown in English only.</string>
+    <string name="settings_language_note">Medical questions and advice are shown in English for this language.</string>
     <string name="settings_emergency_number">One-tap emergency number</string>
     <string name="settings_emergency_number_hint">Used by every emergency button in the app. 112 works across India. Ambulance 108 and 102 availability depends on your state.</string>
     <string name="settings_helplines">Indian helplines</string>

@@ -102,7 +102,7 @@
     <string name="settings_title">సెట్టింగ్‌లు</string>
     <string name="settings_language">భాష</string>
     <string name="settings_language_hint">మెనూలు, స్క్రీన్‌ల భాషను ఎంచుకోండి.</string>
-    <string name="settings_language_note">వైద్య ప్రశ్నలు, సలహా ప్రస్తుతం ఇంగ్లీష్‌లో మాత్రమే కనిపిస్తాయి.</string>
+    <string name="settings_language_note">ఈ భాషలో వైద్య ప్రశ్నలు, సలహా ఇంగ్లీష్‌లో కనిపిస్తాయి.</string>
     <string name="settings_emergency_number">ఒక్క ట్యాప్ అత్యవసర నంబర్</string>
     <string name="settings_emergency_number_hint">యాప్‌లోని అన్ని అత్యవసర బటన్లు ఈ నంబర్‌కు డయల్ చేస్తాయి. 112 భారతదేశమంతా పనిచేస్తుంది. 108, 102 అంబులెన్స్ సేవ రాష్ట్రాన్ని బట్టి మారుతుంది.</string>
     <string name="settings_helplines">భారతీయ హెల్ప్‌లైన్ నంబర్లు</string>

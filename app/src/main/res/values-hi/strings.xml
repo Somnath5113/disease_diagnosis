@@ -102,7 +102,7 @@
     <string name="settings_title">सेटिंग्स</string>
     <string name="settings_language">भाषा</string>
     <string name="settings_language_hint">मेनू और स्क्रीन की भाषा चुनें।</string>
-    <string name="settings_language_note">चिकित्सा प्रश्न और सलाह अभी केवल अंग्रेज़ी में दिखाई देते हैं।</string>
+    <string name="settings_language_note">इस भाषा में चिकित्सा प्रश्न और सलाह अंग्रेज़ी में दिखाई देंगे।</string>
     <string name="settings_emergency_number">एक टैप वाला आपातकालीन नंबर</string>
     <string name="settings_emergency_number_hint">ऐप के सभी आपातकालीन बटन यही नंबर लगाते हैं। 112 पूरे भारत में चलता है। 108 और 102 एम्बुलेंस की सुविधा राज्य पर निर्भर है।</string>
     <string name="settings_helplines">भारत के हेल्पलाइन नंबर</string>

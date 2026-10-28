@@ -4,10 +4,11 @@
   "description": "Mines MedDialog-EN into the MedTriage decision tree",
   "scripts": {
     "mine": "node --max-old-space-size=6000 train.mjs",
-    "emit": "node emit.mjs && node verify_tree.mjs",
+    "emit": "node emit.mjs && node verify_tree.mjs && npm run i18n",
     "verify": "node verify_tree.mjs && node verify_deep.mjs",
     "report": "node report.mjs",
-    "trees": "node print_trees.mjs"
+    "trees": "node print_trees.mjs",
+    "i18n": "node i18n_extract.mjs && node i18n_build.mjs --pseudo && node i18n_build.mjs"
   },
   "keywords": [],
   "author": "",
