@@ -163,7 +163,10 @@ for (const [sym, e] of Object.entries(model.symptoms)) {
 }
 
 // Most common complaints first, so the home screen reflects what patients actually ask about.
-categories.sort((a, b) => b.dialogs - a.dialogs)
+// Topics that are private or that many people would rather not see first (periods, pregnancy) go to
+// the end of the list. They stay one search away and every other complaint keeps its frequency order.
+const SHOWN_LAST = new Set(['PERIODS'])
+categories.sort((a, b) => Number(SHOWN_LAST.has(a.id)) - Number(SHOWN_LAST.has(b.id)) || b.dialogs - a.dialogs)
 for (const c of categories) delete c.dialogs
 
 const out = {
